@@ -90,7 +90,7 @@
   "sources": {
     "metacubex/ai": {
       "bytes": 3351,
-      "sha256": "cfa57e2d92cf58d1e36c75b0c08009265be0610de752571f48c8a8b82e256b0d",
+      "sha256": "6c969f15640c658293008849091952be9d3928cc68f618ef59b15c4ab9903908",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-!cn.list"
     },
     "metacubex/apple-cn": {
