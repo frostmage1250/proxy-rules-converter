@@ -33,13 +33,15 @@ jobs:
       - name: Fetch, convert, and validate rules
         run: python src/convert_rules.py
 
-      - name: Check generated text formatting
-        run: git diff --check
+      - name: Verify generated files are deterministic
+        run: |
+          python src/convert_rules.py --check
+          git diff --check
 
       - name: Commit changed generated files
         shell: bash
         run: |
-          git add dist reports
+          git add -A -- dist reports
           if git diff --cached --quiet; then
             echo "No generated rule changes."
             exit 0
