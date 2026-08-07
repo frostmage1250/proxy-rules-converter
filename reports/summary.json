@@ -1,0 +1,236 @@
+{
+  "domestic": {
+    "converted_source_entries": 864,
+    "duplicates_removed": 0,
+    "output_entries": 864,
+    "semantically_redundant_removed": 0,
+    "wildcard_rules_dropped": 1
+  },
+  "schema_version": 1,
+  "shadowrocket": {
+    "ai": {
+      "duplicates_removed": 0,
+      "output_entries": 173,
+      "semantically_redundant_removed": 0,
+      "source_entries": 173
+    },
+    "apple-cn": {
+      "duplicates_removed": 0,
+      "output_entries": 296,
+      "semantically_redundant_removed": 0,
+      "source_entries": 296
+    },
+    "facebook": {
+      "duplicates_removed": 0,
+      "output_entries": 394,
+      "semantically_redundant_removed": 2,
+      "source_entries": 396
+    },
+    "gfw": {
+      "duplicates_removed": 0,
+      "output_entries": 4332,
+      "semantically_redundant_removed": 0,
+      "source_entries": 4332
+    },
+    "instagram": {
+      "duplicates_removed": 0,
+      "output_entries": 72,
+      "semantically_redundant_removed": 2,
+      "source_entries": 74
+    },
+    "microsoft-cn": {
+      "duplicates_removed": 0,
+      "output_entries": 190,
+      "semantically_redundant_removed": 0,
+      "source_entries": 190
+    },
+    "private": {
+      "duplicates_removed": 0,
+      "output_entries": 130,
+      "semantically_redundant_removed": 0,
+      "source_entries": 130
+    },
+    "telegram": {
+      "duplicates_removed": 0,
+      "output_entries": 21,
+      "semantically_redundant_removed": 0,
+      "source_entries": 21
+    },
+    "threads": {
+      "duplicates_removed": 0,
+      "output_entries": 2,
+      "semantically_redundant_removed": 0,
+      "source_entries": 2
+    },
+    "tiktok": {
+      "duplicates_removed": 0,
+      "output_entries": 35,
+      "semantically_redundant_removed": 1,
+      "source_entries": 36
+    },
+    "twitch": {
+      "duplicates_removed": 0,
+      "output_entries": 34,
+      "semantically_redundant_removed": 0,
+      "source_entries": 34
+    },
+    "twitter": {
+      "duplicates_removed": 0,
+      "output_entries": 24,
+      "semantically_redundant_removed": 0,
+      "source_entries": 24
+    },
+    "youtube": {
+      "duplicates_removed": 0,
+      "output_entries": 177,
+      "semantically_redundant_removed": 1,
+      "source_entries": 178
+    }
+  },
+  "sources": {
+    "metacubex/ai": {
+      "bytes": 3351,
+      "sha256": "cfa57e2d92cf58d1e36c75b0c08009265be0610de752571f48c8a8b82e256b0d",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-!cn.list"
+    },
+    "metacubex/apple-cn": {
+      "bytes": 7000,
+      "sha256": "4614f78209faab091436ecc646f817e1c2caac98126759345878011a64eb2a24",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/apple@cn.list"
+    },
+    "metacubex/facebook": {
+      "bytes": 7120,
+      "sha256": "c596908eb3c2227cd9d7b9974f8fed38ad4439118a0a10c4f63c69181313fd9e",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/facebook.list"
+    },
+    "metacubex/game-download": {
+      "bytes": 14292,
+      "sha256": "ec2f9dc32cd69644ca94b809a781121e4dee581885c3ac19332d7104a746ce07",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-game-platforms-download.list"
+    },
+    "metacubex/gfw": {
+      "bytes": 66677,
+      "sha256": "02a24f9367e3b0c275e11b30ac21f5a820872cdbc53a9b97fbf439c93b3c7216",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/gfw.list"
+    },
+    "metacubex/instagram": {
+      "bytes": 1447,
+      "sha256": "e5cba6ce4fa5a0dddbd4710d9dd5b6693c249e6f5be4179401843109ecbca228",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/instagram.list"
+    },
+    "metacubex/microsoft-cn": {
+      "bytes": 4255,
+      "sha256": "56e575d9d4c9ac084d44cc77dbc7f8c48d177d391c233e08e69d9826b0cce8c7",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft@cn.list"
+    },
+    "metacubex/private": {
+      "bytes": 2688,
+      "sha256": "9caf8f67450f6ff72fde0d2aec4d425238b88e371628011e51aab9185b0da73e",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/private.list"
+    },
+    "metacubex/telegram": {
+      "bytes": 293,
+      "sha256": "2448b2699519cd258b10232fcacd01e89b7db04c8ce7fc860a4962518370a329",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/telegram.list"
+    },
+    "metacubex/threads": {
+      "bytes": 27,
+      "sha256": "77e44a4fe816e840abf6279a11cc88e418d5792d2ddf7bf8e93e42eb426a84f9",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/threads.list"
+    },
+    "metacubex/tiktok": {
+      "bytes": 730,
+      "sha256": "892f03350bb9c1d5e2fa15b417ac6759f13b12f558208d979d9f4d4cec310003",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/tiktok.list"
+    },
+    "metacubex/twitch": {
+      "bytes": 888,
+      "sha256": "230e8e3b582de5c769be1b95e06d7aadf7cd83aa54df240bfca2f8bc14e5fd7c",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/twitch.list"
+    },
+    "metacubex/twitter": {
+      "bytes": 369,
+      "sha256": "7bc17d19d2fa089b36993e56275eb0eb7355963f3e90a711364086442fd369c0",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/twitter.list"
+    },
+    "metacubex/youtube": {
+      "bytes": 2743,
+      "sha256": "e95f241fa4357918fc1066390c352aad750b571ddea15e3421d30c84e947ac10",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/youtube.list"
+    },
+    "sukka/domestic": {
+      "bytes": 22504,
+      "sha256": "3277c9deba0df731b296128d96e9a111422bd8ad7548a8dde63fd9954370bf1b",
+      "url": "https://ruleset.skk.moe/Clash/non_ip/domestic.txt"
+    },
+    "sukka/game-download": {
+      "bytes": 1908,
+      "sha256": "c3549cee2590fd0f0ccd3febd77159d64cec7335361217f667b5de609248d7a3",
+      "url": "https://ruleset.skk.moe/Clash/domainset/game-download.txt"
+    }
+  },
+  "steam_cn_download": {
+    "allowlist_missing_from_sources": [],
+    "duplicates_removed": 0,
+    "output_entries": [
+      "alibaba.cdn.steampipe.steamcontent.com"
+    ],
+    "removed_as_domestic_covered": [
+      {
+        "covered_by": [
+          "+.steam.clngaa.com"
+        ],
+        "domain": "dl.steam.clngaa.com"
+      },
+      {
+        "covered_by": [
+          "+.dl.eccdnx.com"
+        ],
+        "domain": "st.dl.eccdnx.com"
+      },
+      {
+        "covered_by": [
+          "+.dl.bscstorage.net"
+        ],
+        "domain": "st.dl.bscstorage.net"
+      },
+      {
+        "covered_by": [
+          "+.steamchina.com"
+        ],
+        "domain": "cdn-ali.content.steamchina.com"
+      },
+      {
+        "covered_by": [
+          "+.pphimalayanrt.com"
+        ],
+        "domain": "xz.pphimalayanrt.com"
+      },
+      {
+        "covered_by": [
+          "lv.queniujq.cn"
+        ],
+        "domain": "lv.queniujq.cn"
+      },
+      {
+        "covered_by": [
+          "+.steamchina.com"
+        ],
+        "domain": "cdn-ws.content.steamchina.com"
+      },
+      {
+        "covered_by": [
+          "+.steamchina.com"
+        ],
+        "domain": "cdn-qc.content.steamchina.com"
+      }
+    ],
+    "reviewed_allowlist_entries": 9,
+    "semantically_redundant_removed": 0,
+    "source_scope": [
+      "https://ruleset.skk.moe/Clash/domainset/game-download.txt",
+      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-game-platforms-download.list"
+    ],
+    "steam_named_unreviewed_count": 417
+  }
+}

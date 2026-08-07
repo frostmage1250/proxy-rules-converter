@@ -1,0 +1,26 @@
+{
+  "sukka": {
+    "domestic": "https://ruleset.skk.moe/Clash/non_ip/domestic.txt",
+    "game_download": "https://ruleset.skk.moe/Clash/domainset/game-download.txt"
+  },
+  "metacubex": {
+    "base": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite",
+    "game_download": "category-game-platforms-download.list",
+    "shadowrocket": {
+      "private": "private.list",
+      "apple-cn": "apple@cn.list",
+      "microsoft-cn": "microsoft@cn.list",
+      "telegram": "telegram.list",
+      "youtube": "youtube.list",
+      "threads": "threads.list",
+      "instagram": "instagram.list",
+      "facebook": "facebook.list",
+      "twitter": "twitter.list",
+      "twitch": "twitch.list",
+      "tiktok": "tiktok.list",
+      "ai": "category-ai-!cn.list",
+      "gfw": "gfw.list"
+    }
+  }
+}
+

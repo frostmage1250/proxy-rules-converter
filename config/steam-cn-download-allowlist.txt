@@ -1,0 +1,12 @@
+# Only reviewed Mainland China Steam download endpoints are allowed here.
+# Every entry must still be covered by one of the two configured game-download sources.
+dl.steam.clngaa.com
+st.dl.eccdnx.com
+st.dl.bscstorage.net
+cdn-ali.content.steamchina.com
+xz.pphimalayanrt.com
+lv.queniujq.cn
+alibaba.cdn.steampipe.steamcontent.com
+cdn-ws.content.steamchina.com
+cdn-qc.content.steamchina.com
+
