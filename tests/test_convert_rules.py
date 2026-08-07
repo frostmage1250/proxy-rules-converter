@@ -11,7 +11,12 @@ sys.path.insert(0, str(ROOT / "src"))
 from convert_rules import (  # noqa: E402
     ConversionError,
     DomainRule,
+    MICROSOFT_KEYWORDS,
+    SUKKA_ATTRIBUTION_MARKER,
+    drop_sukka_marker,
+    expand_domain_keywords,
     is_droppable_domestic_wildcard,
+    parse_classical_domains,
     parse_domain_text,
     render_rules,
     rule_covers_domain,
@@ -63,6 +68,55 @@ class ConverterTests(unittest.TestCase):
         self.assertEqual(
             render_rules(rules, "shadowrocket"), "a.example\n.example.com\n"
         )
+
+    def test_classical_parser_has_explicit_skip_and_keyword_policy(self) -> None:
+        rules, keywords, ignored = parse_classical_domains(
+            "DOMAIN-SUFFIX,example.com\n"
+            "DOMAIN-KEYWORD,microsoft\n"
+            "PROCESS-NAME,Example.exe\n",
+            "test",
+            allowed_keywords=MICROSOFT_KEYWORDS,
+            ignored_rule_types=frozenset({"PROCESS-NAME"}),
+        )
+        self.assertEqual(rules, [DomainRule("suffix", "example.com")])
+        self.assertEqual(keywords, ["microsoft"])
+        self.assertEqual(ignored, {"PROCESS-NAME": 1})
+
+    def test_classical_parser_rejects_unreviewed_keyword(self) -> None:
+        with self.assertRaises(ConversionError):
+            parse_classical_domains(
+                "DOMAIN-KEYWORD,unexpected\n",
+                "test",
+                allowed_keywords=MICROSOFT_KEYWORDS,
+            )
+
+    def test_keyword_expansion_is_finite_and_reference_backed(self) -> None:
+        expanded, counts = expand_domain_keywords(
+            ["microsoft", "1drv"],
+            [
+                DomainRule("exact", "officecdn-microsoft-com.akamaized.net"),
+                DomainRule("suffix", "1drv.ms"),
+                DomainRule("suffix", "example.com"),
+            ],
+        )
+        self.assertEqual(
+            set(expanded),
+            {
+                DomainRule("exact", "officecdn-microsoft-com.akamaized.net"),
+                DomainRule("suffix", "1drv.ms"),
+            },
+        )
+        self.assertEqual(counts, {"1drv": 1, "microsoft": 1})
+
+    def test_sukka_attribution_marker_is_not_emitted(self) -> None:
+        rules, removed = drop_sukka_marker(
+            [
+                DomainRule("exact", SUKKA_ATTRIBUTION_MARKER),
+                DomainRule("suffix", "example.com"),
+            ]
+        )
+        self.assertEqual(rules, [DomainRule("suffix", "example.com")])
+        self.assertEqual(removed, 1)
 
 
 if __name__ == "__main__":
