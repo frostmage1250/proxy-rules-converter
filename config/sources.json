@@ -1,15 +1,18 @@
 {
   "sukka": {
     "domestic": "https://ruleset.skk.moe/Clash/non_ip/domestic.txt",
-    "game_download": "https://ruleset.skk.moe/Clash/domainset/game-download.txt"
+    "game_download": "https://ruleset.skk.moe/Clash/domainset/game-download.txt",
+    "apple_cdn": "https://ruleset.skk.moe/Clash/domainset/apple_cdn.txt",
+    "apple_services": "https://ruleset.skk.moe/Clash/non_ip/apple_services.txt",
+    "microsoft_cdn": "https://ruleset.skk.moe/Clash/non_ip/microsoft_cdn.txt",
+    "microsoft": "https://ruleset.skk.moe/Clash/non_ip/microsoft.txt"
   },
   "metacubex": {
     "base": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite",
     "game_download": "category-game-platforms-download.list",
+    "microsoft": "microsoft.list",
     "shadowrocket": {
       "private": "private.list",
-      "apple-cn": "apple@cn.list",
-      "microsoft-cn": "microsoft@cn.list",
       "telegram": "telegram.list",
       "youtube": "youtube.list",
       "threads": "threads.list",
