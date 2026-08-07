@@ -1,42 +1,61 @@
 # Mihomo and Shadowrocket rule converter
 
-This repository is a ready-to-run external conversion pipeline for the paired
-Mihomo and Shadowrocket configurations. It uses public upstream rule data only.
+This repository generates compact native domain providers for the paired Mihomo and
+Shadowrocket configurations. It downloads public upstream data, validates every rule
+type, removes duplicates and covered entries, and commits only changed generated files.
 
-## Implemented policy
+## Policy
 
-### Mihomo
+### Shared Apple direct set
 
-- Existing MetaCubeX MRS providers remain upstream-native and are not regenerated here.
-- Sukka `domestic` classical text is converted to Mihomo `behavior: domain`, `format: text`.
-- The generated Mihomo files use the `.list` filename extension, while `format` remains
-  `text`: Mihomo supports `yaml`, `text`, and `mrs` as format values, not `list`.
-- Steam input is limited to Sukka `game-download` and MetaCubeX
+- Combine Sukka `apple_cdn` and the domain portion of `apple_services`.
+- Remove semantic overlap and emit one `apple-direct` provider, reducing client rule
+  lookups while preserving both sources' domain coverage.
+- Ignore the eight process rules and `17.0.0.0/8` from Apple Services.
+- Do not use Sukka Apple CN, MetaCubeX Apple@CN, or the full MetaCubeX Apple set.
+- Shadowrocket APNS remains an external classical rule and is not generated here.
+
+### Mihomo Microsoft split
+
+- Convert Sukka `microsoft_cdn` to `microsoft-cdn.list` for direct connections.
+- Convert the 80 explicit Sukka Microsoft suffixes to `microsoft.list` for proxying.
+- Replace only Sukka's three reviewed keywords (`1drv`, `hotmail`, and `microsoft`)
+  with the finite matching entries found in MetaCubeX `microsoft.list`.
+- The CDN rule must appear before the Microsoft proxy rule because the two providers
+  intentionally overlap.
+- Do not use MetaCubeX Microsoft@CN.
+- Do not generate any Microsoft provider for Shadowrocket.
+
+### Domestic and Steam
+
+- Convert Sukka `domestic` classical text to native domain text for both clients.
+- Drop the reviewed nonessential `DOMAIN-WILDCARD,*.qhimgs?.com` entry; any new
+  wildcard fails the build pending review.
+- Build Steam input only from Sukka `game-download` and MetaCubeX
   `category-game-platforms-download.list`.
-- Only reviewed Mainland China Steam download endpoints are considered.
-- Anything already covered by the converted Sukka domestic set is removed from the
-  standalone Steam output.
-- International Steam download endpoints and other game platforms are not emitted.
+- Emit only reviewed Mainland China Steam download endpoints that are not already
+  covered by Domestic. International endpoints and other game platforms are excluded.
 
-### Shadowrocket
+### Other Shadowrocket providers
 
-- MetaCubeX non-classical `.list` files are converted to native DOMAIN-SET text.
-- The converted Sukka domestic data is rendered separately as a DOMAIN-SET.
-- APNS and all IP rule sets remain external classical RULE-SET resources.
-- No qBittorrent process rule and no standalone Steam rule are generated for Shadowrocket.
+- Convert only MetaCubeX non-classical `.list` domain data to native DOMAIN-SET text.
+- Keep APNS and all IP rules as external classical RULE-SET resources.
+- Do not generate qBittorrent process rules or a Shadowrocket Steam provider.
 
 ## Outputs
 
 ```text
 dist/
 ├─ mihomo/
+│  ├─ apple-direct.list
 │  ├─ domestic.list
+│  ├─ microsoft-cdn.list
+│  ├─ microsoft.list
 │  └─ steam-cn-download.list
 └─ shadowrocket/
+   ├─ apple-direct.domain-set
    ├─ domestic.domain-set
    ├─ private.domain-set
-   ├─ apple-cn.domain-set
-   ├─ microsoft-cn.domain-set
    ├─ telegram.domain-set
    ├─ youtube.domain-set
    ├─ threads.domain-set
@@ -49,15 +68,10 @@ dist/
    └─ gfw.domain-set
 ```
 
-`reports/summary.json` contains source hashes, input/output counts, deduplication
-statistics, Steam domestic-coverage decisions, and missing reviewed candidates.
-
-## Domestic wildcard handling
-
-Sukka currently contains one `DOMAIN-WILDCARD,*.qhimgs?.com` entry. Mihomo domain
-providers do not support the routing rule `?` wildcard. This is a nonessential Qihoo
-360 image-CDN pattern, so the converter deliberately drops it and records that decision
-in the audit report. Any new DOMAIN-WILDCARD causes a hard failure until it is reviewed.
+Mihomo files use the `.list` filename extension with provider `format: text`.
+Shadowrocket files use native DOMAIN-SET syntax. `reports/summary.json` records source
+URLs and hashes, counts, ignored rules, deduplication, keyword expansion, and ordering
+requirements.
 
 ## Run locally
 
@@ -66,82 +80,72 @@ Python 3.11 or newer is sufficient; no third-party packages are needed.
 ```bash
 python -m unittest discover -s tests -v
 python src/convert_rules.py
-```
-
-To verify that committed outputs are current without writing them:
-
-```bash
 python src/convert_rules.py --check
 ```
 
-## Publish with GitHub Actions
+## GitHub Actions schedule
 
-1. Create a public GitHub repository.
-2. Upload this directory to its default branch.
-3. Open **Actions** and manually run **Update generated rules** once.
-4. Ensure repository Actions workflow permissions allow `contents: write`.
-5. The workflow then runs every day at 02:23 Asia/Shanghai and commits only real changes.
-
-No personal access token is needed; the workflow uses the repository-scoped
-`GITHUB_TOKEN` with only `contents: write` permission.
+The **Update generated rules** workflow supports manual runs and runs daily at
+18:23 UTC, which is 02:23 the following day in Asia/Shanghai. It commits only when
+`dist/` or `reports/` actually changes. The repository is independent rather than a
+GitHub fork; upstream attribution and licensing are documented in `NOTICE.md`.
 
 ## Mihomo configuration
 
-The examples use the proposed repository
-`frostmage1250/proxy-rules-converter`:
-
 ```yaml
 rule-providers:
-  steam_cn_download:
+  apple_direct:
     type: http
     interval: 86400
     proxy: MESL
     behavior: domain
     format: text
-    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/steam-cn-download.list"
-    path: ./ruleset/steam-cn-download.list
+    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/apple-direct.list"
+    path: ./ruleset/apple-direct.list
 
-  domestic:
+  microsoft_cdn:
     type: http
     interval: 86400
     proxy: MESL
     behavior: domain
     format: text
-    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/domestic.list"
-    path: ./ruleset/domestic.list
+    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/microsoft-cdn.list"
+    path: ./ruleset/microsoft-cdn.list
+
+  microsoft:
+    type: http
+    interval: 86400
+    proxy: MESL
+    behavior: domain
+    format: text
+    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/microsoft.list"
+    path: ./ruleset/microsoft.list
 ```
 
-Keep the Steam rule before domestic:
+The relevant rule order is:
 
 ```yaml
 rules:
-  - "RULE-SET,steam_cn_download,Direct"
-  # ...
-  - "RULE-SET,domestic,Direct"
+  - "RULE-SET,apple_direct,Direct"
+  - "RULE-SET,microsoft_cdn,Direct"
+  - "RULE-SET,microsoft,MESL"
 ```
 
-If `steam-cn-download.list` becomes empty, remove its provider and rule from Mihomo.
+Keep `microsoft_cdn` immediately before `microsoft`.
 
 ## Shadowrocket configuration
 
-Replace each classical MetaCubeX geosite rule with the corresponding generated
-DOMAIN-SET. For example:
-
 ```ini
-DOMAIN-SET,https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/shadowrocket/private.domain-set,DIRECT
-DOMAIN-SET,https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/shadowrocket/youtube.domain-set,媒体
-DOMAIN-SET,https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/shadowrocket/domestic.domain-set,DIRECT
+DOMAIN-SET,https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/shadowrocket/apple-direct.domain-set,DIRECT
 ```
 
-Keep APNS, Telegram/private IP, China IPv4, and China IPv6 as RULE-SET entries.
+No Microsoft rule from this repository should be added to Shadowrocket.
 
-## Update sources or Steam review decisions
+## Update source decisions
 
-- Public source URLs: `config/sources.json`
-- Reviewed China Steam download endpoints: `config/steam-cn-download-allowlist.txt`
+- Upstream URLs: `config/sources.json`
+- Reviewed Steam China candidates: `config/steam-cn-download-allowlist.txt`
 
-The Steam allowlist is a classification decision, not an additional data source.
-An allowlisted hostname is emitted only when one of the two permitted game-download
-sources still covers it and the converted domestic set does not already cover it.
-
-See [NOTICE.md](NOTICE.md) before publishing generated data.
+The Steam allowlist is a classification decision, not an independent domain source.
+An entry is emitted only while one of the two permitted game-download sources covers
+it and Domestic does not.
