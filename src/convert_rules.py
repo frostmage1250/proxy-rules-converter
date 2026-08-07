@@ -30,6 +30,9 @@ USER_AGENT = (
     "(+https://github.com/frostmage1250/proxy-rules-converter)"
 )
 DOMAIN_LABEL_RE = re.compile(r"^[a-z0-9_](?:[a-z0-9_-]{0,61}[a-z0-9_])?$", re.I)
+SUKKA_ATTRIBUTION_MARKER = "7h15.ru1353t.1s.m4d3.by.5ukk4w.skk.moe"
+MICROSOFT_KEYWORDS = frozenset({"1drv", "microsoft", "hotmail"})
+MANAGED_OUTPUT_ROOTS = (ROOT / "dist", ROOT / "reports")
 
 
 class ConversionError(RuntimeError):
@@ -145,6 +148,76 @@ def parse_domestic_classical(text: str, source: str) -> tuple[list[DomainRule], 
     return result, dropped_wildcards
 
 
+def parse_classical_domains(
+    text: str,
+    source: str,
+    *,
+    allowed_keywords: frozenset[str] = frozenset(),
+    ignored_rule_types: frozenset[str] = frozenset(),
+) -> tuple[list[DomainRule], list[str], dict[str, int]]:
+    """Extract domain rules from a classical source with an explicit policy.
+
+    Unknown keywords and rule types fail the build. This prevents an upstream format
+    change from silently broadening or weakening the generated domain providers.
+    """
+
+    result: list[DomainRule] = []
+    keywords: list[str] = []
+    ignored: dict[str, int] = {}
+    for line in clean_lines(text, source):
+        parts = [part.strip() for part in line.split(",")]
+        if len(parts) < 2:
+            raise ConversionError(f"Malformed classical rule in {source}: {line}")
+        rule_type, value = parts[0].upper(), parts[1]
+        if rule_type == "DOMAIN":
+            result.append(DomainRule("exact", normalize_domain(value)))
+        elif rule_type == "DOMAIN-SUFFIX":
+            result.append(DomainRule("suffix", normalize_domain(value)))
+        elif rule_type == "DOMAIN-KEYWORD":
+            keyword = value.strip().lower()
+            if keyword not in allowed_keywords:
+                raise ConversionError(
+                    f"Unreviewed DOMAIN-KEYWORD in {source}: {value}"
+                )
+            keywords.append(keyword)
+        elif rule_type in ignored_rule_types:
+            ignored[rule_type] = ignored.get(rule_type, 0) + 1
+        else:
+            raise ConversionError(f"Unsupported rule in {source}: {line}")
+    return result, keywords, ignored
+
+
+def drop_sukka_marker(rules: Iterable[DomainRule]) -> tuple[list[DomainRule], int]:
+    """Remove Sukka's attribution/probe hostname from client matching data."""
+
+    materialized = list(rules)
+    kept = [
+        rule
+        for rule in materialized
+        if not (rule.kind == "exact" and rule.value == SUKKA_ATTRIBUTION_MARKER)
+    ]
+    return kept, len(materialized) - len(kept)
+
+
+def expand_domain_keywords(
+    keywords: Iterable[str], reference_rules: Iterable[DomainRule]
+) -> tuple[list[DomainRule], dict[str, int]]:
+    """Expand reviewed keywords only with finite rules from a reference domain set."""
+
+    references = list(reference_rules)
+    expanded: set[DomainRule] = set()
+    counts: dict[str, int] = {}
+    for keyword in sorted(set(keywords)):
+        matches = [rule for rule in references if keyword in rule.value]
+        if not matches:
+            raise ConversionError(
+                f"Microsoft keyword {keyword!r} has no MetaCubeX expansion"
+            )
+        counts[keyword] = len(matches)
+        expanded.update(matches)
+    return sorted(expanded), counts
+
+
 def rule_covers_domain(rule: DomainRule, domain: str) -> bool:
     domain = normalize_domain(domain)
     if rule.kind == "exact":
@@ -234,6 +307,19 @@ def atomic_write(path: Path, content: str) -> None:
     os.replace(temp_name, path)
 
 
+def managed_files() -> set[str]:
+    files: set[str] = set()
+    for output_root in MANAGED_OUTPUT_ROOTS:
+        if not output_root.exists():
+            continue
+        files.update(
+            path.relative_to(ROOT).as_posix()
+            for path in output_root.rglob("*")
+            if path.is_file()
+        )
+    return files
+
+
 def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
     config = json.loads(sources_path.read_text(encoding="utf-8"))
     outputs: dict[str, str] = {}
@@ -253,6 +339,7 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
     domestic_raw, dropped_wildcard_count = parse_domestic_classical(
         domestic_text, domestic_url
     )
+    domestic_raw, domestic_marker_removed = drop_sukka_marker(domestic_raw)
     domestic, domestic_duplicates, domestic_redundant = semantic_minimize(domestic_raw)
     outputs["dist/mihomo/domestic.list"] = render_rules(domestic, "mihomo")
     outputs["dist/shadowrocket/domestic.domain-set"] = render_rules(
@@ -276,11 +363,99 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
             "semantically_redundant_removed": redundant,
         }
 
+    apple_cdn_url = config["sukka"]["apple_cdn"]
+    apple_services_url = config["sukka"]["apple_services"]
+    apple_cdn_text = download("sukka/apple-cdn", apple_cdn_url)
+    apple_services_text = download("sukka/apple-services", apple_services_url)
+    apple_cdn_raw = parse_domain_text(apple_cdn_text, apple_cdn_url)
+    apple_services_raw, apple_keywords, apple_ignored = parse_classical_domains(
+        apple_services_text,
+        apple_services_url,
+        ignored_rule_types=frozenset({"PROCESS-NAME", "IP-CIDR"}),
+    )
+    if apple_keywords:
+        raise ConversionError("Apple Services unexpectedly produced domain keywords")
+    apple_cdn_raw, apple_cdn_marker_removed = drop_sukka_marker(apple_cdn_raw)
+    apple_services_raw, apple_services_marker_removed = drop_sukka_marker(
+        apple_services_raw
+    )
+    apple_direct, apple_duplicates, apple_redundant = semantic_minimize(
+        [*apple_cdn_raw, *apple_services_raw]
+    )
+    outputs["dist/mihomo/apple-direct.list"] = render_rules(
+        apple_direct, "mihomo"
+    )
+    outputs["dist/shadowrocket/apple-direct.domain-set"] = render_rules(
+        apple_direct, "shadowrocket"
+    )
+
+    microsoft_cdn_url = config["sukka"]["microsoft_cdn"]
+    microsoft_url = config["sukka"]["microsoft"]
+    meta_microsoft_url = join_url(meta_base, config["metacubex"]["microsoft"])
+    microsoft_cdn_text = download("sukka/microsoft-cdn", microsoft_cdn_url)
+    microsoft_text = download("sukka/microsoft", microsoft_url)
+    meta_microsoft_text = download("metacubex/microsoft", meta_microsoft_url)
+    microsoft_cdn_raw, microsoft_cdn_keywords, microsoft_cdn_ignored = (
+        parse_classical_domains(microsoft_cdn_text, microsoft_cdn_url)
+    )
+    if microsoft_cdn_keywords or microsoft_cdn_ignored:
+        raise ConversionError("Microsoft CDN contains an unexpected non-domain rule")
+    microsoft_base_raw, microsoft_keywords, microsoft_ignored = (
+        parse_classical_domains(
+            microsoft_text,
+            microsoft_url,
+            allowed_keywords=MICROSOFT_KEYWORDS,
+        )
+    )
+    if microsoft_ignored:
+        raise ConversionError("Microsoft contains an unexpected ignored rule")
+    if set(microsoft_keywords) != MICROSOFT_KEYWORDS:
+        raise ConversionError(
+            "Sukka Microsoft keyword set changed; expected exactly "
+            + ", ".join(sorted(MICROSOFT_KEYWORDS))
+        )
+    microsoft_cdn_raw, microsoft_cdn_marker_removed = drop_sukka_marker(
+        microsoft_cdn_raw
+    )
+    microsoft_base_raw, microsoft_marker_removed = drop_sukka_marker(
+        microsoft_base_raw
+    )
+    meta_microsoft = parse_domain_text(meta_microsoft_text, meta_microsoft_url)
+    microsoft_expanded, microsoft_expansion_counts = expand_domain_keywords(
+        microsoft_keywords, meta_microsoft
+    )
+    microsoft_cdn, microsoft_cdn_duplicates, microsoft_cdn_redundant = (
+        semantic_minimize(microsoft_cdn_raw)
+    )
+    microsoft_proxy, microsoft_duplicates, microsoft_redundant = semantic_minimize(
+        [*microsoft_base_raw, *microsoft_expanded]
+    )
+    outputs["dist/mihomo/microsoft-cdn.list"] = render_rules(
+        microsoft_cdn, "mihomo"
+    )
+    outputs["dist/mihomo/microsoft.list"] = render_rules(
+        microsoft_proxy, "mihomo"
+    )
+
+    microsoft_cdn_proxy_overlaps = [
+        {
+            "cdn_rule": cdn_rule.mihomo(),
+            "covered_by_proxy": [
+                proxy_rule.mihomo()
+                for proxy_rule in microsoft_proxy
+                if rule_covers_rule(proxy_rule, cdn_rule)
+            ],
+        }
+        for cdn_rule in microsoft_cdn
+        if any(rule_covers_rule(proxy_rule, cdn_rule) for proxy_rule in microsoft_proxy)
+    ]
+
     sukka_game_url = config["sukka"]["game_download"]
     meta_game_url = join_url(meta_base, config["metacubex"]["game_download"])
     sukka_game_text = download("sukka/game-download", sukka_game_url)
     meta_game_text = download("metacubex/game-download", meta_game_url)
     sukka_game = parse_domain_text(sukka_game_text, sukka_game_url)
+    sukka_game, sukka_game_marker_removed = drop_sukka_marker(sukka_game)
     meta_game = parse_domain_text(meta_game_text, meta_game_url)
     game_pool = sorted(set(sukka_game) | set(meta_game))
 
@@ -324,14 +499,47 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
     )
 
     summary = {
-        "schema_version": 1,
+        "schema_version": 2,
         "sources": report_sources,
         "domestic": {
             "converted_source_entries": len(domestic_raw),
             "output_entries": len(domestic),
+            "sukka_marker_removed": domestic_marker_removed,
             "wildcard_rules_dropped": dropped_wildcard_count,
             "duplicates_removed": domestic_duplicates,
             "semantically_redundant_removed": domestic_redundant,
+        },
+        "apple_direct": {
+            "source_scope": [apple_cdn_url, apple_services_url],
+            "apple_cdn_domain_entries": len(apple_cdn_raw),
+            "apple_services_domain_entries": len(apple_services_raw),
+            "ignored_non_domain_rules": apple_ignored,
+            "sukka_markers_removed": (
+                apple_cdn_marker_removed + apple_services_marker_removed
+            ),
+            "duplicates_removed": apple_duplicates,
+            "semantically_redundant_removed": apple_redundant,
+            "output_entries": len(apple_direct),
+        },
+        "microsoft": {
+            "cdn_source": microsoft_cdn_url,
+            "proxy_sources": [microsoft_url, meta_microsoft_url],
+            "cdn_source_domain_entries": len(microsoft_cdn_raw),
+            "cdn_output_entries": len(microsoft_cdn),
+            "proxy_base_domain_entries": len(microsoft_base_raw),
+            "keyword_expansion_matches": microsoft_expansion_counts,
+            "keyword_expansion_unique_entries": len(microsoft_expanded),
+            "proxy_output_entries": len(microsoft_proxy),
+            "cdn_duplicates_removed": microsoft_cdn_duplicates,
+            "cdn_semantically_redundant_removed": microsoft_cdn_redundant,
+            "proxy_duplicates_removed": microsoft_duplicates,
+            "proxy_semantically_redundant_removed": microsoft_redundant,
+            "sukka_markers_removed": (
+                microsoft_cdn_marker_removed + microsoft_marker_removed
+            ),
+            "cdn_rules_also_covered_by_proxy": microsoft_cdn_proxy_overlaps,
+            "required_rule_order": ["microsoft-cdn", "microsoft"],
+            "shadowrocket_output_generated": False,
         },
         "steam_cn_download": {
             "source_scope": [sukka_game_url, meta_game_url],
@@ -342,6 +550,7 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
             "duplicates_removed": steam_duplicates,
             "semantically_redundant_removed": steam_redundant,
             "steam_named_unreviewed_count": len(steam_named_not_reviewed),
+            "sukka_marker_removed": sukka_game_marker_removed,
         },
         "shadowrocket": shadowrocket_stats,
     }
@@ -360,6 +569,25 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         f"- Nonessential classical wildcard rules dropped: {dropped_wildcard_count}",
         f"- Exact duplicates removed: {domestic_duplicates}",
         f"- Semantically redundant entries removed: {domestic_redundant}",
+        "",
+        "## Apple direct",
+        "",
+        f"- Apple CDN domain entries: {len(apple_cdn_raw)}",
+        f"- Apple Services domain entries: {len(apple_services_raw)}",
+        f"- Ignored process rules: {apple_ignored.get('PROCESS-NAME', 0)}",
+        f"- Ignored IP rules: {apple_ignored.get('IP-CIDR', 0)}",
+        f"- Final combined output entries: {len(apple_direct)}",
+        "- MetaCubeX Apple and Apple@CN are intentionally not used.",
+        "- The Apple 17.0.0.0/8 rule is intentionally not emitted.",
+        "",
+        "## Microsoft (Mihomo only)",
+        "",
+        f"- CDN direct output entries: {len(microsoft_cdn)}",
+        f"- Microsoft proxy output entries: {len(microsoft_proxy)}",
+        f"- Finite MetaCubeX keyword expansion entries: {len(microsoft_expanded)}",
+        f"- CDN rules also covered by the proxy set: {len(microsoft_cdn_proxy_overlaps)}",
+        "- Required order: microsoft-cdn (DIRECT), then microsoft (proxy).",
+        "- No Microsoft rule is generated for Shadowrocket.",
         "",
         "## Steam China download",
         "",
@@ -381,7 +609,7 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         [
             "## Shadowrocket",
             "",
-            f"- Generated domain sets: {len(shadowrocket_stats) + 1}",
+            f"- Generated domain sets: {len(shadowrocket_stats) + 2}",
             "- APNS and IP rule sets are intentionally not generated by this project.",
             "",
         ]
@@ -403,6 +631,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     try:
         generated = build(args.sources, args.steam_allowlist)
+        stale = sorted(managed_files() - set(generated))
         changed: list[str] = []
         for relative, content in sorted(generated.items()):
             destination = ROOT / relative
@@ -411,13 +640,19 @@ def main(argv: Sequence[str] | None = None) -> int:
                 changed.append(relative)
                 if not args.check:
                     atomic_write(destination, content)
-        if args.check and changed:
+        if not args.check:
+            for relative in stale:
+                (ROOT / relative).unlink()
+        if args.check and (changed or stale):
             print("Generated files are out of date:", file=sys.stderr)
             for relative in changed:
-                print(f"  {relative}", file=sys.stderr)
+                print(f"  changed: {relative}", file=sys.stderr)
+            for relative in stale:
+                print(f"  stale: {relative}", file=sys.stderr)
             return 1
         print(
-            f"Generated {len(generated)} files; changed {len(changed)}."
+            f"Generated {len(generated)} files; changed {len(changed)}, "
+            f"removed {len(stale)} stale files."
             if not args.check
             else f"Generated files are current ({len(generated)} checked)."
         )
