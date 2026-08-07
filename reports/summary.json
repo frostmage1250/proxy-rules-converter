@@ -1,24 +1,370 @@
 {
-  "domestic": {
-    "converted_source_entries": 864,
+  "apple_direct": {
+    "apple_cdn_domain_entries": 158,
+    "apple_services_domain_entries": 16,
     "duplicates_removed": 0,
-    "output_entries": 864,
+    "ignored_non_domain_rules": {
+      "IP-CIDR": 1,
+      "PROCESS-NAME": 8
+    },
+    "output_entries": 65,
+    "semantically_redundant_removed": 109,
+    "source_scope": [
+      "https://ruleset.skk.moe/Clash/domainset/apple_cdn.txt",
+      "https://ruleset.skk.moe/Clash/non_ip/apple_services.txt"
+    ],
+    "sukka_markers_removed": 2
+  },
+  "domestic": {
+    "converted_source_entries": 863,
+    "duplicates_removed": 0,
+    "output_entries": 863,
     "semantically_redundant_removed": 0,
+    "sukka_marker_removed": 1,
     "wildcard_rules_dropped": 1
   },
-  "schema_version": 1,
+  "microsoft": {
+    "cdn_duplicates_removed": 0,
+    "cdn_output_entries": 52,
+    "cdn_rules_also_covered_by_proxy": [
+      {
+        "cdn_rule": "res-1.cdn.office.net",
+        "covered_by_proxy": [
+          "+.office.net"
+        ]
+      },
+      {
+        "cdn_rule": "res-2.cdn.office.net",
+        "covered_by_proxy": [
+          "+.office.net"
+        ]
+      },
+      {
+        "cdn_rule": "res-h3.public.cdn.office.net",
+        "covered_by_proxy": [
+          "+.office.net"
+        ]
+      },
+      {
+        "cdn_rule": "res.cdn.office.net",
+        "covered_by_proxy": [
+          "+.office.net"
+        ]
+      },
+      {
+        "cdn_rule": "statics.teams.cdn.office.net",
+        "covered_by_proxy": [
+          "+.office.net"
+        ]
+      },
+      {
+        "cdn_rule": "+.azuremigrate.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.azuremigratetest.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.azurestackhub.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.azurestackhubuat.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.b.c2r.ts.cdn.office.net",
+        "covered_by_proxy": [
+          "+.office.net"
+        ]
+      },
+      {
+        "cdn_rule": "+.cbdstest.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.collaborate.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.collaborateppe.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.ctldl.windowsupdate.com",
+        "covered_by_proxy": [
+          "+.windowsupdate.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.dl.delivery.mp.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.download.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.download.visualstudio.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.download.windowsupdate.com",
+        "covered_by_proxy": [
+          "+.windowsupdate.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.dreamspark.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.dreamsparkuat.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.f.c2r.ts.cdn.office.net",
+        "covered_by_proxy": [
+          "+.office.net"
+        ]
+      },
+      {
+        "cdn_rule": "+.itacademy.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.itacademyuat.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.lex.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.lexuat.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.mbs.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.mpnbenefits.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.mpnbenefitsrtl.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.mpnbenefitsrtluat.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.msdn.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.msdprod-ad.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.msproduct.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.myvs.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.oemsoc.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.oemsocuat.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.officecdn.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.officemkt.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.officemktuat.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.osrelease.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.rsm.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.sdx.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.software.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.storecorefulfillment.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.storeedge.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.surface.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.surface.downloads.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.vlportal.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.volic.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.vscode.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.vz.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      },
+      {
+        "cdn_rule": "+.windbg.download.prss.microsoft.com",
+        "covered_by_proxy": [
+          "+.microsoft.com"
+        ]
+      }
+    ],
+    "cdn_semantically_redundant_removed": 0,
+    "cdn_source": "https://ruleset.skk.moe/Clash/non_ip/microsoft_cdn.txt",
+    "cdn_source_domain_entries": 52,
+    "keyword_expansion_matches": {
+      "1drv": 1,
+      "hotmail": 6,
+      "microsoft": 180
+    },
+    "keyword_expansion_unique_entries": 186,
+    "proxy_base_domain_entries": 80,
+    "proxy_duplicates_removed": 0,
+    "proxy_output_entries": 212,
+    "proxy_semantically_redundant_removed": 54,
+    "proxy_sources": [
+      "https://ruleset.skk.moe/Clash/non_ip/microsoft.txt",
+      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.list"
+    ],
+    "required_rule_order": [
+      "microsoft-cdn",
+      "microsoft"
+    ],
+    "shadowrocket_output_generated": false,
+    "sukka_markers_removed": 2
+  },
+  "schema_version": 2,
   "shadowrocket": {
     "ai": {
       "duplicates_removed": 0,
       "output_entries": 173,
       "semantically_redundant_removed": 0,
       "source_entries": 173
-    },
-    "apple-cn": {
-      "duplicates_removed": 0,
-      "output_entries": 296,
-      "semantically_redundant_removed": 0,
-      "source_entries": 296
     },
     "facebook": {
       "duplicates_removed": 0,
@@ -37,12 +383,6 @@
       "output_entries": 72,
       "semantically_redundant_removed": 2,
       "source_entries": 74
-    },
-    "microsoft-cn": {
-      "duplicates_removed": 0,
-      "output_entries": 190,
-      "semantically_redundant_removed": 0,
-      "source_entries": 190
     },
     "private": {
       "duplicates_removed": 0,
@@ -93,11 +433,6 @@
       "sha256": "6c969f15640c658293008849091952be9d3928cc68f618ef59b15c4ab9903908",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-!cn.list"
     },
-    "metacubex/apple-cn": {
-      "bytes": 7000,
-      "sha256": "4614f78209faab091436ecc646f817e1c2caac98126759345878011a64eb2a24",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/apple@cn.list"
-    },
     "metacubex/facebook": {
       "bytes": 7120,
       "sha256": "c596908eb3c2227cd9d7b9974f8fed38ad4439118a0a10c4f63c69181313fd9e",
@@ -118,10 +453,10 @@
       "sha256": "e5cba6ce4fa5a0dddbd4710d9dd5b6693c249e6f5be4179401843109ecbca228",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/instagram.list"
     },
-    "metacubex/microsoft-cn": {
-      "bytes": 4255,
-      "sha256": "56e575d9d4c9ac084d44cc77dbc7f8c48d177d391c233e08e69d9826b0cce8c7",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft@cn.list"
+    "metacubex/microsoft": {
+      "bytes": 15501,
+      "sha256": "555ae66b4f0b0610fb3793cb2acd1b99de295ea88fd076fe0393804e29e10327",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.list"
     },
     "metacubex/private": {
       "bytes": 2688,
@@ -158,6 +493,16 @@
       "sha256": "e95f241fa4357918fc1066390c352aad750b571ddea15e3421d30c84e947ac10",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/youtube.list"
     },
+    "sukka/apple-cdn": {
+      "bytes": 4756,
+      "sha256": "8b43c77e550c5eadc51c4ef0869ad99242641086d33b000620839d3b944fe671",
+      "url": "https://ruleset.skk.moe/Clash/domainset/apple_cdn.txt"
+    },
+    "sukka/apple-services": {
+      "bytes": 1157,
+      "sha256": "9c32e8eb6e1d334a85b972791a0afc4b0fc81f57d3a80902a50c9168269f7602",
+      "url": "https://ruleset.skk.moe/Clash/non_ip/apple_services.txt"
+    },
     "sukka/domestic": {
       "bytes": 22504,
       "sha256": "3277c9deba0df731b296128d96e9a111422bd8ad7548a8dde63fd9954370bf1b",
@@ -167,6 +512,16 @@
       "bytes": 1908,
       "sha256": "c3549cee2590fd0f0ccd3febd77159d64cec7335361217f667b5de609248d7a3",
       "url": "https://ruleset.skk.moe/Clash/domainset/game-download.txt"
+    },
+    "sukka/microsoft": {
+      "bytes": 2714,
+      "sha256": "1cc7293548c9f251adf9e373a57bfef3501f6e6756d8234aed5415a5ead4e439",
+      "url": "https://ruleset.skk.moe/Clash/non_ip/microsoft.txt"
+    },
+    "sukka/microsoft-cdn": {
+      "bytes": 3059,
+      "sha256": "1c853a7f845b652558cadb364abdcb790c84200fd4c9889822fe052e1fede403",
+      "url": "https://ruleset.skk.moe/Clash/non_ip/microsoft_cdn.txt"
     }
   },
   "steam_cn_download": {
@@ -231,6 +586,7 @@
       "https://ruleset.skk.moe/Clash/domainset/game-download.txt",
       "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-game-platforms-download.list"
     ],
-    "steam_named_unreviewed_count": 417
+    "steam_named_unreviewed_count": 417,
+    "sukka_marker_removed": 1
   }
 }
