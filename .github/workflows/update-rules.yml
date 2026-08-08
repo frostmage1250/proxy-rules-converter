@@ -27,15 +27,47 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Install latest stable official Mihomo converter
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          release_json="$(gh api repos/MetaCubeX/mihomo/releases/latest)"
+          mihomo_version="$(jq --raw-output '.tag_name' <<< "${release_json}")"
+          asset="mihomo-linux-amd64-compatible-${mihomo_version}.gz"
+          asset_json="$(
+            jq --compact-output --arg name "${asset}" \
+              '.assets[] | select(.name == $name)' <<< "${release_json}"
+          )"
+          download_url="$(jq --raw-output '.browser_download_url' <<< "${asset_json}")"
+          digest="$(jq --raw-output '.digest' <<< "${asset_json}")"
+          if [[ -z "${asset_json}" || "${digest}" != sha256:* ]]; then
+            echo "Latest stable Mihomo release is missing ${asset} or its SHA-256 digest." >&2
+            exit 1
+          fi
+          archive="${RUNNER_TEMP}/${asset}"
+          curl --fail --location --silent --show-error \
+            "${download_url}" \
+            --output "${archive}"
+          echo "${digest#sha256:}  ${archive}" | sha256sum --check
+          gzip --decompress --stdout "${archive}" > "${RUNNER_TEMP}/mihomo"
+          chmod +x "${RUNNER_TEMP}/mihomo"
+          echo "${RUNNER_TEMP}" >> "${GITHUB_PATH}"
+          echo "Using latest stable Mihomo ${mihomo_version}."
+          "${RUNNER_TEMP}/mihomo" -v
+
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
 
       - name: Fetch, convert, and validate rules
-        run: python src/convert_rules.py
+        run: |
+          python src/convert_rules.py
+          python src/convert_mrs.py
 
       - name: Verify generated files are deterministic
         run: |
           python src/convert_rules.py --check
+          python src/convert_mrs.py --check
           git diff --check
 
       - name: Commit changed generated files

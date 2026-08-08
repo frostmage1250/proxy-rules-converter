@@ -63,11 +63,17 @@ type, removes duplicates and covered entries, and commits only changed generated
 dist/
 ├─ mihomo/
 │  ├─ apple-direct.list
+│  ├─ apple-direct.mrs
 │  ├─ domestic.list
+│  ├─ domestic.mrs
 │  ├─ global.list
+│  ├─ global.mrs
 │  ├─ microsoft-cdn.list
+│  ├─ microsoft-cdn.mrs
 │  ├─ microsoft.list
-│  └─ steam-cn-download.list
+│  ├─ microsoft.mrs
+│  ├─ steam-cn-download.list
+│  └─ steam-cn-download.mrs
 └─ shadowrocket/
    ├─ apple-direct.domain-set
    ├─ bilibili-direct.list
@@ -85,19 +91,34 @@ dist/
    └─ ai.domain-set
 ```
 
-Mihomo files use the `.list` filename extension with provider `format: text`.
+Each Mihomo provider is published twice: a readable `.list` source with
+`format: text`, and a compact `.mrs` binary compiled by Mihomo's official
+`convert-ruleset` command. On every run, the workflow resolves the latest stable
+official Mihomo release through GitHub's `releases/latest` API, selects the compatible
+Linux AMD64 build, and verifies the asset's published SHA-256 digest before conversion.
+Pre-releases such as Alpha are intentionally excluded.
 Shadowrocket files use native DOMAIN-SET syntax. `reports/summary.json` records source
 URLs and hashes, counts, ignored rules, deduplication, keyword expansion, and ordering
 requirements.
 
 ## Run locally
 
-Python 3.11 or newer is sufficient; no third-party packages are needed.
+Python 3.11 or newer is sufficient for the text converter; no third-party Python
+packages are needed. MRS generation additionally requires the official `mihomo`
+executable in `PATH`, through `MIHOMO_BIN`, or with `--mihomo`.
 
 ```bash
 python -m unittest discover -s tests -v
 python src/convert_rules.py
+python src/convert_mrs.py
 python src/convert_rules.py --check
+python src/convert_mrs.py --check
+```
+
+The MRS wrapper runs the official command for every `dist/mihomo/*.list` file:
+
+```text
+mihomo convert-ruleset domain text input.list output.mrs
 ```
 
 ## GitHub Actions schedule
@@ -106,6 +127,16 @@ The **Update generated rules** workflow supports manual runs and runs daily at
 18:23 UTC, which is 02:23 the following day in Asia/Shanghai. It commits only when
 `dist/` or `reports/` actually changes. The repository is independent rather than a
 GitHub fork; upstream attribution and licensing are documented in `NOTICE.md`.
+
+There is no separate upstream download timer or cache: every workflow run fetches all
+configured upstream rule sets immediately before conversion. The scheduled upstream
+refresh interval and conversion interval are therefore both one day. Mihomo client
+examples below also use `interval: 86400`, so published providers are checked daily.
+
+Dependabot checks only the GitHub Actions development dependencies once per day. A
+three-day cooldown keeps newly published versions out of update PRs until they have had
+time to stabilize; application rule sources and generated providers are not part of
+this dependency-update configuration.
 
 ## Mihomo configuration
 
@@ -116,36 +147,36 @@ rule-providers:
     interval: 86400
     proxy: MESL
     behavior: domain
-    format: text
-    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/apple-direct.list"
-    path: ./ruleset/apple-direct.list
+    format: mrs
+    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/apple-direct.mrs"
+    path: ./ruleset/apple-direct.mrs
 
   microsoft_cdn:
     type: http
     interval: 86400
     proxy: MESL
     behavior: domain
-    format: text
-    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/microsoft-cdn.list"
-    path: ./ruleset/microsoft-cdn.list
+    format: mrs
+    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/microsoft-cdn.mrs"
+    path: ./ruleset/microsoft-cdn.mrs
 
   microsoft:
     type: http
     interval: 86400
     proxy: MESL
     behavior: domain
-    format: text
-    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/microsoft.list"
-    path: ./ruleset/microsoft.list
+    format: mrs
+    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/microsoft.mrs"
+    path: ./ruleset/microsoft.mrs
 
   global:
     type: http
     interval: 86400
     proxy: MESL
     behavior: domain
-    format: text
-    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/global.list"
-    path: ./ruleset/global.list
+    format: mrs
+    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/global.mrs"
+    path: ./ruleset/global.mrs
 ```
 
 The relevant rule order is:

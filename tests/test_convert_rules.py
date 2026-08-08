@@ -19,6 +19,7 @@ from convert_rules import (  # noqa: E402
     drop_domain_fragments,
     expand_domain_keywords,
     is_droppable_domestic_wildcard,
+    is_externally_managed_output,
     parse_classical_domains,
     parse_domain_text,
     render_rules,
@@ -28,6 +29,17 @@ from convert_rules import (  # noqa: E402
 
 
 class ConverterTests(unittest.TestCase):
+    def test_mrs_outputs_are_owned_by_the_official_converter(self) -> None:
+        self.assertTrue(
+            is_externally_managed_output(ROOT / "dist" / "mihomo" / "global.mrs")
+        )
+        self.assertFalse(
+            is_externally_managed_output(ROOT / "dist" / "mihomo" / "global.list")
+        )
+        self.assertFalse(
+            is_externally_managed_output(ROOT / "dist" / "shadowrocket" / "global.mrs")
+        )
+
     def test_parse_non_classical_domain_text(self) -> None:
         rules = parse_domain_text("example.com\n+.example.org\n", "test")
         self.assertEqual(

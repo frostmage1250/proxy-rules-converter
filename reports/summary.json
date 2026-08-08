@@ -16,9 +16,9 @@
     "sukka_markers_removed": 2
   },
   "domestic": {
-    "converted_source_entries": 863,
+    "converted_source_entries": 864,
     "duplicates_removed": 0,
-    "output_entries": 863,
+    "output_entries": 864,
     "semantically_redundant_removed": 0,
     "sukka_marker_removed": 1,
     "wildcard_rules_dropped": 1
@@ -614,8 +614,8 @@
       "url": "https://ruleset.skk.moe/Clash/non_ip/apple_services.txt"
     },
     "sukka/domestic": {
-      "bytes": 22504,
-      "sha256": "3277c9deba0df731b296128d96e9a111422bd8ad7548a8dde63fd9954370bf1b",
+      "bytes": 22532,
+      "sha256": "e86dead64f2ca26ad980ba5ffa7d41c4a82a0fa8acec371a239a52719a387ec4",
       "url": "https://ruleset.skk.moe/Clash/non_ip/domestic.txt"
     },
     "sukka/game-download": {

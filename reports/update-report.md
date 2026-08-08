@@ -4,7 +4,7 @@ This report is deterministic; no build timestamp is embedded.
 
 ## Domestic
 
-- Output entries: 863
+- Output entries: 864
 - Nonessential classical wildcard rules dropped: 1
 - Exact duplicates removed: 0
 - Semantically redundant entries removed: 0

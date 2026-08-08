@@ -46,6 +46,12 @@ STATIC_OUTPUTS = frozenset(
 MANAGED_OUTPUT_ROOTS = (ROOT / "dist", ROOT / "reports")
 
 
+def is_externally_managed_output(path: Path) -> bool:
+    """Return whether another repository generator owns this output."""
+
+    return path.parent == ROOT / "dist" / "mihomo" and path.suffix == ".mrs"
+
+
 class ConversionError(RuntimeError):
     """Raised when an upstream rule cannot be converted without guesswork."""
 
@@ -347,6 +353,7 @@ def managed_files() -> set[str]:
             if path.is_file()
             for relative in [path.relative_to(ROOT).as_posix()]
             if relative not in STATIC_OUTPUTS
+            if not is_externally_managed_output(path)
         )
     return files
 
