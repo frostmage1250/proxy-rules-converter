@@ -22,6 +22,7 @@ from convert_rules import (  # noqa: E402
     is_externally_managed_output,
     parse_classical_domains,
     parse_domain_text,
+    parse_ipcidr_text,
     render_rules,
     rule_covers_domain,
     semantic_minimize,
@@ -29,6 +30,26 @@ from convert_rules import (  # noqa: E402
 
 
 class ConverterTests(unittest.TestCase):
+    def test_parses_and_deduplicates_ipv4_cidrs(self) -> None:
+        entries, duplicates = parse_ipcidr_text(
+            "# comment\n1.1.8.0/24\n1.1.8.0/24\n", "test", 4
+        )
+        self.assertEqual(entries, ["1.1.8.0/24"])
+        self.assertEqual(duplicates, 1)
+
+    def test_parses_ipv6_cidrs(self) -> None:
+        entries, duplicates = parse_ipcidr_text("2001:250::/30\n", "test", 6)
+        self.assertEqual(entries, ["2001:250::/30"])
+        self.assertEqual(duplicates, 0)
+
+    def test_rejects_wrong_ip_family(self) -> None:
+        with self.assertRaises(ConversionError):
+            parse_ipcidr_text("2001:250::/30\n", "test", 4)
+
+    def test_rejects_noncanonical_cidr(self) -> None:
+        with self.assertRaises(ConversionError):
+            parse_ipcidr_text("1.1.8.1/24\n", "test", 4)
+
     def test_mrs_outputs_are_owned_by_the_official_converter(self) -> None:
         self.assertTrue(
             is_externally_managed_output(ROOT / "dist" / "mihomo" / "global.mrs")

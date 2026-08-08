@@ -49,6 +49,14 @@ type, removes duplicates and covered entries, and commits only changed generated
   reintroduced indirectly.
 - Do not generate a Shadowrocket Global or GFW provider.
 
+### Mihomo China IP providers
+
+- Fetch Sukka's `china_ip.txt` and `china_ip_ipv6.txt` directly on every build.
+- Validate every entry as a canonical IPv4 or IPv6 network and reject mixed families.
+- Download into temporary text files and publish only `.mrs` files compiled with
+  Mihomo's official `ipcidr` converter behavior.
+- Do not generate corresponding Shadowrocket IP providers.
+
 ### Other Shadowrocket providers
 
 - Convert only MetaCubeX non-classical `.list` domain data to native DOMAIN-SET text.
@@ -64,6 +72,8 @@ dist/
 ├─ mihomo/
 │  ├─ apple-direct.list
 │  ├─ apple-direct.mrs
+│  ├─ china-ip.mrs
+│  ├─ china-ip-ipv6.mrs
 │  ├─ domestic.list
 │  ├─ domestic.mrs
 │  ├─ global.list
@@ -91,9 +101,10 @@ dist/
    └─ ai.domain-set
 ```
 
-Each Mihomo provider is published twice: a readable `.list` source with
-`format: text`, and a compact `.mrs` binary compiled by Mihomo's official
-`convert-ruleset` command. On every run, the workflow resolves the latest stable
+Each Mihomo domain provider is published twice: a readable `.list` source with
+`format: text`, and a compact `.mrs` binary. The two China IP providers publish only
+their compact `.mrs` binaries; their downloaded text is temporary. All binaries are
+compiled by Mihomo's official `convert-ruleset` command. On every run, the workflow resolves the latest stable
 official Mihomo release through GitHub's `releases/latest` API, selects the compatible
 Linux AMD64 build, and verifies the asset's published SHA-256 digest before conversion.
 Pre-releases such as Alpha are intentionally excluded.
@@ -115,10 +126,12 @@ python src/convert_rules.py --check
 python src/convert_mrs.py --check
 ```
 
-The MRS wrapper runs the official command for every `dist/mihomo/*.list` file:
+The MRS wrapper runs the official command for every `dist/mihomo/*.list` file,
+selecting the behavior assigned to that provider:
 
 ```text
 mihomo convert-ruleset domain text input.list output.mrs
+mihomo convert-ruleset ipcidr text input.list output.mrs
 ```
 
 ## GitHub Actions schedule
@@ -142,6 +155,24 @@ this dependency-update configuration.
 
 ```yaml
 rule-providers:
+  china_ip:
+    type: http
+    interval: 86400
+    proxy: MESL
+    behavior: ipcidr
+    format: mrs
+    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/china-ip.mrs"
+    path: ./ruleset/china-ip.mrs
+
+  china_ip_ipv6:
+    type: http
+    interval: 86400
+    proxy: MESL
+    behavior: ipcidr
+    format: mrs
+    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/china-ip-ipv6.mrs"
+    path: ./ruleset/china-ip-ipv6.mrs
+
   apple_direct:
     type: http
     interval: 86400
