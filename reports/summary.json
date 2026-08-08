@@ -20,7 +20,7 @@
       "behavior": "ipcidr",
       "duplicates_removed": 0,
       "ip_version": 4,
-      "output_entries": 3906,
+      "output_entries": 3908,
       "source": "https://ruleset.skk.moe/Clash/ip/china_ip.txt"
     },
     "china_ip_ipv6": {
@@ -119,6 +119,7 @@
     ],
     "output_entries": 2252,
     "semantically_redundant_removed": 439,
+    "shadowrocket_output_generated": true,
     "source_scope": [
       "https://ruleset.skk.moe/Clash/non_ip/global.txt",
       "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/discord.list",
@@ -630,8 +631,8 @@
       "url": "https://ruleset.skk.moe/Clash/non_ip/apple_services.txt"
     },
     "sukka/china-ip": {
-      "bytes": 61237,
-      "sha256": "4490c95417204e079e7c2006a34a5acee525dcaba86417b1b4c94dfb449f8858",
+      "bytes": 61268,
+      "sha256": "8836290806f407d464ebf1b3a4a57f31e128c3407dd4de683852949718f04c5e",
       "url": "https://ruleset.skk.moe/Clash/ip/china_ip.txt"
     },
     "sukka/china-ip-ipv6": {
