@@ -9,10 +9,6 @@ on:
 permissions:
   contents: write
 
-env:
-  MIHOMO_VERSION: v1.19.28
-  MIHOMO_LINUX_AMD64_SHA256: 70d01cfb8cb7bf7a92fd1af16cb4b9553d90bb4eecde3b5c4849103e27c80ddb
-
 concurrency:
   group: update-generated-rules
   cancel-in-progress: false
@@ -31,18 +27,33 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install official Mihomo converter
+      - name: Install latest stable official Mihomo converter
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          asset="mihomo-linux-amd64-compatible-${MIHOMO_VERSION}.gz"
+          release_json="$(gh api repos/MetaCubeX/mihomo/releases/latest)"
+          mihomo_version="$(jq --raw-output '.tag_name' <<< "${release_json}")"
+          asset="mihomo-linux-amd64-compatible-${mihomo_version}.gz"
+          asset_json="$(
+            jq --compact-output --arg name "${asset}" \
+              '.assets[] | select(.name == $name)' <<< "${release_json}"
+          )"
+          download_url="$(jq --raw-output '.browser_download_url' <<< "${asset_json}")"
+          digest="$(jq --raw-output '.digest' <<< "${asset_json}")"
+          if [[ -z "${asset_json}" || "${digest}" != sha256:* ]]; then
+            echo "Latest stable Mihomo release is missing ${asset} or its SHA-256 digest." >&2
+            exit 1
+          fi
           archive="${RUNNER_TEMP}/${asset}"
           curl --fail --location --silent --show-error \
-            "https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/${asset}" \
+            "${download_url}" \
             --output "${archive}"
-          echo "${MIHOMO_LINUX_AMD64_SHA256}  ${archive}" | sha256sum --check
+          echo "${digest#sha256:}  ${archive}" | sha256sum --check
           gzip --decompress --stdout "${archive}" > "${RUNNER_TEMP}/mihomo"
           chmod +x "${RUNNER_TEMP}/mihomo"
           echo "${RUNNER_TEMP}" >> "${GITHUB_PATH}"
+          echo "Using latest stable Mihomo ${mihomo_version}."
           "${RUNNER_TEMP}/mihomo" -v
 
       - name: Run unit tests

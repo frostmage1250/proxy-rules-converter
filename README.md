@@ -93,8 +93,10 @@ dist/
 
 Each Mihomo provider is published twice: a readable `.list` source with
 `format: text`, and a compact `.mrs` binary compiled by Mihomo's official
-`convert-ruleset` command. The workflow pins the official Mihomo release and verifies
-its SHA-256 digest before conversion.
+`convert-ruleset` command. On every run, the workflow resolves the latest stable
+official Mihomo release through GitHub's `releases/latest` API, selects the compatible
+Linux AMD64 build, and verifies the asset's published SHA-256 digest before conversion.
+Pre-releases such as Alpha are intentionally excluded.
 Shadowrocket files use native DOMAIN-SET syntax. `reports/summary.json` records source
 URLs and hashes, counts, ignored rules, deduplication, keyword expansion, and ordering
 requirements.
