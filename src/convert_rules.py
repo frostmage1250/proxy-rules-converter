@@ -472,6 +472,9 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         [*global_base_raw, *global_branch_rules]
     )
     outputs["dist/mihomo/global.list"] = render_rules(global_rules, "mihomo")
+    outputs["dist/shadowrocket/global.domain-set"] = render_rules(
+        global_rules, "shadowrocket"
+    )
 
     shadowrocket_stats: dict[str, dict[str, int]] = {}
     for output_name, source_leaf in config["metacubex"]["shadowrocket"].items():
@@ -654,6 +657,7 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
             "semantically_redundant_removed": global_redundant,
             "sukka_marker_removed": global_marker_removed,
             "output_entries": len(global_rules),
+            "shadowrocket_output_generated": True,
         },
         "apple_direct": {
             "source_scope": [apple_cdn_url, apple_services_url],
@@ -733,7 +737,7 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         "- MetaCubeX Apple and Apple@CN are intentionally not used.",
         "- The Apple 17.0.0.0/8 rule is intentionally not emitted.",
         "",
-        "## Global (Mihomo only)",
+        "## Global",
         "",
         f"- Sukka explicit domain entries: {len(global_base_raw)}",
         f"- MetaCubeX branch entries before exclusions: {global_branch_raw_count}",
@@ -742,7 +746,7 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         f"- Semantically redundant entries removed: {global_redundant}",
         "- Expanded branches: " + ", ".join(sorted(GLOBAL_EXPANDED_KEYWORDS)) + ".",
         "- Dropped completely: " + ", ".join(sorted(GLOBAL_DROPPED_KEYWORDS)) + ".",
-        "- No Shadowrocket Global provider is generated.",
+        "- The same canonical rules are rendered as a Shadowrocket DOMAIN-SET.",
         "",
         "## Microsoft (Mihomo only)",
         "",
@@ -773,7 +777,7 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         [
             "## Shadowrocket",
             "",
-            f"- Generated domain sets: {len(shadowrocket_stats) + 2}",
+            f"- Generated domain sets: {len(shadowrocket_stats) + 3}",
             f"- Static hand-maintained domain sets: {len(STATIC_OUTPUTS)}",
             "- APNS and Shadowrocket IP rule sets are intentionally not generated.",
             "",

@@ -4,7 +4,7 @@ This report is deterministic; no build timestamp is embedded.
 
 ## China IP (Mihomo only)
 
-- IPv4 output entries: 3906
+- IPv4 output entries: 3908
 - IPv6 output entries: 1618
 - Both providers are compiled with Mihomo behavior `ipcidr`.
 - No Shadowrocket IP provider is generated.
@@ -26,7 +26,7 @@ This report is deterministic; no build timestamp is embedded.
 - MetaCubeX Apple and Apple@CN are intentionally not used.
 - The Apple 17.0.0.0/8 rule is intentionally not emitted.
 
-## Global (Mihomo only)
+## Global
 
 - Sukka explicit domain entries: 1259
 - MetaCubeX branch entries before exclusions: 1576
@@ -35,7 +35,7 @@ This report is deterministic; no build timestamp is embedded.
 - Semantically redundant entries removed: 439
 - Expanded branches: discord, dropbox, facebook, google, pinterest, whatsapp.
 - Dropped completely: blogspot, browserleaks, sci-hub.
-- No Shadowrocket Global provider is generated.
+- The same canonical rules are rendered as a Shadowrocket DOMAIN-SET.
 
 ## Microsoft (Mihomo only)
 
@@ -59,6 +59,6 @@ Final entries:
 
 ## Shadowrocket
 
-- Generated domain sets: 12
+- Generated domain sets: 13
 - Static hand-maintained domain sets: 2
 - APNS and Shadowrocket IP rule sets are intentionally not generated.
