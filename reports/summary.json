@@ -23,6 +23,97 @@
     "sukka_marker_removed": 1,
     "wildcard_rules_dropped": 1
   },
+  "global": {
+    "base_domain_entries": 1259,
+    "base_excluded_fragments": {
+      "blogspot": 0,
+      "browserleaks": 0,
+      "sci-hub": 0
+    },
+    "branch_source_entries": 1576,
+    "branches": {
+      "discord": {
+        "entries_after_exclusions": 28,
+        "excluded_fragments": {
+          "blogspot": 0,
+          "browserleaks": 0,
+          "sci-hub": 0
+        },
+        "source_entries": 28
+      },
+      "dropbox": {
+        "entries_after_exclusions": 16,
+        "excluded_fragments": {
+          "blogspot": 0,
+          "browserleaks": 0,
+          "sci-hub": 0
+        },
+        "source_entries": 16
+      },
+      "facebook": {
+        "entries_after_exclusions": 396,
+        "excluded_fragments": {
+          "blogspot": 0,
+          "browserleaks": 0,
+          "sci-hub": 0
+        },
+        "source_entries": 396
+      },
+      "google": {
+        "entries_after_exclusions": 998,
+        "excluded_fragments": {
+          "blogspot": 73,
+          "browserleaks": 0,
+          "sci-hub": 0
+        },
+        "source_entries": 1071
+      },
+      "pinterest": {
+        "entries_after_exclusions": 52,
+        "excluded_fragments": {
+          "blogspot": 0,
+          "browserleaks": 0,
+          "sci-hub": 0
+        },
+        "source_entries": 52
+      },
+      "whatsapp": {
+        "entries_after_exclusions": 13,
+        "excluded_fragments": {
+          "blogspot": 0,
+          "browserleaks": 0,
+          "sci-hub": 0
+        },
+        "source_entries": 13
+      }
+    },
+    "dropped_keywords": [
+      "blogspot",
+      "browserleaks",
+      "sci-hub"
+    ],
+    "duplicates_removed": 71,
+    "expanded_keywords": [
+      "discord",
+      "dropbox",
+      "facebook",
+      "google",
+      "pinterest",
+      "whatsapp"
+    ],
+    "output_entries": 2252,
+    "semantically_redundant_removed": 439,
+    "source_scope": [
+      "https://ruleset.skk.moe/Clash/non_ip/global.txt",
+      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/discord.list",
+      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/dropbox.list",
+      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/facebook.list",
+      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google.list",
+      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/pinterest.list",
+      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/whatsapp.list"
+    ],
+    "sukka_marker_removed": 1
+  },
   "microsoft": {
     "cdn_duplicates_removed": 0,
     "cdn_output_entries": 52,
@@ -358,7 +449,7 @@
     "shadowrocket_output_generated": false,
     "sukka_markers_removed": 2
   },
-  "schema_version": 2,
+  "schema_version": 3,
   "shadowrocket": {
     "ai": {
       "duplicates_removed": 0,
@@ -371,12 +462,6 @@
       "output_entries": 394,
       "semantically_redundant_removed": 2,
       "source_entries": 396
-    },
-    "gfw": {
-      "duplicates_removed": 0,
-      "output_entries": 4332,
-      "semantically_redundant_removed": 0,
-      "source_entries": 4332
     },
     "instagram": {
       "duplicates_removed": 0,
@@ -430,7 +515,7 @@
   "sources": {
     "metacubex/ai": {
       "bytes": 3351,
-      "sha256": "6c969f15640c658293008849091952be9d3928cc68f618ef59b15c4ab9903908",
+      "sha256": "30ecee6cb91262463663af1400dd919c5fa4908b4496b0f9a2d1edfe78243874",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-!cn.list"
     },
     "metacubex/facebook": {
@@ -443,10 +528,35 @@
       "sha256": "ec2f9dc32cd69644ca94b809a781121e4dee581885c3ac19332d7104a746ce07",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-game-platforms-download.list"
     },
-    "metacubex/gfw": {
-      "bytes": 66677,
-      "sha256": "02a24f9367e3b0c275e11b30ac21f5a820872cdbc53a9b97fbf439c93b3c7216",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/gfw.list"
+    "metacubex/global/discord": {
+      "bytes": 542,
+      "sha256": "9f2530e2dc4117a27851256d731908931064bc6c9fefe43f69cc164804a33456",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/discord.list"
+    },
+    "metacubex/global/dropbox": {
+      "bytes": 312,
+      "sha256": "08b94c5a0979054b356d45c4befc78a61345b3ba2d272a91ba57da5c3ab29ba9",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/dropbox.list"
+    },
+    "metacubex/global/facebook": {
+      "bytes": 7120,
+      "sha256": "c596908eb3c2227cd9d7b9974f8fed38ad4439118a0a10c4f63c69181313fd9e",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/facebook.list"
+    },
+    "metacubex/global/google": {
+      "bytes": 18231,
+      "sha256": "b5395746cca0cce497fd91108d62d5d2c33fc811192439c5aa18d6a9d4392aa1",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google.list"
+    },
+    "metacubex/global/pinterest": {
+      "bytes": 865,
+      "sha256": "746287c3d7a99ed19edef7dfec4244b50cae8a5db22c2ceffe6f377245296226",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/pinterest.list"
+    },
+    "metacubex/global/whatsapp": {
+      "bytes": 218,
+      "sha256": "5554ce8069e2b3ca3222f112b2192652e96e5574be9096f71579191c8d498bfc",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/whatsapp.list"
     },
     "metacubex/instagram": {
       "bytes": 1447,
@@ -455,7 +565,7 @@
     },
     "metacubex/microsoft": {
       "bytes": 15501,
-      "sha256": "555ae66b4f0b0610fb3793cb2acd1b99de295ea88fd076fe0393804e29e10327",
+      "sha256": "078bc09f81412b643e2c0ed09166d4810204b07fd84aefba1f0e0bdcee709b29",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.list"
     },
     "metacubex/private": {
@@ -512,6 +622,11 @@
       "bytes": 1908,
       "sha256": "c3549cee2590fd0f0ccd3febd77159d64cec7335361217f667b5de609248d7a3",
       "url": "https://ruleset.skk.moe/Clash/domainset/game-download.txt"
+    },
+    "sukka/global": {
+      "bytes": 33221,
+      "sha256": "70639efaab105eba6b4b677c941a4085ae7ef108c55296879395267b8e0e29b3",
+      "url": "https://ruleset.skk.moe/Clash/non_ip/global.txt"
     },
     "sukka/microsoft": {
       "bytes": 2714,

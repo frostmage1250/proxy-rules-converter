@@ -32,6 +32,17 @@ USER_AGENT = (
 DOMAIN_LABEL_RE = re.compile(r"^[a-z0-9_](?:[a-z0-9_-]{0,61}[a-z0-9_])?$", re.I)
 SUKKA_ATTRIBUTION_MARKER = "7h15.ru1353t.1s.m4d3.by.5ukk4w.skk.moe"
 MICROSOFT_KEYWORDS = frozenset({"1drv", "microsoft", "hotmail"})
+GLOBAL_EXPANDED_KEYWORDS = frozenset(
+    {"google", "facebook", "whatsapp", "discord", "dropbox", "pinterest"}
+)
+GLOBAL_DROPPED_KEYWORDS = frozenset({"blogspot", "sci-hub", "browserleaks"})
+GLOBAL_KEYWORDS = GLOBAL_EXPANDED_KEYWORDS | GLOBAL_DROPPED_KEYWORDS
+STATIC_OUTPUTS = frozenset(
+    {
+        "dist/shadowrocket/bilibili-direct.list",
+        "dist/shadowrocket/bilibili-pcdn.list",
+    }
+)
 MANAGED_OUTPUT_ROOTS = (ROOT / "dist", ROOT / "reports")
 
 
@@ -199,6 +210,24 @@ def drop_sukka_marker(rules: Iterable[DomainRule]) -> tuple[list[DomainRule], in
     return kept, len(materialized) - len(kept)
 
 
+def drop_domain_fragments(
+    rules: Iterable[DomainRule], fragments: Iterable[str]
+) -> tuple[list[DomainRule], dict[str, int]]:
+    """Drop domains containing explicitly excluded case-normalized fragments."""
+
+    excluded = sorted({fragment.strip().lower() for fragment in fragments})
+    counts = {fragment: 0 for fragment in excluded}
+    kept: list[DomainRule] = []
+    for rule in rules:
+        matches = [fragment for fragment in excluded if fragment in rule.value]
+        if matches:
+            for fragment in matches:
+                counts[fragment] += 1
+            continue
+        kept.append(rule)
+    return kept, counts
+
+
 def expand_domain_keywords(
     keywords: Iterable[str], reference_rules: Iterable[DomainRule]
 ) -> tuple[list[DomainRule], dict[str, int]]:
@@ -313,9 +342,11 @@ def managed_files() -> set[str]:
         if not output_root.exists():
             continue
         files.update(
-            path.relative_to(ROOT).as_posix()
+            relative
             for path in output_root.rglob("*")
             if path.is_file()
+            for relative in [path.relative_to(ROOT).as_posix()]
+            if relative not in STATIC_OUTPUTS
         )
     return files
 
@@ -347,6 +378,55 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
     )
 
     meta_base = config["metacubex"]["base"]
+
+    global_url = config["sukka"]["global"]
+    global_text = download("sukka/global", global_url)
+    global_base_raw, global_keywords, global_ignored = parse_classical_domains(
+        global_text,
+        global_url,
+        allowed_keywords=GLOBAL_KEYWORDS,
+    )
+    if global_ignored:
+        raise ConversionError("Sukka Global contains an unexpected ignored rule")
+    if set(global_keywords) != GLOBAL_KEYWORDS:
+        raise ConversionError(
+            "Sukka Global keyword set changed; expected exactly "
+            + ", ".join(sorted(GLOBAL_KEYWORDS))
+        )
+    global_base_raw, global_marker_removed = drop_sukka_marker(global_base_raw)
+    global_base_raw, global_base_excluded = drop_domain_fragments(
+        global_base_raw, GLOBAL_DROPPED_KEYWORDS
+    )
+
+    configured_global_branches = config["metacubex"]["global_keyword_branches"]
+    if set(configured_global_branches) != GLOBAL_EXPANDED_KEYWORDS:
+        raise ConversionError(
+            "MetaCubeX Global branch mapping must contain exactly "
+            + ", ".join(sorted(GLOBAL_EXPANDED_KEYWORDS))
+        )
+    global_branch_raw_count = 0
+    global_branch_rules: list[DomainRule] = []
+    global_branch_stats: dict[str, dict[str, object]] = {}
+    for keyword in sorted(GLOBAL_EXPANDED_KEYWORDS):
+        branch_url = join_url(meta_base, configured_global_branches[keyword])
+        branch_text = download(f"metacubex/global/{keyword}", branch_url)
+        branch_raw = parse_domain_text(branch_text, branch_url)
+        global_branch_raw_count += len(branch_raw)
+        branch_kept, branch_excluded = drop_domain_fragments(
+            branch_raw, GLOBAL_DROPPED_KEYWORDS
+        )
+        global_branch_rules.extend(branch_kept)
+        global_branch_stats[keyword] = {
+            "source_entries": len(branch_raw),
+            "entries_after_exclusions": len(branch_kept),
+            "excluded_fragments": branch_excluded,
+        }
+
+    global_rules, global_duplicates, global_redundant = semantic_minimize(
+        [*global_base_raw, *global_branch_rules]
+    )
+    outputs["dist/mihomo/global.list"] = render_rules(global_rules, "mihomo")
+
     shadowrocket_stats: dict[str, dict[str, int]] = {}
     for output_name, source_leaf in config["metacubex"]["shadowrocket"].items():
         url = join_url(meta_base, source_leaf)
@@ -499,7 +579,7 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
     )
 
     summary = {
-        "schema_version": 2,
+        "schema_version": 3,
         "sources": report_sources,
         "domestic": {
             "converted_source_entries": len(domestic_raw),
@@ -508,6 +588,25 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
             "wildcard_rules_dropped": dropped_wildcard_count,
             "duplicates_removed": domestic_duplicates,
             "semantically_redundant_removed": domestic_redundant,
+        },
+        "global": {
+            "source_scope": [
+                global_url,
+                *[
+                    join_url(meta_base, configured_global_branches[keyword])
+                    for keyword in sorted(GLOBAL_EXPANDED_KEYWORDS)
+                ],
+            ],
+            "base_domain_entries": len(global_base_raw),
+            "expanded_keywords": sorted(GLOBAL_EXPANDED_KEYWORDS),
+            "dropped_keywords": sorted(GLOBAL_DROPPED_KEYWORDS),
+            "base_excluded_fragments": global_base_excluded,
+            "branch_source_entries": global_branch_raw_count,
+            "branches": global_branch_stats,
+            "duplicates_removed": global_duplicates,
+            "semantically_redundant_removed": global_redundant,
+            "sukka_marker_removed": global_marker_removed,
+            "output_entries": len(global_rules),
         },
         "apple_direct": {
             "source_scope": [apple_cdn_url, apple_services_url],
@@ -580,6 +679,17 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         "- MetaCubeX Apple and Apple@CN are intentionally not used.",
         "- The Apple 17.0.0.0/8 rule is intentionally not emitted.",
         "",
+        "## Global (Mihomo only)",
+        "",
+        f"- Sukka explicit domain entries: {len(global_base_raw)}",
+        f"- MetaCubeX branch entries before exclusions: {global_branch_raw_count}",
+        f"- Final output entries: {len(global_rules)}",
+        f"- Exact duplicates removed: {global_duplicates}",
+        f"- Semantically redundant entries removed: {global_redundant}",
+        "- Expanded branches: " + ", ".join(sorted(GLOBAL_EXPANDED_KEYWORDS)) + ".",
+        "- Dropped completely: " + ", ".join(sorted(GLOBAL_DROPPED_KEYWORDS)) + ".",
+        "- No Shadowrocket Global provider is generated.",
+        "",
         "## Microsoft (Mihomo only)",
         "",
         f"- CDN direct output entries: {len(microsoft_cdn)}",
@@ -610,6 +720,7 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
             "## Shadowrocket",
             "",
             f"- Generated domain sets: {len(shadowrocket_stats) + 2}",
+            f"- Static hand-maintained domain sets: {len(STATIC_OUTPUTS)}",
             "- APNS and IP rule sets are intentionally not generated by this project.",
             "",
         ]

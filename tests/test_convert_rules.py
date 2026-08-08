@@ -11,9 +11,12 @@ sys.path.insert(0, str(ROOT / "src"))
 from convert_rules import (  # noqa: E402
     ConversionError,
     DomainRule,
+    GLOBAL_DROPPED_KEYWORDS,
+    GLOBAL_EXPANDED_KEYWORDS,
     MICROSOFT_KEYWORDS,
     SUKKA_ATTRIBUTION_MARKER,
     drop_sukka_marker,
+    drop_domain_fragments,
     expand_domain_keywords,
     is_droppable_domestic_wildcard,
     parse_classical_domains,
@@ -117,6 +120,30 @@ class ConverterTests(unittest.TestCase):
         )
         self.assertEqual(rules, [DomainRule("suffix", "example.com")])
         self.assertEqual(removed, 1)
+
+    def test_global_keyword_policy_is_explicit_and_disjoint(self) -> None:
+        self.assertEqual(
+            GLOBAL_EXPANDED_KEYWORDS,
+            {"google", "facebook", "whatsapp", "discord", "dropbox", "pinterest"},
+        )
+        self.assertEqual(
+            GLOBAL_DROPPED_KEYWORDS, {"blogspot", "sci-hub", "browserleaks"}
+        )
+        self.assertFalse(GLOBAL_EXPANDED_KEYWORDS & GLOBAL_DROPPED_KEYWORDS)
+
+    def test_dropped_global_fragments_do_not_return_through_branches(self) -> None:
+        rules, counts = drop_domain_fragments(
+            [
+                DomainRule("suffix", "blogspot.com"),
+                DomainRule("exact", "browserleaks.com"),
+                DomainRule("suffix", "google.com"),
+            ],
+            GLOBAL_DROPPED_KEYWORDS,
+        )
+        self.assertEqual(rules, [DomainRule("suffix", "google.com")])
+        self.assertEqual(counts["blogspot"], 1)
+        self.assertEqual(counts["browserleaks"], 1)
+        self.assertEqual(counts["sci-hub"], 0)
 
 
 if __name__ == "__main__":
