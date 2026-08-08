@@ -128,6 +128,11 @@ The **Update generated rules** workflow supports manual runs and runs daily at
 `dist/` or `reports/` actually changes. The repository is independent rather than a
 GitHub fork; upstream attribution and licensing are documented in `NOTICE.md`.
 
+There is no separate upstream download timer or cache: every workflow run fetches all
+configured upstream rule sets immediately before conversion. The scheduled upstream
+refresh interval and conversion interval are therefore both one day. Mihomo client
+examples below also use `interval: 86400`, so published providers are checked daily.
+
 ## Mihomo configuration
 
 ```yaml
