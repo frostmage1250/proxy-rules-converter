@@ -133,6 +133,11 @@ configured upstream rule sets immediately before conversion. The scheduled upstr
 refresh interval and conversion interval are therefore both one day. Mihomo client
 examples below also use `interval: 86400`, so published providers are checked daily.
 
+Dependabot checks only the GitHub Actions development dependencies once per day. A
+three-day cooldown keeps newly published versions out of update PRs until they have had
+time to stabilize; application rule sources and generated providers are not part of
+this dependency-update configuration.
+
 ## Mihomo configuration
 
 ```yaml
