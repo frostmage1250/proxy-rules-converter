@@ -27,7 +27,7 @@
       "behavior": "ipcidr",
       "duplicates_removed": 0,
       "ip_version": 6,
-      "output_entries": 1618,
+      "output_entries": 1234,
       "source": "https://ruleset.skk.moe/Clash/ip/china_ip_ipv6.txt"
     }
   },
@@ -532,7 +532,7 @@
   "sources": {
     "metacubex/ai": {
       "bytes": 3351,
-      "sha256": "30ecee6cb91262463663af1400dd919c5fa4908b4496b0f9a2d1edfe78243874",
+      "sha256": "914a954345f7d12f1aca0e123672854794004e9efeecf51105a7c352ae66be44",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-!cn.list"
     },
     "metacubex/facebook": {
@@ -562,7 +562,7 @@
     },
     "metacubex/global/google": {
       "bytes": 18231,
-      "sha256": "b5395746cca0cce497fd91108d62d5d2c33fc811192439c5aa18d6a9d4392aa1",
+      "sha256": "b5688175b9332e5018a585fb8326ff4a4c41895f872b9f69a2fa8bb4444ee171",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google.list"
     },
     "metacubex/global/pinterest": {
@@ -582,7 +582,7 @@
     },
     "metacubex/microsoft": {
       "bytes": 15501,
-      "sha256": "078bc09f81412b643e2c0ed09166d4810204b07fd84aefba1f0e0bdcee709b29",
+      "sha256": "24fa98441627693a344761685a28a0706aec896737f4bf71f6bcc9ea297dc4ae",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.list"
     },
     "metacubex/private": {
@@ -636,8 +636,8 @@
       "url": "https://ruleset.skk.moe/Clash/ip/china_ip.txt"
     },
     "sukka/china-ip-ipv6": {
-      "bytes": 29825,
-      "sha256": "8073fcbe9eccbf5ee21ed280f9586f179d926564bbb434a777cc9a23dc93cfe1",
+      "bytes": 22437,
+      "sha256": "9b093e77a0422b215a42c605a8a254644b996678c0e3e714bcd910ce4f801640",
       "url": "https://ruleset.skk.moe/Clash/ip/china_ip_ipv6.txt"
     },
     "sukka/domestic": {
