@@ -20,14 +20,14 @@
       "behavior": "ipcidr",
       "duplicates_removed": 0,
       "ip_version": 4,
-      "output_entries": 3908,
+      "output_entries": 3910,
       "source": "https://ruleset.skk.moe/Clash/ip/china_ip.txt"
     },
     "china_ip_ipv6": {
       "behavior": "ipcidr",
       "duplicates_removed": 0,
       "ip_version": 6,
-      "output_entries": 1234,
+      "output_entries": 1215,
       "source": "https://ruleset.skk.moe/Clash/ip/china_ip_ipv6.txt"
     }
   },
@@ -532,7 +532,7 @@
   "sources": {
     "metacubex/ai": {
       "bytes": 3351,
-      "sha256": "914a954345f7d12f1aca0e123672854794004e9efeecf51105a7c352ae66be44",
+      "sha256": "bd6abeaaf912f31b305b2771253fba0cfa394f821b7d9ea467772eb99c3c86e6",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-!cn.list"
     },
     "metacubex/facebook": {
@@ -562,7 +562,7 @@
     },
     "metacubex/global/google": {
       "bytes": 18231,
-      "sha256": "b5688175b9332e5018a585fb8326ff4a4c41895f872b9f69a2fa8bb4444ee171",
+      "sha256": "addc897956eaa1c3923e460b8224d2c8de1e318060411c954a7e58114724cca9",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google.list"
     },
     "metacubex/global/pinterest": {
@@ -631,13 +631,13 @@
       "url": "https://ruleset.skk.moe/Clash/non_ip/apple_services.txt"
     },
     "sukka/china-ip": {
-      "bytes": 61268,
-      "sha256": "8836290806f407d464ebf1b3a4a57f31e128c3407dd4de683852949718f04c5e",
+      "bytes": 61300,
+      "sha256": "09cc327bda89de8bfcc53445db77ca53632fdf625bda0e69488f1cea356b9652",
       "url": "https://ruleset.skk.moe/Clash/ip/china_ip.txt"
     },
     "sukka/china-ip-ipv6": {
-      "bytes": 22437,
-      "sha256": "9b093e77a0422b215a42c605a8a254644b996678c0e3e714bcd910ce4f801640",
+      "bytes": 22096,
+      "sha256": "e1d227838f005d1ae7ec86e6002fa63e2f56e8a7f9b0d91660b43aa41ea0088e",
       "url": "https://ruleset.skk.moe/Clash/ip/china_ip_ipv6.txt"
     },
     "sukka/domestic": {
