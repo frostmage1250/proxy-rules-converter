@@ -226,7 +226,7 @@
       "behavior": "ipcidr",
       "duplicates_removed": 0,
       "ip_version": 4,
-      "output_entries": 3912,
+      "output_entries": 3913,
       "source": "https://ruleset.skk.moe/Clash/ip/china_ip.txt"
     },
     "china_ip_ipv6": {
@@ -738,7 +738,7 @@
   "sources": {
     "metacubex/ai": {
       "bytes": 3351,
-      "sha256": "d629c98d07f4bb3e8b860d34aba0b541f806be5765211208146faca0314bd638",
+      "sha256": "7414ca6e1cca1a1d66a103ef3d11313c15828af086f9de8f3aad1d58d00ae7c3",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-!cn.list"
     },
     "metacubex/apple": {
@@ -793,7 +793,7 @@
     },
     "metacubex/microsoft": {
       "bytes": 15501,
-      "sha256": "804ab4e686381daddc5cd1bf93a2f2d75f45494e76cbd88a9c85d8c0e933c735",
+      "sha256": "24fa98441627693a344761685a28a0706aec896737f4bf71f6bcc9ea297dc4ae",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.list"
     },
     "metacubex/private": {
@@ -847,8 +847,8 @@
       "url": "https://ruleset.skk.moe/Clash/non_ip/apple_services.txt"
     },
     "sukka/china-ip": {
-      "bytes": 61332,
-      "sha256": "12aab9055762275cfefb54cd38ecca2af008a14240b7fdf0a0b5b69dbe3f9edf",
+      "bytes": 61349,
+      "sha256": "066468caa19b3e94757f4f84b374d1d80e4a773a937a8e844e3a0228b6b84971",
       "url": "https://ruleset.skk.moe/Clash/ip/china_ip.txt"
     },
     "sukka/china-ip-ipv6": {
