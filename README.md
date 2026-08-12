@@ -6,14 +6,20 @@ type, removes duplicates and covered entries, and commits only changed generated
 
 ## Policy
 
-### Shared Apple direct set
+### Apple direct and services split
 
-- Combine Sukka `apple_cdn` and the domain portion of `apple_services`.
-- Remove semantic overlap and emit one `apple-direct` provider, reducing client rule
-  lookups while preserving both sources' domain coverage.
+- Combine Sukka `apple_cdn` and `apple_cn`, minimize their internal overlap, and emit
+  `apple-direct` for direct connections.
+- Build `apple-services` primarily from Sukka `apple_services`: convert its 15 reviewed
+  explicit suffixes directly, but replace the broad `apple.com` suffix with the finite
+  matching descendants from MetaCubeX `apple.list` plus the exact `apple.com` apex.
+- Never restore the broad `+.apple.com` rule, import the full MetaCubeX Apple set, or
+  import MetaCubeX Apple@CN. In particular, `apps.apple.com` is not added specially.
+- Keep overlap between `apple-direct` and `apple-services`; direct must be evaluated
+  first because the providers intentionally use different policies.
 - Ignore the eight process rules and `17.0.0.0/8` from Apple Services.
-- Do not use Sukka Apple CN, MetaCubeX Apple@CN, or the full MetaCubeX Apple set.
-- Shadowrocket APNS remains an external classical rule and is not generated here.
+- Emit both Apple providers for Mihomo and Shadowrocket. Shadowrocket APNS remains an
+  external classical rule and is not generated here.
 
 ### Mihomo Microsoft split
 
@@ -73,6 +79,8 @@ dist/
 ├─ mihomo/
 │  ├─ apple-direct.list
 │  ├─ apple-direct.mrs
+│  ├─ apple-services.list
+│  ├─ apple-services.mrs
 │  ├─ china-ip.mrs
 │  ├─ china-ip-ipv6.mrs
 │  ├─ domestic.list
@@ -87,6 +95,7 @@ dist/
 │  └─ steam-cn-download.mrs
 └─ shadowrocket/
    ├─ apple-direct.domain-set
+   ├─ apple-services.domain-set
    ├─ bilibili-direct.list
    ├─ bilibili-pcdn.list
    ├─ domestic.domain-set
@@ -184,6 +193,15 @@ rule-providers:
     url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/apple-direct.mrs"
     path: ./ruleset/apple-direct.mrs
 
+  apple_services:
+    type: http
+    interval: 86400
+    proxy: MESL
+    behavior: domain
+    format: mrs
+    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/apple-services.mrs"
+    path: ./ruleset/apple-services.mrs
+
   microsoft_cdn:
     type: http
     interval: 86400
@@ -217,17 +235,20 @@ The relevant rule order is:
 ```yaml
 rules:
   - "RULE-SET,apple_direct,Direct"
+  - "RULE-SET,apple_services,MESL"
   - "RULE-SET,microsoft_cdn,Direct"
   - "RULE-SET,microsoft,MESL"
   - "RULE-SET,global,MESL"
 ```
 
-Keep `microsoft_cdn` immediately before `microsoft`.
+Keep `apple_direct` immediately before `apple_services`, and keep `microsoft_cdn`
+immediately before `microsoft`.
 
 ## Shadowrocket configuration
 
 ```ini
 DOMAIN-SET,https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/shadowrocket/apple-direct.domain-set,DIRECT
+DOMAIN-SET,https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/shadowrocket/apple-services.domain-set,PROXY
 DOMAIN-SET,https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/shadowrocket/bilibili-direct.list,DIRECT
 DOMAIN-SET,https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/shadowrocket/bilibili-pcdn.list,REJECT
 ```
