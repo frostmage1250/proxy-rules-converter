@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from convert_rules import (  # noqa: E402
+    APPLE_EXPANDED_SUFFIXES,
     ConversionError,
     DomainRule,
     GLOBAL_DROPPED_KEYWORDS,
@@ -18,6 +19,7 @@ from convert_rules import (  # noqa: E402
     drop_sukka_marker,
     drop_domain_fragments,
     expand_domain_keywords,
+    expand_domain_suffixes,
     is_droppable_domestic_wildcard,
     is_externally_managed_output,
     parse_classical_domains,
@@ -143,6 +145,34 @@ class ConverterTests(unittest.TestCase):
             },
         )
         self.assertEqual(counts, {"1drv": 1, "microsoft": 1})
+
+    def test_apple_suffix_expansion_is_finite_and_preserves_only_exact_apex(self) -> None:
+        expanded, counts = expand_domain_suffixes(
+            APPLE_EXPANDED_SUFFIXES,
+            [
+                DomainRule("suffix", "apple.com"),
+                DomainRule("exact", "music.apple.com"),
+                DomainRule("suffix", "iad.apple.com"),
+                DomainRule("suffix", "applemusic.com"),
+            ],
+        )
+        self.assertEqual(
+            set(expanded),
+            {
+                DomainRule("exact", "apple.com"),
+                DomainRule("exact", "music.apple.com"),
+                DomainRule("suffix", "iad.apple.com"),
+            },
+        )
+        self.assertEqual(counts, {"apple.com": 2})
+        self.assertNotIn(DomainRule("suffix", "apple.com"), expanded)
+
+    def test_apple_suffix_expansion_requires_reference_matches(self) -> None:
+        with self.assertRaises(ConversionError):
+            expand_domain_suffixes(
+                APPLE_EXPANDED_SUFFIXES,
+                [DomainRule("suffix", "applemusic.com")],
+            )
 
     def test_sukka_attribution_marker_is_not_emitted(self) -> None:
         rules, removed = drop_sukka_marker(

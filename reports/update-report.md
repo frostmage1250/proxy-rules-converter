@@ -5,7 +5,7 @@ This report is deterministic; no build timestamp is embedded.
 ## China IP (Mihomo only)
 
 - IPv4 output entries: 3912
-- IPv6 output entries: 1233
+- IPv6 output entries: 1235
 - Both providers are compiled with Mihomo behavior `ipcidr`.
 - No Shadowrocket IP provider is generated.
 
@@ -19,11 +19,22 @@ This report is deterministic; no build timestamp is embedded.
 ## Apple direct
 
 - Apple CDN domain entries: 158
-- Apple Services domain entries: 16
+- Apple CN domain entries: 9
+- Final combined output entries: 165
+- Sources are Sukka Apple CDN and Apple CN; overlap is minimized internally.
+
+## Apple Services
+
+- Sukka directly converted domain entries: 15
+- Finite MetaCubeX apple.com expansion entries including apex: 149
 - Ignored process rules: 8
 - Ignored IP rules: 1
-- Final combined output entries: 65
-- MetaCubeX Apple and Apple@CN are intentionally not used.
+- Final Apple Services output entries: 164
+- Direct rules also covered by Services: 30
+- Sukka +.apple.com is replaced by finite descendants from MetaCubeX Apple.
+- MetaCubeX Apple@CN is intentionally not used; apps.apple.com is not added.
+- Required order: apple-direct (DIRECT), then apple-services (proxy).
+- The same canonical rules are rendered for Mihomo and Shadowrocket.
 - The Apple 17.0.0.0/8 rule is intentionally not emitted.
 
 ## Global
@@ -59,6 +70,6 @@ Final entries:
 
 ## Shadowrocket
 
-- Generated domain sets: 13
+- Generated domain sets: 14
 - Static hand-maintained domain sets: 2
 - APNS and Shadowrocket IP rule sets are intentionally not generated.

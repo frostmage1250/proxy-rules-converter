@@ -33,6 +33,7 @@ USER_AGENT = (
 DOMAIN_LABEL_RE = re.compile(r"^[a-z0-9_](?:[a-z0-9_-]{0,61}[a-z0-9_])?$", re.I)
 SUKKA_ATTRIBUTION_MARKER = "7h15.ru1353t.1s.m4d3.by.5ukk4w.skk.moe"
 MICROSOFT_KEYWORDS = frozenset({"1drv", "microsoft", "hotmail"})
+APPLE_EXPANDED_SUFFIXES = frozenset({"apple.com"})
 GLOBAL_EXPANDED_KEYWORDS = frozenset(
     {"google", "facebook", "whatsapp", "discord", "dropbox", "pinterest"}
 )
@@ -276,6 +277,35 @@ def expand_domain_keywords(
     return sorted(expanded), counts
 
 
+def expand_domain_suffixes(
+    suffixes: Iterable[str], reference_rules: Iterable[DomainRule]
+) -> tuple[list[DomainRule], dict[str, int]]:
+    """Replace reviewed broad suffixes with finite descendants from a reference set.
+
+    The broad suffix rule itself is never copied from the reference. An exact apex
+    rule is emitted separately so the finite replacement preserves apex matching
+    without capturing every present and future subdomain.
+    """
+
+    references = list(reference_rules)
+    expanded: set[DomainRule] = set()
+    counts: dict[str, int] = {}
+    for suffix in sorted({normalize_domain(value) for value in suffixes}):
+        matches = [
+            rule
+            for rule in references
+            if rule.value != suffix and rule.value.endswith("." + suffix)
+        ]
+        if not matches:
+            raise ConversionError(
+                f"Apple suffix {suffix!r} has no MetaCubeX finite expansion"
+            )
+        counts[suffix] = len(matches)
+        expanded.update(matches)
+        expanded.add(DomainRule("exact", suffix))
+    return sorted(expanded), counts
+
+
 def rule_covers_domain(rule: DomainRule, domain: str) -> bool:
     domain = normalize_domain(domain)
     if rule.kind == "exact":
@@ -493,10 +523,19 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         }
 
     apple_cdn_url = config["sukka"]["apple_cdn"]
+    apple_cn_url = config["sukka"]["apple_cn"]
     apple_services_url = config["sukka"]["apple_services"]
+    meta_apple_url = join_url(meta_base, config["metacubex"]["apple"])
     apple_cdn_text = download("sukka/apple-cdn", apple_cdn_url)
+    apple_cn_text = download("sukka/apple-cn", apple_cn_url)
     apple_services_text = download("sukka/apple-services", apple_services_url)
+    meta_apple_text = download("metacubex/apple", meta_apple_url)
     apple_cdn_raw = parse_domain_text(apple_cdn_text, apple_cdn_url)
+    apple_cn_raw, apple_cn_keywords, apple_cn_ignored = parse_classical_domains(
+        apple_cn_text, apple_cn_url
+    )
+    if apple_cn_keywords or apple_cn_ignored:
+        raise ConversionError("Apple CN contains an unexpected non-domain rule")
     apple_services_raw, apple_keywords, apple_ignored = parse_classical_domains(
         apple_services_text,
         apple_services_url,
@@ -505,18 +544,64 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
     if apple_keywords:
         raise ConversionError("Apple Services unexpectedly produced domain keywords")
     apple_cdn_raw, apple_cdn_marker_removed = drop_sukka_marker(apple_cdn_raw)
+    apple_cn_raw, apple_cn_marker_removed = drop_sukka_marker(apple_cn_raw)
     apple_services_raw, apple_services_marker_removed = drop_sukka_marker(
         apple_services_raw
     )
-    apple_direct, apple_duplicates, apple_redundant = semantic_minimize(
-        [*apple_cdn_raw, *apple_services_raw]
+    broad_apple_suffixes = {
+        rule.value
+        for rule in apple_services_raw
+        if rule.kind == "suffix" and rule.value in APPLE_EXPANDED_SUFFIXES
+    }
+    if broad_apple_suffixes != APPLE_EXPANDED_SUFFIXES:
+        raise ConversionError(
+            "Sukka Apple Services expandable suffix set changed; expected exactly "
+            + ", ".join(sorted(APPLE_EXPANDED_SUFFIXES))
+        )
+    apple_services_base_raw = [
+        rule
+        for rule in apple_services_raw
+        if not (rule.kind == "suffix" and rule.value in APPLE_EXPANDED_SUFFIXES)
+    ]
+    meta_apple = parse_domain_text(meta_apple_text, meta_apple_url)
+    apple_services_expanded, apple_expansion_counts = expand_domain_suffixes(
+        broad_apple_suffixes, meta_apple
     )
+    apple_direct, apple_direct_duplicates, apple_direct_redundant = semantic_minimize(
+        [*apple_cdn_raw, *apple_cn_raw]
+    )
+    apple_services, apple_services_duplicates, apple_services_redundant = (
+        semantic_minimize([*apple_services_base_raw, *apple_services_expanded])
+    )
+    if DomainRule("suffix", "apple.com") in apple_services:
+        raise ConversionError("Apple Services finite expansion restored broad +.apple.com")
     outputs["dist/mihomo/apple-direct.list"] = render_rules(
         apple_direct, "mihomo"
+    )
+    outputs["dist/mihomo/apple-services.list"] = render_rules(
+        apple_services, "mihomo"
     )
     outputs["dist/shadowrocket/apple-direct.domain-set"] = render_rules(
         apple_direct, "shadowrocket"
     )
+    outputs["dist/shadowrocket/apple-services.domain-set"] = render_rules(
+        apple_services, "shadowrocket"
+    )
+    apple_direct_service_overlaps = [
+        {
+            "direct_rule": direct_rule.mihomo(),
+            "covered_by_services": [
+                service_rule.mihomo()
+                for service_rule in apple_services
+                if rule_covers_rule(service_rule, direct_rule)
+            ],
+        }
+        for direct_rule in apple_direct
+        if any(
+            rule_covers_rule(service_rule, direct_rule)
+            for service_rule in apple_services
+        )
+    ]
 
     microsoft_cdn_url = config["sukka"]["microsoft_cdn"]
     microsoft_url = config["sukka"]["microsoft"]
@@ -628,7 +713,7 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
     )
 
     summary = {
-        "schema_version": 4,
+        "schema_version": 5,
         "sources": report_sources,
         "china_ip": china_ip_stats,
         "domestic": {
@@ -660,16 +745,33 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
             "shadowrocket_output_generated": True,
         },
         "apple_direct": {
-            "source_scope": [apple_cdn_url, apple_services_url],
+            "source_scope": [apple_cdn_url, apple_cn_url],
             "apple_cdn_domain_entries": len(apple_cdn_raw),
-            "apple_services_domain_entries": len(apple_services_raw),
-            "ignored_non_domain_rules": apple_ignored,
+            "apple_cn_domain_entries": len(apple_cn_raw),
             "sukka_markers_removed": (
-                apple_cdn_marker_removed + apple_services_marker_removed
+                apple_cdn_marker_removed + apple_cn_marker_removed
             ),
-            "duplicates_removed": apple_duplicates,
-            "semantically_redundant_removed": apple_redundant,
+            "duplicates_removed": apple_direct_duplicates,
+            "semantically_redundant_removed": apple_direct_redundant,
             "output_entries": len(apple_direct),
+        },
+        "apple_services": {
+            "source_scope": [apple_services_url, meta_apple_url],
+            "sukka_domain_entries": len(apple_services_raw),
+            "sukka_directly_converted_entries": len(apple_services_base_raw),
+            "expanded_suffixes": sorted(APPLE_EXPANDED_SUFFIXES),
+            "suffix_expansion_matches": apple_expansion_counts,
+            "suffix_expansion_unique_entries_including_apex": len(
+                apple_services_expanded
+            ),
+            "ignored_non_domain_rules": apple_ignored,
+            "sukka_marker_removed": apple_services_marker_removed,
+            "duplicates_removed": apple_services_duplicates,
+            "semantically_redundant_removed": apple_services_redundant,
+            "output_entries": len(apple_services),
+            "direct_rules_also_covered_by_services": apple_direct_service_overlaps,
+            "required_rule_order": ["apple-direct", "apple-services"],
+            "shadowrocket_output_generated": True,
         },
         "microsoft": {
             "cdn_source": microsoft_cdn_url,
@@ -730,11 +832,22 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         "## Apple direct",
         "",
         f"- Apple CDN domain entries: {len(apple_cdn_raw)}",
-        f"- Apple Services domain entries: {len(apple_services_raw)}",
+        f"- Apple CN domain entries: {len(apple_cn_raw)}",
+        f"- Final combined output entries: {len(apple_direct)}",
+        "- Sources are Sukka Apple CDN and Apple CN; overlap is minimized internally.",
+        "",
+        "## Apple Services",
+        "",
+        f"- Sukka directly converted domain entries: {len(apple_services_base_raw)}",
+        f"- Finite MetaCubeX apple.com expansion entries including apex: {len(apple_services_expanded)}",
         f"- Ignored process rules: {apple_ignored.get('PROCESS-NAME', 0)}",
         f"- Ignored IP rules: {apple_ignored.get('IP-CIDR', 0)}",
-        f"- Final combined output entries: {len(apple_direct)}",
-        "- MetaCubeX Apple and Apple@CN are intentionally not used.",
+        f"- Final Apple Services output entries: {len(apple_services)}",
+        f"- Direct rules also covered by Services: {len(apple_direct_service_overlaps)}",
+        "- Sukka +.apple.com is replaced by finite descendants from MetaCubeX Apple.",
+        "- MetaCubeX Apple@CN is intentionally not used; apps.apple.com is not added.",
+        "- Required order: apple-direct (DIRECT), then apple-services (proxy).",
+        "- The same canonical rules are rendered for Mihomo and Shadowrocket.",
         "- The Apple 17.0.0.0/8 rule is intentionally not emitted.",
         "",
         "## Global",
@@ -777,7 +890,7 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         [
             "## Shadowrocket",
             "",
-            f"- Generated domain sets: {len(shadowrocket_stats) + 3}",
+            f"- Generated domain sets: {len(shadowrocket_stats) + 4}",
             f"- Static hand-maintained domain sets: {len(STATIC_OUTPUTS)}",
             "- APNS and Shadowrocket IP rule sets are intentionally not generated.",
             "",
