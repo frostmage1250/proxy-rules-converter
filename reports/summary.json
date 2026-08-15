@@ -738,12 +738,12 @@
   "sources": {
     "metacubex/ai": {
       "bytes": 3351,
-      "sha256": "4a1346b6b5cd9c226c3426eea2c44a90ed214823bf5816ed39bca0b0756b01c6",
+      "sha256": "ad13aff144561b260ac8f2e48745db4701068c2324db5ee93e276fb05c88fb3b",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-!cn.list"
     },
     "metacubex/apple": {
       "bytes": 36860,
-      "sha256": "63bdcb1d6e6d2951247dea256246a720cb55a4638480ad8f1c2ba8c91b816dda",
+      "sha256": "652da48ef957e4efd8a08993f33e081629868969b91df0eccda1512271cd966a",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/apple.list"
     },
     "metacubex/facebook": {
@@ -773,7 +773,7 @@
     },
     "metacubex/global/google": {
       "bytes": 18231,
-      "sha256": "14f8ba42f48cf6593b2fc47fba64e209f2a57070965ab2642737ff25c8a11714",
+      "sha256": "502100262c9992f18be86d3f05433be26c10ae6920492cdc983d21e5bbd4920e",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google.list"
     },
     "metacubex/global/pinterest": {
@@ -793,7 +793,7 @@
     },
     "metacubex/microsoft": {
       "bytes": 15501,
-      "sha256": "078bc09f81412b643e2c0ed09166d4810204b07fd84aefba1f0e0bdcee709b29",
+      "sha256": "69cae164f2b0b3e6a9822be85ed08421fdabbcc63a0879d8ab28acc45dde2f00",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.list"
     },
     "metacubex/private": {
@@ -848,7 +848,7 @@
     },
     "sukka/china-ip": {
       "bytes": 61365,
-      "sha256": "970ab798636eb5324067fbc05f3a05b1b5a215671a6b892994778e77914199bd",
+      "sha256": "7370bbb2ed8c5cdff95b5949a6b79ca440d23d18fbf53ce0f41f6309cdf9aaac",
       "url": "https://ruleset.skk.moe/Clash/ip/china_ip.txt"
     },
     "sukka/china-ip-ipv6": {
