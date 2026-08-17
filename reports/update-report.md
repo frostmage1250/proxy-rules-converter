@@ -4,7 +4,7 @@ This report is deterministic; no build timestamp is embedded.
 
 ## China IP (Mihomo only)
 
-- IPv4 output entries: 3914
+- IPv4 output entries: 3915
 - IPv6 output entries: 1235
 - Both providers are compiled with Mihomo behavior `ipcidr`.
 - No Shadowrocket IP provider is generated.
