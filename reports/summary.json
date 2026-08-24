@@ -226,7 +226,7 @@
       "behavior": "ipcidr",
       "duplicates_removed": 0,
       "ip_version": 4,
-      "output_entries": 3919,
+      "output_entries": 3918,
       "source": "https://ruleset.skk.moe/Clash/ip/china_ip.txt"
     },
     "china_ip_ipv6": {
@@ -738,12 +738,12 @@
   "sources": {
     "metacubex/ai": {
       "bytes": 3431,
-      "sha256": "73b85d965732d2a785073a56e152f56163e029d611b60ad631419dcc8a39781e",
+      "sha256": "b73e4d82ee8b7f2f1507e5966858e4da782289133bbbaadab1846b6c8aca3d1a",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-!cn.list"
     },
     "metacubex/apple": {
       "bytes": 36860,
-      "sha256": "945c038021304dc0f1cf85b484c8d00fb64ead28d44ecb34f3a908445217c286",
+      "sha256": "32e3b024e421b279b132dc997f2fcb2762a1a79c7ef2995e24ccd12ad6e3c219",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/apple.list"
     },
     "metacubex/facebook": {
@@ -773,7 +773,7 @@
     },
     "metacubex/global/google": {
       "bytes": 18231,
-      "sha256": "d6bcaa2d1a33c743533aada0f4ad8956454b8af9eb9552a20e6a4602faa89a18",
+      "sha256": "f6cc9aceeae451692f78642b8cadd6efcc109fe01722a487c63e10d49992342a",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google.list"
     },
     "metacubex/global/pinterest": {
@@ -793,7 +793,7 @@
     },
     "metacubex/microsoft": {
       "bytes": 15481,
-      "sha256": "45d5888e9914e1e40876f6d9ec3bd6149642ade9a81a91c8d13480fa83d4e72d",
+      "sha256": "fb70aec92becb1d830533467b6fb01ce3cf9e7bcca687d449f1d9c82a04b8b35",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.list"
     },
     "metacubex/private": {
@@ -847,8 +847,8 @@
       "url": "https://ruleset.skk.moe/Clash/non_ip/apple_services.txt"
     },
     "sukka/china-ip": {
-      "bytes": 61440,
-      "sha256": "5c9d994e247da473ebc9d28f80a4ff920f1927109941fa3992dd007b165676d3",
+      "bytes": 61421,
+      "sha256": "8a1b55c5c2991101f6c2858febf3639073a8806d4dfbd098a5ab3aacbd744f75",
       "url": "https://ruleset.skk.moe/Clash/ip/china_ip.txt"
     },
     "sukka/china-ip-ipv6": {
