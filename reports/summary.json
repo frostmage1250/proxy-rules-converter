@@ -226,14 +226,14 @@
       "behavior": "ipcidr",
       "duplicates_removed": 0,
       "ip_version": 4,
-      "output_entries": 3918,
+      "output_entries": 3917,
       "source": "https://ruleset.skk.moe/Clash/ip/china_ip.txt"
     },
     "china_ip_ipv6": {
       "behavior": "ipcidr",
       "duplicates_removed": 0,
       "ip_version": 6,
-      "output_entries": 1235,
+      "output_entries": 3429,
       "source": "https://ruleset.skk.moe/Clash/ip/china_ip_ipv6.txt"
     }
   },
@@ -738,12 +738,12 @@
   "sources": {
     "metacubex/ai": {
       "bytes": 3431,
-      "sha256": "b73e4d82ee8b7f2f1507e5966858e4da782289133bbbaadab1846b6c8aca3d1a",
+      "sha256": "295bbf48f90e0bacbc0cb16bd145a5dd74ad9d2e780f3435c62c098d9950bd2b",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-!cn.list"
     },
     "metacubex/apple": {
       "bytes": 36860,
-      "sha256": "32e3b024e421b279b132dc997f2fcb2762a1a79c7ef2995e24ccd12ad6e3c219",
+      "sha256": "6cd5e895257ac76889b468775f421bbe8514e1024be23d347818aa9b9faba659",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/apple.list"
     },
     "metacubex/facebook": {
@@ -773,7 +773,7 @@
     },
     "metacubex/global/google": {
       "bytes": 18231,
-      "sha256": "f6cc9aceeae451692f78642b8cadd6efcc109fe01722a487c63e10d49992342a",
+      "sha256": "d7835f6d6f7a6668ff52334497a21330f9e20c31139bf40ecd2c375c95d4ca7b",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google.list"
     },
     "metacubex/global/pinterest": {
@@ -793,7 +793,7 @@
     },
     "metacubex/microsoft": {
       "bytes": 15481,
-      "sha256": "fb70aec92becb1d830533467b6fb01ce3cf9e7bcca687d449f1d9c82a04b8b35",
+      "sha256": "abc5bf55bb46d9436f489cb88d7701543864506fcc88ddfd20a782d597c2e98a",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.list"
     },
     "metacubex/private": {
@@ -847,13 +847,13 @@
       "url": "https://ruleset.skk.moe/Clash/non_ip/apple_services.txt"
     },
     "sukka/china-ip": {
-      "bytes": 61421,
-      "sha256": "8a1b55c5c2991101f6c2858febf3639073a8806d4dfbd098a5ab3aacbd744f75",
+      "bytes": 61404,
+      "sha256": "4702d025878bb0b8171caf15d54cd69a1b5dead560433b79c3bad9bcef642539",
       "url": "https://ruleset.skk.moe/Clash/ip/china_ip.txt"
     },
     "sukka/china-ip-ipv6": {
-      "bytes": 22462,
-      "sha256": "5b14f012bb9926fc5439497e8aee5d94d30fbc7a41c99f22930ffbe9b8d9ae4b",
+      "bytes": 57617,
+      "sha256": "4be3fbff894faa21fe3bd4a7bdaa14632cef4cb5de31eb48ad8e62a8decccba1",
       "url": "https://ruleset.skk.moe/Clash/ip/china_ip_ipv6.txt"
     },
     "sukka/domestic": {
