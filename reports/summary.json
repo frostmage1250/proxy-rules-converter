@@ -672,7 +672,7 @@
     "shadowrocket_output_generated": false,
     "sukka_markers_removed": 2
   },
-  "schema_version": 5,
+  "schema_version": 6,
   "shadowrocket": {
     "ai": {
       "duplicates_removed": 0,
@@ -752,9 +752,9 @@
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/facebook.list"
     },
     "metacubex/game-download": {
-      "bytes": 14292,
-      "sha256": "ec2f9dc32cd69644ca94b809a781121e4dee581885c3ac19332d7104a746ce07",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-game-platforms-download.list"
+      "bytes": 752,
+      "sha256": "46c1ca51a0b7a8342efe8be5870a393e61abc72bdbc7a272787164b9dd13cc08",
+      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-game-platforms-download@cn.list"
     },
     "metacubex/global/discord": {
       "bytes": 542,
@@ -861,11 +861,6 @@
       "sha256": "e86dead64f2ca26ad980ba5ffa7d41c4a82a0fa8acec371a239a52719a387ec4",
       "url": "https://ruleset.skk.moe/Clash/non_ip/domestic.txt"
     },
-    "sukka/game-download": {
-      "bytes": 1908,
-      "sha256": "c3549cee2590fd0f0ccd3febd77159d64cec7335361217f667b5de609248d7a3",
-      "url": "https://ruleset.skk.moe/Clash/domainset/game-download.txt"
-    },
     "sukka/global": {
       "bytes": 33221,
       "sha256": "70639efaab105eba6b4b677c941a4085ae7ef108c55296879395267b8e0e29b3",
@@ -885,66 +880,29 @@
   "steam_cn_download": {
     "allowlist_missing_from_sources": [],
     "duplicates_removed": 0,
+    "full_steam_provider": "MetaCubeX meta-rules-dat steam.mrs",
     "output_entries": [
-      "alibaba.cdn.steampipe.steamcontent.com"
+      "alibaba.cdn.steampipe.steamcontent.com",
+      "cdn-ali.content.steamchina.com",
+      "cdn-qc.content.steamchina.com",
+      "cdn-ws.content.steamchina.com",
+      "dl.steam.clngaa.com",
+      "lv.queniujq.cn",
+      "st-bak.viv.wanwang.space",
+      "st.dl.bscstorage.net",
+      "st.dl.eccdnx.com",
+      "trts.baishancdnx.cn",
+      "xz.pphimalayanrt.com"
     ],
-    "removed_as_domestic_covered": [
-      {
-        "covered_by": [
-          "+.steam.clngaa.com"
-        ],
-        "domain": "dl.steam.clngaa.com"
-      },
-      {
-        "covered_by": [
-          "+.dl.eccdnx.com"
-        ],
-        "domain": "st.dl.eccdnx.com"
-      },
-      {
-        "covered_by": [
-          "+.dl.bscstorage.net"
-        ],
-        "domain": "st.dl.bscstorage.net"
-      },
-      {
-        "covered_by": [
-          "+.steamchina.com"
-        ],
-        "domain": "cdn-ali.content.steamchina.com"
-      },
-      {
-        "covered_by": [
-          "+.pphimalayanrt.com"
-        ],
-        "domain": "xz.pphimalayanrt.com"
-      },
-      {
-        "covered_by": [
-          "lv.queniujq.cn"
-        ],
-        "domain": "lv.queniujq.cn"
-      },
-      {
-        "covered_by": [
-          "+.steamchina.com"
-        ],
-        "domain": "cdn-ws.content.steamchina.com"
-      },
-      {
-        "covered_by": [
-          "+.steamchina.com"
-        ],
-        "domain": "cdn-qc.content.steamchina.com"
-      }
+    "required_rule_order": [
+      "steam-cn-download",
+      "steam"
     ],
-    "reviewed_allowlist_entries": 9,
+    "reviewed_allowlist_entries": 11,
     "semantically_redundant_removed": 0,
     "source_scope": [
-      "https://ruleset.skk.moe/Clash/domainset/game-download.txt",
-      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-game-platforms-download.list"
+      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-game-platforms-download@cn.list"
     ],
-    "steam_named_unreviewed_count": 417,
-    "sukka_marker_removed": 1
+    "steam_named_unreviewed_count": 0
   }
 }

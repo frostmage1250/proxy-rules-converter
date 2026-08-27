@@ -37,10 +37,13 @@ type, removes duplicates and covered entries, and commits only changed generated
 - Convert Sukka `domestic` classical text to native domain text for both clients.
 - Drop the reviewed nonessential `DOMAIN-WILDCARD,*.qhimgs?.com` entry; any new
   wildcard fails the build pending review.
-- Build Steam input only from Sukka `game-download` and MetaCubeX
-  `category-game-platforms-download.list`.
-- Emit only reviewed Mainland China Steam download endpoints that are not already
-  covered by Domestic. International endpoints and other game platforms are excluded.
+- Build Steam input only from MetaCubeX
+  `category-game-platforms-download@cn.list`.
+- Emit its reviewed Steam-only subset as a self-contained direct provider. Domestic
+  overlap is retained because this provider must be evaluated before the complete
+  MetaCubeX `steam.mrs` proxy provider.
+- Required order: `steam-cn-download` (DIRECT), then MetaCubeX `steam` (proxy).
+  Other game platforms from the upstream `@cn` category are excluded.
 
 ### Global replacement
 
@@ -265,5 +268,6 @@ converter.
 - Reviewed Steam China candidates: `config/steam-cn-download-allowlist.txt`
 
 The Steam allowlist is a classification decision, not an independent domain source.
-An entry is emitted only while one of the two permitted game-download sources covers
-it and Domestic does not.
+An entry is emitted only while MetaCubeX `category-game-platforms-download@cn`
+covers it. Domestic overlap is intentionally retained so the direct subset remains
+self-contained ahead of the complete Steam proxy rule.

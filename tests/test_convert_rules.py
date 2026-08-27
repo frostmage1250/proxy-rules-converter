@@ -32,6 +32,19 @@ from convert_rules import (  # noqa: E402
 
 
 class ConverterTests(unittest.TestCase):
+    def test_steam_cn_allowlist_is_the_reviewed_metacubex_subset(self) -> None:
+        entries = [
+            line.strip()
+            for line in (ROOT / "config" / "steam-cn-download-allowlist.txt")
+            .read_text(encoding="utf-8")
+            .splitlines()
+            if line.strip() and not line.startswith("#")
+        ]
+        self.assertEqual(len(entries), 11)
+        self.assertEqual(len(entries), len(set(entries)))
+        self.assertIn("st-bak.viv.wanwang.space", entries)
+        self.assertIn("trts.baishancdnx.cn", entries)
+
     def test_parses_and_deduplicates_ipv4_cidrs(self) -> None:
         entries, duplicates = parse_ipcidr_text(
             "# comment\n1.1.8.0/24\n1.1.8.0/24\n", "test", 4

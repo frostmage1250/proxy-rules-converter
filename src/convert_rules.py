@@ -664,32 +664,18 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         if any(rule_covers_rule(proxy_rule, cdn_rule) for proxy_rule in microsoft_proxy)
     ]
 
-    sukka_game_url = config["sukka"]["game_download"]
     meta_game_url = join_url(meta_base, config["metacubex"]["game_download"])
-    sukka_game_text = download("sukka/game-download", sukka_game_url)
     meta_game_text = download("metacubex/game-download", meta_game_url)
-    sukka_game = parse_domain_text(sukka_game_text, sukka_game_url)
-    sukka_game, sukka_game_marker_removed = drop_sukka_marker(sukka_game)
     meta_game = parse_domain_text(meta_game_text, meta_game_url)
-    game_pool = sorted(set(sukka_game) | set(meta_game))
+    game_pool = sorted(set(meta_game))
 
     reviewed = load_allowlist(allowlist_path)
     source_missing: list[str] = []
-    covered_by_domestic: list[dict[str, object]] = []
     final_steam: list[DomainRule] = []
     for domain in reviewed:
         source_matches = [rule for rule in game_pool if rule_covers_domain(rule, domain)]
         if not source_matches:
             source_missing.append(domain)
-            continue
-        domestic_matches = [rule for rule in domestic if rule_covers_domain(rule, domain)]
-        if domestic_matches:
-            covered_by_domestic.append(
-                {
-                    "domain": domain,
-                    "covered_by": [rule.mihomo() for rule in domestic_matches],
-                }
-            )
             continue
         final_steam.append(DomainRule("exact", domain))
 
@@ -713,7 +699,7 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
     )
 
     summary = {
-        "schema_version": 5,
+        "schema_version": 6,
         "sources": report_sources,
         "china_ip": china_ip_stats,
         "domestic": {
@@ -794,15 +780,15 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
             "shadowrocket_output_generated": False,
         },
         "steam_cn_download": {
-            "source_scope": [sukka_game_url, meta_game_url],
+            "source_scope": [meta_game_url],
             "reviewed_allowlist_entries": len(reviewed),
             "allowlist_missing_from_sources": source_missing,
-            "removed_as_domestic_covered": covered_by_domestic,
             "output_entries": [rule.mihomo() for rule in final_steam],
             "duplicates_removed": steam_duplicates,
             "semantically_redundant_removed": steam_redundant,
             "steam_named_unreviewed_count": len(steam_named_not_reviewed),
-            "sukka_marker_removed": sukka_game_marker_removed,
+            "required_rule_order": ["steam-cn-download", "steam"],
+            "full_steam_provider": "MetaCubeX meta-rules-dat steam.mrs",
         },
         "shadowrocket": shadowrocket_stats,
     }
@@ -873,9 +859,9 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         "## Steam China download",
         "",
         f"- Reviewed candidates: {len(reviewed)}",
-        f"- Removed because domestic already covers them: {len(covered_by_domestic)}",
-        f"- Missing from both permitted game-download sources: {len(source_missing)}",
+        f"- Missing from MetaCubeX category-game-platforms-download@cn: {len(source_missing)}",
         f"- Final output entries: {len(final_steam)}",
+        "- Required order: steam-cn-download (DIRECT), then MetaCubeX steam (proxy).",
         "",
     ]
     if final_steam:
