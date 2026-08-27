@@ -59,14 +59,24 @@ This report is deterministic; no build timestamp is embedded.
 
 ## Steam China download
 
-- Reviewed candidates: 9
-- Removed because domestic already covers them: 8
-- Missing from both permitted game-download sources: 0
-- Final output entries: 1
+- Reviewed candidates: 11
+- Missing from MetaCubeX category-game-platforms-download@cn: 0
+- Final output entries: 11
+- Required order: steam-cn-download (DIRECT), then MetaCubeX steam (proxy).
 
 Final entries:
 
 - `alibaba.cdn.steampipe.steamcontent.com`
+- `cdn-ali.content.steamchina.com`
+- `cdn-qc.content.steamchina.com`
+- `cdn-ws.content.steamchina.com`
+- `dl.steam.clngaa.com`
+- `lv.queniujq.cn`
+- `st-bak.viv.wanwang.space`
+- `st.dl.bscstorage.net`
+- `st.dl.eccdnx.com`
+- `trts.baishancdnx.cn`
+- `xz.pphimalayanrt.com`
 
 ## Shadowrocket
 
