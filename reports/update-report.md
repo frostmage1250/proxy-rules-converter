@@ -4,7 +4,7 @@ This report is deterministic; no build timestamp is embedded.
 
 ## China IP (Mihomo only)
 
-- IPv4 output entries: 3917
+- IPv4 output entries: 3905
 - IPv6 output entries: 3429
 - Both providers are compiled with Mihomo behavior `ipcidr`.
 - No Shadowrocket IP provider is generated.
@@ -18,9 +18,9 @@ This report is deterministic; no build timestamp is embedded.
 
 ## Apple direct
 
-- Apple CDN domain entries: 158
+- Apple CDN domain entries: 159
 - Apple CN domain entries: 9
-- Final combined output entries: 165
+- Final combined output entries: 166
 - Sources are Sukka Apple CDN and Apple CN; overlap is minimized internally.
 
 ## Apple Services
@@ -50,7 +50,7 @@ This report is deterministic; no build timestamp is embedded.
 
 ## Microsoft (Mihomo only)
 
-- CDN direct output entries: 52
+- CDN direct output entries: 51
 - Microsoft proxy output entries: 212
 - Finite MetaCubeX keyword expansion entries: 186
 - CDN rules also covered by the proxy set: 51

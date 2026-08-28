@@ -1,9 +1,9 @@
 {
   "apple_direct": {
-    "apple_cdn_domain_entries": 158,
+    "apple_cdn_domain_entries": 159,
     "apple_cn_domain_entries": 9,
     "duplicates_removed": 1,
-    "output_entries": 165,
+    "output_entries": 166,
     "semantically_redundant_removed": 1,
     "source_scope": [
       "https://ruleset.skk.moe/Clash/domainset/apple_cdn.txt",
@@ -226,7 +226,7 @@
       "behavior": "ipcidr",
       "duplicates_removed": 0,
       "ip_version": 4,
-      "output_entries": 3917,
+      "output_entries": 3905,
       "source": "https://ruleset.skk.moe/Clash/ip/china_ip.txt"
     },
     "china_ip_ipv6": {
@@ -339,7 +339,7 @@
   },
   "microsoft": {
     "cdn_duplicates_removed": 0,
-    "cdn_output_entries": 52,
+    "cdn_output_entries": 51,
     "cdn_rules_also_covered_by_proxy": [
       {
         "cdn_rule": "res-1.cdn.office.net",
@@ -650,7 +650,7 @@
     ],
     "cdn_semantically_redundant_removed": 0,
     "cdn_source": "https://ruleset.skk.moe/Clash/non_ip/microsoft_cdn.txt",
-    "cdn_source_domain_entries": 52,
+    "cdn_source_domain_entries": 51,
     "keyword_expansion_matches": {
       "1drv": 1,
       "hotmail": 6,
@@ -738,12 +738,12 @@
   "sources": {
     "metacubex/ai": {
       "bytes": 3431,
-      "sha256": "295bbf48f90e0bacbc0cb16bd145a5dd74ad9d2e780f3435c62c098d9950bd2b",
+      "sha256": "3c2b2d408134e924cdb4521bb1b12dfb61aab9af0888e075ea8d92908ea14b73",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-!cn.list"
     },
     "metacubex/apple": {
       "bytes": 36860,
-      "sha256": "6cd5e895257ac76889b468775f421bbe8514e1024be23d347818aa9b9faba659",
+      "sha256": "e2a592cea684119083d1257355fae20428ac80ed719a9c3712a07ba983bdae8c",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/apple.list"
     },
     "metacubex/facebook": {
@@ -773,7 +773,7 @@
     },
     "metacubex/global/google": {
       "bytes": 18231,
-      "sha256": "d7835f6d6f7a6668ff52334497a21330f9e20c31139bf40ecd2c375c95d4ca7b",
+      "sha256": "612a27fb5eb52279795a3d56f8c1322194c5ab165b31db9a1555107ca2b7dc78",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google.list"
     },
     "metacubex/global/pinterest": {
@@ -793,7 +793,7 @@
     },
     "metacubex/microsoft": {
       "bytes": 15481,
-      "sha256": "abc5bf55bb46d9436f489cb88d7701543864506fcc88ddfd20a782d597c2e98a",
+      "sha256": "0e9f157e2792d8e9f2af81d0cfa8e9c7cd3aa8b6cc53993f2790ae7157ae0e90",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.list"
     },
     "metacubex/private": {
@@ -832,8 +832,8 @@
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/youtube.list"
     },
     "sukka/apple-cdn": {
-      "bytes": 4756,
-      "sha256": "8b43c77e550c5eadc51c4ef0869ad99242641086d33b000620839d3b944fe671",
+      "bytes": 4787,
+      "sha256": "353e7f1244fe816019036274f13762ecaf25c29b3f4a01ab952fc3f1281626d3",
       "url": "https://ruleset.skk.moe/Clash/domainset/apple_cdn.txt"
     },
     "sukka/apple-cn": {
@@ -847,13 +847,13 @@
       "url": "https://ruleset.skk.moe/Clash/non_ip/apple_services.txt"
     },
     "sukka/china-ip": {
-      "bytes": 61404,
-      "sha256": "4702d025878bb0b8171caf15d54cd69a1b5dead560433b79c3bad9bcef642539",
+      "bytes": 61229,
+      "sha256": "16018ddceef3b61996be63223f7692f39eda664dafb7df3248f13825147562bc",
       "url": "https://ruleset.skk.moe/Clash/ip/china_ip.txt"
     },
     "sukka/china-ip-ipv6": {
-      "bytes": 57617,
-      "sha256": "4be3fbff894faa21fe3bd4a7bdaa14632cef4cb5de31eb48ad8e62a8decccba1",
+      "bytes": 57613,
+      "sha256": "95d5d94d44dd79741d43e6f3d15ab7f781aab882ac676b5129348aecae31d04d",
       "url": "https://ruleset.skk.moe/Clash/ip/china_ip_ipv6.txt"
     },
     "sukka/domestic": {
@@ -872,8 +872,8 @@
       "url": "https://ruleset.skk.moe/Clash/non_ip/microsoft.txt"
     },
     "sukka/microsoft-cdn": {
-      "bytes": 3059,
-      "sha256": "1c853a7f845b652558cadb364abdcb790c84200fd4c9889822fe052e1fede403",
+      "bytes": 3024,
+      "sha256": "2e9f22761edfd2c4ee92d3f6af31ec7cea26d3e1a4184b94fbb7849cd88c8b2f",
       "url": "https://ruleset.skk.moe/Clash/non_ip/microsoft_cdn.txt"
     }
   },
