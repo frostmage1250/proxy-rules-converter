@@ -738,12 +738,12 @@
   "sources": {
     "metacubex/ai": {
       "bytes": 3431,
-      "sha256": "988a71e643b1ff42cea0d14ad3d61ad72a3f0e695ca1e14a8f95b9716175cd2c",
+      "sha256": "d6c34ef2f9577edf2f105c17ce9737f590d8beca4141d9bf7b911913b58cd135",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-!cn.list"
     },
     "metacubex/apple": {
       "bytes": 36860,
-      "sha256": "c364e76e1efdd2f8a4071670b38c966dfad2d40cba17f6aec8b7e104bc43ca4c",
+      "sha256": "b9fd350b40adfeb996cd7c106cdf245be189a6cedcaec77cae62b8570eb4aee3",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/apple.list"
     },
     "metacubex/facebook": {
@@ -773,7 +773,7 @@
     },
     "metacubex/global/google": {
       "bytes": 18231,
-      "sha256": "392ec869f91b651fed33d4dd17eba80fb1492e458884511b80e11345338c5b15",
+      "sha256": "d0e082328e370ecfd618c4a4d24aefd8ffe8168e81b03b73f977333f2439aba9",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google.list"
     },
     "metacubex/global/pinterest": {
@@ -793,7 +793,7 @@
     },
     "metacubex/microsoft": {
       "bytes": 15481,
-      "sha256": "2fe1cec309f44192ee38160228770c1488ee45cd491aee1a0b700efdd798ea7d",
+      "sha256": "11d35d0253286500c98b0fceba3524870cd1a5681d2e237bb08cb0fda5482fad",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.list"
     },
     "metacubex/private": {
