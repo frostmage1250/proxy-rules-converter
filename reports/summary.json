@@ -680,11 +680,53 @@
       "semantically_redundant_removed": 0,
       "source_entries": 179
     },
+    "apple": {
+      "duplicates_removed": 2,
+      "output_entries": 1585,
+      "semantically_redundant_removed": 205,
+      "source_entries": 1792
+    },
+    "apple-cn": {
+      "duplicates_removed": 0,
+      "output_entries": 296,
+      "semantically_redundant_removed": 0,
+      "source_entries": 296
+    },
+    "ehentai": {
+      "duplicates_removed": 0,
+      "output_entries": 8,
+      "semantically_redundant_removed": 0,
+      "source_entries": 8
+    },
     "facebook": {
       "duplicates_removed": 0,
       "output_entries": 394,
       "semantically_redundant_removed": 2,
       "source_entries": 396
+    },
+    "geolocation-cn": {
+      "duplicates_removed": 0,
+      "output_entries": 5281,
+      "semantically_redundant_removed": 8,
+      "source_entries": 5289
+    },
+    "geolocation-non-cn": {
+      "duplicates_removed": 0,
+      "output_entries": 33436,
+      "semantically_redundant_removed": 678,
+      "source_entries": 34114
+    },
+    "github": {
+      "duplicates_removed": 0,
+      "output_entries": 59,
+      "semantically_redundant_removed": 5,
+      "source_entries": 64
+    },
+    "google": {
+      "duplicates_removed": 0,
+      "output_entries": 846,
+      "semantically_redundant_removed": 225,
+      "source_entries": 1071
     },
     "instagram": {
       "duplicates_removed": 0,
@@ -692,11 +734,35 @@
       "semantically_redundant_removed": 2,
       "source_entries": 74
     },
+    "microsoft": {
+      "duplicates_removed": 2,
+      "output_entries": 637,
+      "semantically_redundant_removed": 109,
+      "source_entries": 748
+    },
+    "microsoft-cn": {
+      "duplicates_removed": 0,
+      "output_entries": 189,
+      "semantically_redundant_removed": 0,
+      "source_entries": 189
+    },
+    "pikpak": {
+      "duplicates_removed": 0,
+      "output_entries": 7,
+      "semantically_redundant_removed": 0,
+      "source_entries": 7
+    },
     "private": {
       "duplicates_removed": 0,
       "output_entries": 130,
       "semantically_redundant_removed": 0,
       "source_entries": 130
+    },
+    "steam": {
+      "duplicates_removed": 0,
+      "output_entries": 59,
+      "semantically_redundant_removed": 1,
+      "source_entries": 60
     },
     "telegram": {
       "duplicates_removed": 0,
@@ -735,21 +801,198 @@
       "source_entries": 178
     }
   },
+  "shadowrocket_ip": {
+    "cn-ip": {
+      "duplicates_removed": 0,
+      "output_entries": 10673,
+      "source_entries": 10673
+    },
+    "facebook-ip": {
+      "duplicates_removed": 0,
+      "output_entries": 82,
+      "source_entries": 82
+    },
+    "google-ip": {
+      "duplicates_removed": 0,
+      "output_entries": 949,
+      "source_entries": 949
+    },
+    "private-ip": {
+      "duplicates_removed": 0,
+      "output_entries": 18,
+      "source_entries": 18
+    },
+    "steam-asn": {
+      "duplicates_removed": 0,
+      "output_entries": 23,
+      "source_entries": 23
+    },
+    "telegram-ip": {
+      "duplicates_removed": 0,
+      "output_entries": 12,
+      "source_entries": 12
+    },
+    "tiktok-ip": {
+      "duplicates_removed": 0,
+      "output_entries": 115,
+      "source_entries": 115
+    },
+    "twitter-ip": {
+      "duplicates_removed": 0,
+      "output_entries": 686,
+      "source_entries": 686
+    }
+  },
   "sources": {
-    "metacubex/ai": {
+    "bett/asn/steam-asn": {
+      "bytes": 374,
+      "sha256": "78a89a4b5cb9331ddcd7082e39908f149ab391a98d78599066a272a2b54e91f6",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/asn/AS32590.list"
+    },
+    "bett/geoip/cn-ip": {
+      "bytes": 171312,
+      "sha256": "b64a13c625ff9b0d50db28dcc9d10510694bf505b174d9b2b9adfe4523eff9d1",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/cn.list"
+    },
+    "bett/geoip/facebook-ip": {
+      "bytes": 1329,
+      "sha256": "7eb48df382269dff7fed77e65301a047e3585407dd2d05db4355e3de6063c65e",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/facebook.list"
+    },
+    "bett/geoip/google-ip": {
+      "bytes": 15174,
+      "sha256": "1b759ada85cc832f18280255ee50e898c5b527c30b531e909b810f71e29e6a13",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/google.list"
+    },
+    "bett/geoip/private-ip": {
+      "bytes": 222,
+      "sha256": "06ae700eaba0fb7b812e699acf3e9fe8167344443ecc7fcfad0ca54c90ad100c",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/private.list"
+    },
+    "bett/geoip/telegram-ip": {
+      "bytes": 191,
+      "sha256": "271a96cc22155f8aefbe0b282384b611c4e2d17b87e264bb6e0b6e94c019407a",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/telegram.list"
+    },
+    "bett/geoip/tiktok-ip": {
+      "bytes": 1776,
+      "sha256": "f36a20898caa278f9581acb90bc47a4a34e4fcebc89340bfc19fa59abc9071c4",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/tiktok.list"
+    },
+    "bett/geoip/twitter-ip": {
+      "bytes": 10742,
+      "sha256": "8badefcd5cb8e933f3db64f9e1a17aa7e8b6d650a9ace53302599f178f18d0d2",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/twitter.list"
+    },
+    "bett/geosite/ai": {
       "bytes": 3431,
-      "sha256": "d6c34ef2f9577edf2f105c17ce9737f590d8beca4141d9bf7b911913b58cd135",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-!cn.list"
+      "sha256": "1d7639994289af31a54987c283b859af42bb9571b182851542c7f532a5b1b698",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/category-ai-!cn.list"
+    },
+    "bett/geosite/apple": {
+      "bytes": 36860,
+      "sha256": "30d9f17917afc15c65f54ad6bfa715bc6e7413880edca0591ec66f705214ad6c",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple.list"
+    },
+    "bett/geosite/apple-cn": {
+      "bytes": 7000,
+      "sha256": "6545a20e267955d0e27418962f53518af51fcd7fd030fc8d9e74f34fbe558171",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple@cn.list"
+    },
+    "bett/geosite/ehentai": {
+      "bytes": 121,
+      "sha256": "b0465da3d078db69bef733acbfd6a81ba5eb527b281ab45dfc93fab02e956e0e",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/ehentai.list"
+    },
+    "bett/geosite/facebook": {
+      "bytes": 7120,
+      "sha256": "c596908eb3c2227cd9d7b9974f8fed38ad4439118a0a10c4f63c69181313fd9e",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/facebook.list"
+    },
+    "bett/geosite/geolocation-cn": {
+      "bytes": 75729,
+      "sha256": "d4a1fee671d021220fc4b875808c3312289d354d937fc9f225bfc3932f82079e",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/geolocation-cn.list"
+    },
+    "bett/geosite/geolocation-non-cn": {
+      "bytes": 540151,
+      "sha256": "1ea4fd3209f0e48a6c7e3942c33b1c73f1f6b199dcd242721ac3f10eca4f5893",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/geolocation-!cn.list"
+    },
+    "bett/geosite/github": {
+      "bytes": 1924,
+      "sha256": "f5d67e6e0c8799bd292c8a012d579c8af37ee6a0af771299dd6500db4d1202fd",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/github.list"
+    },
+    "bett/geosite/google": {
+      "bytes": 18231,
+      "sha256": "241367a959a59465edd213cf0749e03d3a236e684eaa1e381517f6200577e1ab",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/google.list"
+    },
+    "bett/geosite/instagram": {
+      "bytes": 1447,
+      "sha256": "e5cba6ce4fa5a0dddbd4710d9dd5b6693c249e6f5be4179401843109ecbca228",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/instagram.list"
+    },
+    "bett/geosite/microsoft": {
+      "bytes": 15481,
+      "sha256": "11d35d0253286500c98b0fceba3524870cd1a5681d2e237bb08cb0fda5482fad",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/microsoft.list"
+    },
+    "bett/geosite/microsoft-cn": {
+      "bytes": 4235,
+      "sha256": "cad6cb3e1253def08646df6391ca79abfb22ddea030d3bc9487babf22d00af3b",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/microsoft@cn.list"
+    },
+    "bett/geosite/pikpak": {
+      "bytes": 124,
+      "sha256": "a0ad3b0278f3b720e37133d0641c634549b785e1264a5d5f740defdf5c487b21",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/pikpak.list"
+    },
+    "bett/geosite/private": {
+      "bytes": 2688,
+      "sha256": "9caf8f67450f6ff72fde0d2aec4d425238b88e371628011e51aab9185b0da73e",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/private.list"
+    },
+    "bett/geosite/steam": {
+      "bytes": 1370,
+      "sha256": "63e7cfe27eedb6660abd763618129cf46e3a39ebf436886bfb8a8eedde5b49bb",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/steam.list"
+    },
+    "bett/geosite/telegram": {
+      "bytes": 293,
+      "sha256": "2448b2699519cd258b10232fcacd01e89b7db04c8ce7fc860a4962518370a329",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/telegram.list"
+    },
+    "bett/geosite/threads": {
+      "bytes": 27,
+      "sha256": "77e44a4fe816e840abf6279a11cc88e418d5792d2ddf7bf8e93e42eb426a84f9",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/threads.list"
+    },
+    "bett/geosite/tiktok": {
+      "bytes": 730,
+      "sha256": "892f03350bb9c1d5e2fa15b417ac6759f13b12f558208d979d9f4d4cec310003",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/tiktok.list"
+    },
+    "bett/geosite/twitch": {
+      "bytes": 888,
+      "sha256": "230e8e3b582de5c769be1b95e06d7aadf7cd83aa54df240bfca2f8bc14e5fd7c",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/twitch.list"
+    },
+    "bett/geosite/twitter": {
+      "bytes": 369,
+      "sha256": "7bc17d19d2fa089b36993e56275eb0eb7355963f3e90a711364086442fd369c0",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/twitter.list"
+    },
+    "bett/geosite/youtube": {
+      "bytes": 2743,
+      "sha256": "e95f241fa4357918fc1066390c352aad750b571ddea15e3421d30c84e947ac10",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/youtube.list"
     },
     "metacubex/apple": {
       "bytes": 36860,
       "sha256": "b9fd350b40adfeb996cd7c106cdf245be189a6cedcaec77cae62b8570eb4aee3",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/apple.list"
-    },
-    "metacubex/facebook": {
-      "bytes": 7120,
-      "sha256": "c596908eb3c2227cd9d7b9974f8fed38ad4439118a0a10c4f63c69181313fd9e",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/facebook.list"
     },
     "metacubex/game-download": {
       "bytes": 752,
@@ -786,50 +1029,10 @@
       "sha256": "5554ce8069e2b3ca3222f112b2192652e96e5574be9096f71579191c8d498bfc",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/whatsapp.list"
     },
-    "metacubex/instagram": {
-      "bytes": 1447,
-      "sha256": "e5cba6ce4fa5a0dddbd4710d9dd5b6693c249e6f5be4179401843109ecbca228",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/instagram.list"
-    },
     "metacubex/microsoft": {
       "bytes": 15481,
       "sha256": "11d35d0253286500c98b0fceba3524870cd1a5681d2e237bb08cb0fda5482fad",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.list"
-    },
-    "metacubex/private": {
-      "bytes": 2688,
-      "sha256": "9caf8f67450f6ff72fde0d2aec4d425238b88e371628011e51aab9185b0da73e",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/private.list"
-    },
-    "metacubex/telegram": {
-      "bytes": 293,
-      "sha256": "2448b2699519cd258b10232fcacd01e89b7db04c8ce7fc860a4962518370a329",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/telegram.list"
-    },
-    "metacubex/threads": {
-      "bytes": 27,
-      "sha256": "77e44a4fe816e840abf6279a11cc88e418d5792d2ddf7bf8e93e42eb426a84f9",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/threads.list"
-    },
-    "metacubex/tiktok": {
-      "bytes": 730,
-      "sha256": "892f03350bb9c1d5e2fa15b417ac6759f13b12f558208d979d9f4d4cec310003",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/tiktok.list"
-    },
-    "metacubex/twitch": {
-      "bytes": 888,
-      "sha256": "230e8e3b582de5c769be1b95e06d7aadf7cd83aa54df240bfca2f8bc14e5fd7c",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/twitch.list"
-    },
-    "metacubex/twitter": {
-      "bytes": 369,
-      "sha256": "7bc17d19d2fa089b36993e56275eb0eb7355963f3e90a711364086442fd369c0",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/twitter.list"
-    },
-    "metacubex/youtube": {
-      "bytes": 2743,
-      "sha256": "e95f241fa4357918fc1066390c352aad750b571ddea15e3421d30c84e947ac10",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/youtube.list"
     },
     "sukka/apple-cdn": {
       "bytes": 4787,

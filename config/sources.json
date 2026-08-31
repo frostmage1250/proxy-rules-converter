@@ -22,9 +22,19 @@
       "discord": "discord.list",
       "dropbox": "dropbox.list",
       "pinterest": "pinterest.list"
-    },
-    "shadowrocket": {
+    }
+  },
+  "bett": {
+    "geosite_base": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite",
+    "geoip_base": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip",
+    "asn_base": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/asn",
+    "shadowrocket_domains": {
       "private": "private.list",
+      "steam": "steam.list",
+      "apple-cn": "apple@cn.list",
+      "apple": "apple.list",
+      "microsoft-cn": "microsoft@cn.list",
+      "microsoft": "microsoft.list",
       "telegram": "telegram.list",
       "youtube": "youtube.list",
       "threads": "threads.list",
@@ -33,7 +43,25 @@
       "twitter": "twitter.list",
       "twitch": "twitch.list",
       "tiktok": "tiktok.list",
-      "ai": "category-ai-!cn.list"
+      "google": "google.list",
+      "ai": "category-ai-!cn.list",
+      "github": "github.list",
+      "pikpak": "pikpak.list",
+      "ehentai": "ehentai.list",
+      "geolocation-non-cn": "geolocation-!cn.list",
+      "geolocation-cn": "geolocation-cn.list"
+    },
+    "shadowrocket_ips": {
+      "private-ip": "private.list",
+      "cn-ip": "cn.list",
+      "telegram-ip": "telegram.list",
+      "facebook-ip": "facebook.list",
+      "twitter-ip": "twitter.list",
+      "tiktok-ip": "tiktok.list",
+      "google-ip": "google.list"
+    },
+    "shadowrocket_asns": {
+      "steam-asn": "AS32590.list"
     }
   }
 }

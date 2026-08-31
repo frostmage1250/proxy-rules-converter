@@ -158,6 +158,21 @@ def parse_ipcidr_text(
     return unique, len(entries) - len(unique)
 
 
+def parse_mixed_ipcidr_text(text: str, source: str) -> tuple[list[str], int]:
+    """Parse a plain CIDR list containing either or both IP families."""
+
+    entries: list[str] = []
+    for line in clean_lines(text, source):
+        try:
+            network = ipaddress.ip_network(line, strict=True)
+        except ValueError as exc:
+            raise ConversionError(f"Invalid CIDR in {source}: {line}") from exc
+        entries.append(str(network))
+
+    unique = list(dict.fromkeys(entries))
+    return unique, len(entries) - len(unique)
+
+
 def is_droppable_domestic_wildcard(pattern: str) -> bool:
     """Return true only for the explicitly reviewed, nonessential Qihoo image rule."""
     return pattern.lower() == "*.qhimgs?.com"
@@ -332,12 +347,26 @@ def rule_covers_rule(cover: DomainRule, candidate: DomainRule) -> bool:
 def semantic_minimize(rules: Iterable[DomainRule]) -> tuple[list[DomainRule], int, int]:
     raw = list(rules)
     unique = sorted(set(raw), key=lambda rule: (rule.value, rule.kind))
+    suffix_values = {rule.value for rule in unique if rule.kind == "suffix"}
+    subdomain_suffix_values = {
+        rule.value for rule in unique if rule.kind == "subdomain_suffix"
+    }
+
+    def ancestors(value: str) -> Iterable[str]:
+        labels = value.split(".")
+        for index in range(1, len(labels)):
+            yield ".".join(labels[index:])
+
     kept: list[DomainRule] = []
     for candidate in unique:
-        if any(
-            other != candidate and rule_covers_rule(other, candidate)
-            for other in unique
-        ):
+        inherited = any(
+            ancestor in suffix_values or ancestor in subdomain_suffix_values
+            for ancestor in ancestors(candidate.value)
+        )
+        covered_at_apex = (
+            candidate.kind != "suffix" and candidate.value in suffix_values
+        )
+        if inherited or covered_at_apex:
             continue
         kept.append(candidate)
     kept.sort(key=lambda rule: (rule.kind != "exact", rule.value, rule.kind))
@@ -378,6 +407,19 @@ def render_rules(rules: Sequence[DomainRule], target: str) -> str:
         raise ConversionError(f"Unknown render target: {target}")
     if len(lines) != len(set(lines)):
         raise ConversionError(f"Rendering introduced duplicate {target} entries")
+    return "\n".join(lines) + "\n"
+
+
+def render_shadowrocket_ip_rules(networks: Sequence[str]) -> str:
+    """Render plain CIDRs as a Shadowrocket classical remote rule set."""
+
+    lines: list[str] = []
+    for value in networks:
+        network = ipaddress.ip_network(value, strict=True)
+        rule_type = "IP-CIDR" if network.version == 4 else "IP-CIDR6"
+        lines.append(f"{rule_type},{network}")
+    if len(lines) != len(set(lines)):
+        raise ConversionError("Rendering introduced duplicate Shadowrocket IP rules")
     return "\n".join(lines) + "\n"
 
 
@@ -507,9 +549,11 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
     )
 
     shadowrocket_stats: dict[str, dict[str, int]] = {}
-    for output_name, source_leaf in config["metacubex"]["shadowrocket"].items():
-        url = join_url(meta_base, source_leaf)
-        text = download(f"metacubex/{output_name}", url)
+    bett_config = config["bett"]
+    bett_geosite_base = bett_config["geosite_base"]
+    for output_name, source_leaf in bett_config["shadowrocket_domains"].items():
+        url = join_url(bett_geosite_base, source_leaf)
+        text = download(f"bett/geosite/{output_name}", url)
         raw_rules = parse_domain_text(text, url)
         rules, duplicates, redundant = semantic_minimize(raw_rules)
         outputs[f"dist/shadowrocket/{output_name}.domain-set"] = render_rules(
@@ -520,6 +564,33 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
             "output_entries": len(rules),
             "duplicates_removed": duplicates,
             "semantically_redundant_removed": redundant,
+        }
+
+    shadowrocket_ip_stats: dict[str, dict[str, int]] = {}
+    for output_name, source_leaf in bett_config["shadowrocket_ips"].items():
+        url = join_url(bett_config["geoip_base"], source_leaf)
+        text = download(f"bett/geoip/{output_name}", url)
+        networks, duplicates = parse_mixed_ipcidr_text(text, url)
+        outputs[f"dist/shadowrocket/{output_name}.list"] = (
+            render_shadowrocket_ip_rules(networks)
+        )
+        shadowrocket_ip_stats[output_name] = {
+            "source_entries": len(networks) + duplicates,
+            "output_entries": len(networks),
+            "duplicates_removed": duplicates,
+        }
+
+    for output_name, source_leaf in bett_config["shadowrocket_asns"].items():
+        url = join_url(bett_config["asn_base"], source_leaf)
+        text = download(f"bett/asn/{output_name}", url)
+        networks, duplicates = parse_mixed_ipcidr_text(text, url)
+        outputs[f"dist/shadowrocket/{output_name}.list"] = (
+            render_shadowrocket_ip_rules(networks)
+        )
+        shadowrocket_ip_stats[output_name] = {
+            "source_entries": len(networks) + duplicates,
+            "output_entries": len(networks),
+            "duplicates_removed": duplicates,
         }
 
     apple_cdn_url = config["sukka"]["apple_cdn"]
@@ -683,6 +754,9 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
     outputs["dist/mihomo/steam-cn-download.list"] = render_rules(
         final_steam, "mihomo"
     )
+    outputs["dist/shadowrocket/steam-cn-download.domain-set"] = render_rules(
+        final_steam, "shadowrocket"
+    )
 
     reviewed_set = set(reviewed)
     steam_named_not_reviewed = sorted(
@@ -791,6 +865,7 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
             "full_steam_provider": "MetaCubeX meta-rules-dat steam.mrs",
         },
         "shadowrocket": shadowrocket_stats,
+        "shadowrocket_ip": shadowrocket_ip_stats,
     }
     outputs["reports/summary.json"] = json.dumps(
         summary, ensure_ascii=False, indent=2, sort_keys=True
@@ -876,9 +951,11 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         [
             "## Shadowrocket",
             "",
-            f"- Generated domain sets: {len(shadowrocket_stats) + 4}",
+            f"- Generated bett-rules domain sets: {len(shadowrocket_stats)}",
+            f"- Generated bett-rules IP/ASN sets: {len(shadowrocket_ip_stats)}",
+            "- Generated Steam-China domain set: 1",
             f"- Static hand-maintained domain sets: {len(STATIC_OUTPUTS)}",
-            "- APNS and Shadowrocket IP rule sets are intentionally not generated.",
+            "- APNS remains externally maintained and is not generated.",
             "",
         ]
     )

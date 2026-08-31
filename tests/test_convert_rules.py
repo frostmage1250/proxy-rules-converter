@@ -25,7 +25,9 @@ from convert_rules import (  # noqa: E402
     parse_classical_domains,
     parse_domain_text,
     parse_ipcidr_text,
+    parse_mixed_ipcidr_text,
     render_rules,
+    render_shadowrocket_ip_rules,
     rule_covers_domain,
     semantic_minimize,
 )
@@ -56,6 +58,42 @@ class ConverterTests(unittest.TestCase):
         entries, duplicates = parse_ipcidr_text("2001:250::/30\n", "test", 6)
         self.assertEqual(entries, ["2001:250::/30"])
         self.assertEqual(duplicates, 0)
+
+    def test_parses_and_renders_mixed_shadowrocket_ip_rules(self) -> None:
+        entries, duplicates = parse_mixed_ipcidr_text(
+            "1.1.1.0/24\n2001:db8::/32\n1.1.1.0/24\n", "test"
+        )
+        self.assertEqual(entries, ["1.1.1.0/24", "2001:db8::/32"])
+        self.assertEqual(duplicates, 1)
+        self.assertEqual(
+            render_shadowrocket_ip_rules(entries),
+            "IP-CIDR,1.1.1.0/24\nIP-CIDR6,2001:db8::/32\n",
+        )
+
+    def test_bett_shadowrocket_mapping_matches_reviewed_scope(self) -> None:
+        import json
+
+        config = json.loads(
+            (ROOT / "config" / "sources.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(
+            set(config["bett"]["shadowrocket_ips"]),
+            {
+                "private-ip",
+                "cn-ip",
+                "telegram-ip",
+                "facebook-ip",
+                "twitter-ip",
+                "tiktok-ip",
+                "google-ip",
+            },
+        )
+        self.assertEqual(
+            config["bett"]["shadowrocket_asns"],
+            {"steam-asn": "AS32590.list"},
+        )
+        for forbidden in ("apple-ip", "microsoft-ip", "steam-ip", "openai-ip"):
+            self.assertNotIn(forbidden, config["bett"]["shadowrocket_ips"])
 
     def test_rejects_wrong_ip_family(self) -> None:
         with self.assertRaises(ConversionError):
@@ -106,6 +144,25 @@ class ConverterTests(unittest.TestCase):
         self.assertEqual(rules, [DomainRule("suffix", "example.com")])
         self.assertEqual(duplicates, 1)
         self.assertEqual(redundant, 1)
+
+    def test_semantic_minimize_preserves_apex_for_subdomain_suffix(self) -> None:
+        rules, duplicates, redundant = semantic_minimize(
+            [
+                DomainRule("subdomain_suffix", "example.com"),
+                DomainRule("exact", "example.com"),
+                DomainRule("exact", "www.example.com"),
+                DomainRule("suffix", "cdn.example.com"),
+            ]
+        )
+        self.assertEqual(
+            rules,
+            [
+                DomainRule("exact", "example.com"),
+                DomainRule("subdomain_suffix", "example.com"),
+            ],
+        )
+        self.assertEqual(duplicates, 0)
+        self.assertEqual(redundant, 2)
 
     def test_suffix_coverage(self) -> None:
         rule = DomainRule("suffix", "example.com")

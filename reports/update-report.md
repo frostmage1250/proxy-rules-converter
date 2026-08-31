@@ -80,6 +80,8 @@ Final entries:
 
 ## Shadowrocket
 
-- Generated domain sets: 14
+- Generated bett-rules domain sets: 21
+- Generated bett-rules IP/ASN sets: 8
+- Generated Steam-China domain set: 1
 - Static hand-maintained domain sets: 2
-- APNS and Shadowrocket IP rule sets are intentionally not generated.
+- APNS remains externally maintained and is not generated.
