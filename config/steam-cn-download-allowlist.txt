@@ -1,4 +1,4 @@
-# Steam-only subset of MetaCubeX category-game-platforms-download@cn.
+# Steam-only subset validated against Bett category-game-platforms-download@cn.
 # Keep this provider self-contained because it must precede the full Steam proxy rule.
 dl.steam.clngaa.com
 st.dl.eccdnx.com

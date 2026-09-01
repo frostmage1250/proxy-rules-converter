@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the V2Fly -> MetaCubeX geolocation-cn build and write its report."""
+"""Validate V2Fly geolocation-cn text and its MRS compilation."""
 
 from __future__ import annotations
 
@@ -75,16 +75,14 @@ def parse_v2fly_export(path: Path) -> list[V2FlyEntry]:
     return entries
 
 
-def load_meta_domain_rules(path: Path) -> set[str]:
+def load_domain_rules(path: Path) -> list[str]:
     lines = [line.strip() for line in path.read_text(encoding="utf-8").splitlines()]
     rules = [line for line in lines if line and not line.startswith("#")]
-    if len(rules) != len(set(rules)):
-        raise ValidationError(f"{path}: duplicate domain rules found")
     for rule in rules:
         domain = rule[2:] if rule.startswith("+.") else rule
         if not domain or any(character.isspace() for character in domain):
             raise ValidationError(f"{path}: malformed domain rule {rule!r}")
-    return set(rules)
+    return rules
 
 
 def matches(host: str, rules: set[str]) -> bool:
@@ -96,7 +94,7 @@ def matches(host: str, rules: set[str]) -> bool:
 
 def validate(
     export_path: Path,
-    meta_list_path: Path,
+    domain_list_path: Path,
     mrs_path: Path,
     expected_regex_path: Path = DEFAULT_EXPECTED_REGEX,
     minimum_domain_rules: int = 7000,
@@ -132,27 +130,38 @@ def validate(
             f"Reviewed regex set changed; missing={missing}, added={added}"
         )
 
-    expected_domain_rules = {
-        *("+." + entry.value for entry in by_type["domain"]),
-        *(entry.value for entry in by_type["full"]),
-    }
+    expected_domain_rules = [
+        ("+." + entry.value if entry.rule_type == "domain" else entry.value)
+        for entry in entries
+        if entry.rule_type in {"domain", "full"}
+    ]
     if len(expected_domain_rules) < minimum_domain_rules:
         raise ValidationError(
             f"Only {len(expected_domain_rules)} MRS-compatible rules remain; "
             f"expected at least {minimum_domain_rules}"
         )
 
-    actual_domain_rules = load_meta_domain_rules(meta_list_path)
+    actual_domain_rules = load_domain_rules(domain_list_path)
     if actual_domain_rules != expected_domain_rules:
-        missing = sorted(expected_domain_rules - actual_domain_rules)[:10]
-        added = sorted(actual_domain_rules - expected_domain_rules)[:10]
+        mismatch = next(
+            (
+                index
+                for index, (expected, actual) in enumerate(
+                    zip(expected_domain_rules, actual_domain_rules), 1
+                )
+                if expected != actual
+            ),
+            min(len(expected_domain_rules), len(actual_domain_rules)) + 1,
+        )
         raise ValidationError(
-            "MetaCubeX output does not exactly match V2Fly domain/full entries; "
-            f"missing sample={missing}, added sample={added}"
+            "Canonical domain list does not preserve V2Fly domain/full order and count; "
+            f"first mismatch at rule {mismatch}, expected count={len(expected_domain_rules)}, "
+            f"actual count={len(actual_domain_rules)}"
         )
 
-    failed_positive = [host for host in positive_hosts if not matches(host, actual_domain_rules)]
-    failed_negative = [host for host in negative_hosts if matches(host, actual_domain_rules)]
+    rule_set = set(actual_domain_rules)
+    failed_positive = [host for host in positive_hosts if not matches(host, rule_set)]
+    failed_negative = [host for host in negative_hosts if matches(host, rule_set)]
     if failed_positive or failed_negative:
         raise ValidationError(
             f"Sentinel checks failed; missing={failed_positive}, unexpectedly matched={failed_negative}"
@@ -172,7 +181,7 @@ def validate(
         "negative_sentinels": list(negative_hosts),
         "sha256": {
             "v2fly_export": sha256(export_path),
-            "domain_list": sha256(meta_list_path),
+            "domain_list": sha256(domain_list_path),
             "domain_mrs": sha256(mrs_path),
         },
     }
@@ -181,24 +190,28 @@ def validate(
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--v2fly-export", type=Path, required=True)
-    parser.add_argument("--meta-list", type=Path, required=True)
-    parser.add_argument("--meta-mrs", type=Path, required=True)
+    parser.add_argument("--domain-list", type=Path, required=True)
+    parser.add_argument("--domain-mrs", type=Path, required=True)
     parser.add_argument("--expected-regex", type=Path, default=DEFAULT_EXPECTED_REGEX)
     parser.add_argument("--v2fly-commit", required=True)
-    parser.add_argument("--converter-commit", required=True)
+    parser.add_argument("--mrs-converter-commit", required=True)
     parser.add_argument("--report", type=Path, required=True)
     args = parser.parse_args(argv)
 
     try:
         report = validate(
             args.v2fly_export.resolve(),
-            args.meta_list.resolve(),
-            args.meta_mrs.resolve(),
+            args.domain_list.resolve(),
+            args.domain_mrs.resolve(),
             args.expected_regex.resolve(),
         )
         report["upstreams"] = {
             "v2fly/domain-list-community": args.v2fly_commit,
-            "MetaCubeX/meta-rules-converter": args.converter_commit,
+            "mrs_converter": {
+                "name": "MetaCubeX/meta-rules-converter",
+                "commit": args.mrs_converter_commit,
+                "role": "MRS format generation only",
+            },
         }
         args.report.parent.mkdir(parents=True, exist_ok=True)
         args.report.write_text(

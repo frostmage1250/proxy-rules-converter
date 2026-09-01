@@ -29,7 +29,7 @@ class GeolocationCnValidationTests(unittest.TestCase):
         self.assertEqual(entries[0].attrs, ("cn",))
         self.assertEqual(entries[1].value, r"^foo:[0-9]+\.cn$")
 
-    def test_validates_exact_meta_projection_and_sentinels(self) -> None:
+    def test_validates_exact_v2fly_projection_and_sentinels(self) -> None:
         with tempfile.TemporaryDirectory() as temp_name:
             root = Path(temp_name)
             export = root / "export.txt"

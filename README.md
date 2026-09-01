@@ -1,157 +1,80 @@
 # Mihomo and Shadowrocket rule converter
 
-This repository generates compact native domain providers for the paired Mihomo and
-Shadowrocket configurations. It downloads public upstream data, validates every rule
-type, removes duplicates and covered entries, and commits only changed generated files.
+This repository publishes reviewed Bett rules for Mihomo and Shadowrocket, plus the
+separately documented V2Fly `geolocation-cn` fallback.
 
-## Policy
+## Conversion policy
 
-### Apple direct and services split
+- Perform only syntax changes required by the target client.
+- Preserve every source rule, its order, and the total rule count.
+- Do not semantically minimize, deduplicate, sort, replace, or silently ignore rules.
+- Preserve upstream exact duplicates in their original positions without special
+  handling or approval.
+- Stop the build when an unsupported rule, normalization requirement, source
+  disappearance, or target-format collision is detected, then request a maintainer
+  decision.
 
-- Combine Sukka `apple_cdn` and `apple_cn`, minimize their internal overlap, and emit
-  `apple-direct` for direct connections.
-- Build `apple-services` primarily from Sukka `apple_services`: convert its 15 reviewed
-  explicit suffixes directly, but replace the broad `apple.com` suffix with the finite
-  matching descendants from MetaCubeX `apple.list` plus the exact `apple.com` apex.
-- Never restore the broad `+.apple.com` rule, import the full MetaCubeX Apple set, or
-  import MetaCubeX Apple@CN. In particular, `apps.apple.com` is not added specially.
-- Keep overlap between `apple-direct` and `apple-services`; direct must be evaluated
-  first because the providers intentionally use different policies.
-- Ignore the eight process rules and `17.0.0.0/8` from Apple Services.
-- Emit both Apple providers for Mihomo and Shadowrocket. Shadowrocket APNS remains an
-  external classical rule and is not generated here.
+## Sources and outputs
 
-### Mihomo Microsoft split
+### Bett to Shadowrocket
 
-- Convert Sukka `microsoft_cdn` to `microsoft-cdn.list` for direct connections.
-- Convert the 80 explicit Sukka Microsoft suffixes to `microsoft.list` for proxying.
-- Replace only Sukka's three reviewed keywords (`1drv`, `hotmail`, and `microsoft`)
-  with the finite matching entries found in MetaCubeX `microsoft.list`.
-- The CDN rule must appear before the Microsoft proxy rule because the two providers
-  intentionally overlap.
-- Do not use MetaCubeX Microsoft@CN.
-- Do not generate any Microsoft provider for Shadowrocket.
+The converter downloads the configured `appshubcc/bett-rules@meta` geosite, GeoIP,
+and ASN lists. It converts:
 
-### Domestic and Steam
+- Mihomo `+.` domain suffix syntax to Shadowrocket `.` syntax.
+- IPv4 CIDRs to `IP-CIDR,<network>`.
+- IPv6 CIDRs to `IP-CIDR6,<network>`.
 
-- Convert Sukka `domestic` classical text to native domain text for both clients.
-- Drop the reviewed nonessential `DOMAIN-WILDCARD,*.qhimgs?.com` entry; any new
-  wildcard fails the build pending review.
-- Build Steam input only from MetaCubeX
-  `category-game-platforms-download@cn.list`.
-- Emit its reviewed Steam-only subset as a self-contained direct provider. Domestic
-  overlap is retained because this provider must be evaluated before the complete
-  MetaCubeX `steam.mrs` proxy provider.
-- Required order: `steam-cn-download` (DIRECT), then MetaCubeX `steam` (proxy).
-  Other game platforms from the upstream `@cn` category are excluded.
+No other rule transformation is permitted. The output line at position N always
+corresponds to source rule N.
 
-### Global replacement
+### Steam China download
 
-- Replace the old Shadowrocket GFW provider with a Mihomo-only Global provider built
-  from Sukka `global`.
-- Convert Sukka `DOMAIN` and `DOMAIN-SUFFIX` entries to native Mihomo domain text.
-- Replace the six reviewed keywords (`google`, `facebook`, `whatsapp`, `discord`,
-  `dropbox`, and `pinterest`) with the complete corresponding MetaCubeX `.list`
-  branches, rather than approximate wildcard matching.
-- Drop `blogspot`, `sci-hub`, and `browserleaks` completely. This exclusion is also
-  applied to the expanded branches, so Blogspot entries from `google.list` cannot be
-  reintroduced indirectly.
-- Render the same canonical result as Mihomo domain text and as a Shadowrocket
-  DOMAIN-SET; only the client-specific suffix syntax differs.
+`config/steam-cn-download-allowlist.txt` is the canonical reviewed 11-rule source.
+Every build verifies that Bett
+`category-game-platforms-download@cn.list` still covers all 11 entries, then emits the
+allowlist unchanged and in its original order for Mihomo and Shadowrocket.
 
-### Mihomo China IP providers
+### V2Fly geolocation-cn
 
-- Fetch Sukka's `china_ip.txt` and `china_ip_ipv6.txt` directly on every build.
-- Validate every entry as a canonical IPv4 or IPv6 network and reject mixed families.
-- Download into temporary text files and publish only `.mrs` files compiled with
-  Mihomo's official `ipcidr` converter behavior.
-- Do not generate corresponding Shadowrocket IP providers.
+This is the explicitly approved exception to the Bett-only rule-data policy.
+The workflow builds `geolocation-cn-clean` with V2Fly's official generator and
+MetaCubeX's official converter. The current three regular-expression rules cannot be
+represented by domain MRS and are explicitly pinned in
+`config/v2fly/geolocation-cn-regex.txt`; any change to that reviewed set stops the
+workflow. The generated Mihomo list is converted to Shadowrocket without changing its
+rule count or order.
 
-### V2Fly geolocation-cn fallback
+### Static file
 
-- Build the routing fallback from the current official
-  `v2fly/domain-list-community` source with V2Fly's own Go generator. This is
-  required because its `@-attribute` include filters must not be interpreted by
-  older third-party parsers.
-- Add a local `geolocation-cn-clean` category containing
-  `include:geolocation-cn @-ads`. The official upstream category already removes
-  entries tagged `@!cn`; the local inclusion additionally removes entries tagged
-  `@ads`.
-- Assemble a DAT containing only that category, then use the current official
-  `MetaCubeX/meta-rules-converter` to publish `geolocation-cn.list` and
-  `geolocation-cn.mrs` for Mihomo.
-- Require at least 7,000 MRS-compatible rules; exact projection from V2Fly
-  `domain`/`full` entries; reviewed positive and negative hostname sentinels; and
-  zero retained `@ads`, `@!cn`, or keyword entries.
-- Domain MRS cannot represent V2Fly regular expressions. The three currently
-  reviewed regex entries are recorded in `reports/geolocation-cn.json`; any
-  change to that set fails the workflow for review instead of being silently
-  dropped.
+`dist/shadowrocket/bilibili-pcdn.list` is the only hand-maintained static provider.
+The converter never rewrites it.
 
-### Bett-rules Shadowrocket providers
-
-- Fetch the reviewed service and geolocation inputs from the authoritative
-  `appshubcc/bett-rules@meta` raw GitHub branch and convert its non-classical
-  `geo/geosite/*.list` files to native Shadowrocket DOMAIN-SET text.
-- Generate classical Shadowrocket IP rule sets only for Private, China, Google,
-  Telegram, Facebook, Twitter, and TikTok, plus Steam ASN AS32590. Apple,
-  Microsoft, OpenAI, and Steam GeoIP are intentionally excluded.
-- Emit the reviewed 11-domain Steam-China subset as
-  `steam-cn-download.domain-set`; it must precede the complete Steam provider.
-- Keep APNS external. Do not generate qBittorrent process rules.
-- Keep `bilibili-direct.list` and `bilibili-pcdn.list` as hand-maintained static
-  Shadowrocket files; the converter neither creates nor rewrites them.
-
-## Outputs
+## Published files
 
 ```text
 dist/
 ├─ mihomo/
-│  ├─ apple-direct.list
-│  ├─ apple-direct.mrs
-│  ├─ apple-services.list
-│  ├─ apple-services.mrs
-│  ├─ china-ip.mrs
-│  ├─ china-ip-ipv6.mrs
-│  ├─ domestic.list
-│  ├─ domestic.mrs
-│  ├─ global.list
-│  ├─ global.mrs
 │  ├─ geolocation-cn.list
 │  ├─ geolocation-cn.mrs
-│  ├─ microsoft-cdn.list
-│  ├─ microsoft-cdn.mrs
-│  ├─ microsoft.list
-│  ├─ microsoft.mrs
 │  ├─ steam-cn-download.list
 │  └─ steam-cn-download.mrs
 └─ shadowrocket/
-   ├─ *.domain-set        # Bett geosite conversions and Steam-China subset
-   ├─ *-ip.list           # Reviewed Bett GeoIP classical rules
-   ├─ steam-asn.list      # Bett AS32590 classical rules
-   ├─ bilibili-direct.list
-   └─ bilibili-pcdn.list
+   ├─ *.domain-set          # Bett geosite sets, geolocation-cn, Steam-China
+   ├─ *-ip.list             # Bett GeoIP sets
+   ├─ steam-asn.list        # Bett AS32590 CIDRs
+   └─ bilibili-pcdn.list    # static reviewed provider
 ```
 
-Each Mihomo domain provider is published twice: a readable `.list` source with
-`format: text`, and a compact `.mrs` binary. The two China IP providers publish only
-their compact `.mrs` binaries; their downloaded text is temporary. All binaries except
-`geolocation-cn.mrs` are compiled by Mihomo's official `convert-ruleset` command. The
-geolocation fallback is assembled by V2Fly's official generator and compiled by
-MetaCubeX's official converter. Its Shadowrocket DOMAIN-SET is converted directly
-from that same self-built `.list`, rather than from bett-rules. On every run, the workflow resolves the latest stable
-official Mihomo release through GitHub's `releases/latest` API, selects the compatible
-Linux AMD64 build, and verifies the asset's published SHA-256 digest before conversion.
-Pre-releases such as Alpha are intentionally excluded.
-Shadowrocket files use native DOMAIN-SET syntax. `reports/summary.json` records source
-URLs and hashes, counts, ignored rules, deduplication, keyword expansion, and ordering
-requirements.
+Mihomo MRS files are produced by official converters. `steam-cn-download.mrs` is
+compiled with Mihomo's `convert-ruleset` command. `geolocation-cn.mrs` is produced by
+MetaCubeX's official converter from the V2Fly build.
 
 ## Run locally
 
-Python 3.11 or newer is sufficient for the text converter; no third-party Python
-packages are needed. MRS generation additionally requires the official `mihomo`
-executable in `PATH`, through `MIHOMO_BIN`, or with `--mihomo`.
+Python 3.11 or newer is sufficient for text conversion. MRS generation additionally
+requires an official Mihomo executable in `PATH`, through `MIHOMO_BIN`, or with
+`--mihomo`.
 
 ```bash
 python -m unittest discover -s tests -v
@@ -159,145 +82,14 @@ python src/convert_rules.py
 python src/convert_mrs.py
 python src/convert_rules.py --check
 python src/convert_mrs.py --check
+python src/convert_geolocation_cn_shadowrocket.py --check
 ```
 
-The MRS wrapper runs the official command for every `dist/mihomo/*.list` file,
-selecting the behavior assigned to that provider:
+## Automation
 
-```text
-mihomo convert-ruleset domain text input.list output.mrs
-mihomo convert-ruleset ipcidr text input.list output.mrs
-```
+`.github/workflows/update-rules.yml` runs daily and on relevant source changes. It
+fetches fresh upstream files, runs all validation, regenerates the providers, checks
+determinism, and commits only changed files under `dist/` and `reports/`.
 
-## GitHub Actions schedule
+Source mappings are in `config/sources.json`.
 
-The **Update generated rules** workflow supports manual runs and runs daily at
-18:23 UTC, which is 02:23 the following day in Asia/Shanghai. It commits only when
-`dist/` or `reports/` actually changes. The repository is independent rather than a
-GitHub fork; upstream attribution and licensing are documented in `NOTICE.md`.
-
-There is no separate upstream download timer or cache: every workflow run fetches all
-configured upstream rule sets immediately before conversion. The scheduled upstream
-refresh interval and conversion interval are therefore both one day. Mihomo client
-examples below also use `interval: 86400`, so published providers are checked daily.
-
-Dependabot checks only the GitHub Actions development dependencies once per day. A
-three-day cooldown keeps newly published versions out of update PRs until they have had
-time to stabilize; application rule sources and generated providers are not part of
-this dependency-update configuration.
-
-## Mihomo configuration
-
-```yaml
-rule-providers:
-  china_ip:
-    type: http
-    interval: 86400
-    proxy: MESL
-    behavior: ipcidr
-    format: mrs
-    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/china-ip.mrs"
-    path: ./ruleset/china-ip.mrs
-
-  china_ip_ipv6:
-    type: http
-    interval: 86400
-    proxy: MESL
-    behavior: ipcidr
-    format: mrs
-    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/china-ip-ipv6.mrs"
-    path: ./ruleset/china-ip-ipv6.mrs
-
-  apple_direct:
-    type: http
-    interval: 86400
-    proxy: MESL
-    behavior: domain
-    format: mrs
-    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/apple-direct.mrs"
-    path: ./ruleset/apple-direct.mrs
-
-  apple_services:
-    type: http
-    interval: 86400
-    proxy: MESL
-    behavior: domain
-    format: mrs
-    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/apple-services.mrs"
-    path: ./ruleset/apple-services.mrs
-
-  microsoft_cdn:
-    type: http
-    interval: 86400
-    proxy: MESL
-    behavior: domain
-    format: mrs
-    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/microsoft-cdn.mrs"
-    path: ./ruleset/microsoft-cdn.mrs
-
-  microsoft:
-    type: http
-    interval: 86400
-    proxy: MESL
-    behavior: domain
-    format: mrs
-    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/microsoft.mrs"
-    path: ./ruleset/microsoft.mrs
-
-  global:
-    type: http
-    interval: 86400
-    proxy: MESL
-    behavior: domain
-    format: mrs
-    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/global.mrs"
-    path: ./ruleset/global.mrs
-
-  geolocation_cn:
-    type: http
-    interval: 86400
-    proxy: MESL
-    behavior: domain
-    format: mrs
-    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/geolocation-cn.mrs"
-    path: ./ruleset/geolocation-cn.mrs
-```
-
-The relevant rule order is:
-
-```yaml
-rules:
-  - "RULE-SET,apple_direct,Direct"
-  - "RULE-SET,apple_services,MESL"
-  - "RULE-SET,microsoft_cdn,Direct"
-  - "RULE-SET,microsoft,MESL"
-  - "RULE-SET,global,MESL"
-  # Late direct fallback, immediately before the non-CN proxy fallback/final rule.
-  - "RULE-SET,geolocation_cn,Direct"
-```
-
-Keep `apple_direct` immediately before `apple_services`, and keep `microsoft_cdn`
-immediately before `microsoft`.
-
-## Shadowrocket configuration
-
-```ini
-DOMAIN-SET,https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/shadowrocket/apple-cn.domain-set,DIRECT
-DOMAIN-SET,https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/shadowrocket/apple.domain-set,PROXY
-DOMAIN-SET,https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/shadowrocket/google.domain-set,Google
-DOMAIN-SET,https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/shadowrocket/geolocation-cn.domain-set,DIRECT
-RULE-SET,https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/shadowrocket/google-ip.list,Google,no-resolve
-```
-
-The two Bilibili files are static reviewed inputs and are not generated by the
-converter. APNS remains an external rule and must stay first in the client config.
-
-## Update source decisions
-
-- Upstream URLs: `config/sources.json`
-- Reviewed Steam China candidates: `config/steam-cn-download-allowlist.txt`
-
-The Steam allowlist is a classification decision, not an independent domain source.
-An entry is emitted only while MetaCubeX `category-game-platforms-download@cn`
-covers it. Domestic overlap is intentionally retained so the direct subset remains
-self-contained ahead of the complete Steam proxy rule.

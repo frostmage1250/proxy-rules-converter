@@ -8,7 +8,6 @@ This wrapper deliberately delegates the binary format to Mihomo's official
 from __future__ import annotations
 
 import argparse
-import json
 import os
 import shutil
 import subprocess
@@ -18,16 +17,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
 
-from convert_rules import ConversionError, fetch_text, parse_ipcidr_text
-
-
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RULE_DIR = ROOT / "dist" / "mihomo"
-DEFAULT_SOURCES = ROOT / "config" / "sources.json"
-IPCIDR_RULE_SETS = (
-    ("china_ip", "china-ip", 4),
-    ("china_ip_ipv6", "china-ip-ipv6", 6),
-)
 EXTERNALLY_COMPILED_DOMAIN_LISTS = frozenset({"geolocation-cn.list"})
 EXTERNALLY_COMPILED_MRS = frozenset({"geolocation-cn.mrs"})
 
@@ -55,24 +46,6 @@ def discover_rule_sets(rule_dir: Path) -> list[RuleSet]:
         for source in sorted(rule_dir.glob("*.list"))
         if source.name not in EXTERNALLY_COMPILED_DOMAIN_LISTS
     ]
-
-
-def materialize_ipcidr_rule_sets(
-    temp_dir: Path, rule_dir: Path, sources_path: Path
-) -> list[RuleSet]:
-    """Download validated IP sources into temporary files for direct MRS compilation."""
-
-    config = json.loads(sources_path.read_text(encoding="utf-8"))
-    result: list[RuleSet] = []
-    for source_key, output_name, ip_version in IPCIDR_RULE_SETS:
-        url = config["sukka"][source_key]
-        entries, _ = parse_ipcidr_text(fetch_text(url), url, ip_version)
-        source = temp_dir / f"{output_name}.source.txt"
-        source.write_text("\n".join(entries) + "\n", encoding="utf-8", newline="\n")
-        result.append(
-            RuleSet(source, rule_dir / f"{output_name}.mrs", "ipcidr")
-        )
-    return result
 
 
 def resolve_mihomo(explicit: Path | None) -> Path:
@@ -115,7 +88,7 @@ def compile_rule_set(mihomo: Path, rule_set: RuleSet, destination: Path) -> None
 
 
 def convert_all(
-    mihomo: Path, rule_dir: Path, check: bool, sources_path: Path = DEFAULT_SOURCES
+    mihomo: Path, rule_dir: Path, check: bool
 ) -> tuple[list[str], list[str]]:
     domain_rule_sets = discover_rule_sets(rule_dir)
     if not domain_rule_sets:
@@ -124,10 +97,7 @@ def convert_all(
 
     with tempfile.TemporaryDirectory(prefix="mrs-", dir=rule_dir) as temp_name:
         temp_dir = Path(temp_name)
-        rule_sets = [
-            *domain_rule_sets,
-            *materialize_ipcidr_rule_sets(temp_dir, rule_dir, sources_path),
-        ]
+        rule_sets = domain_rule_sets
         expected = {rule_set.destination for rule_set in rule_sets}
         stale = sorted(
             path.name
@@ -157,7 +127,6 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--mihomo", type=Path, help="Path to the official Mihomo executable")
     parser.add_argument("--rule-dir", type=Path, default=DEFAULT_RULE_DIR)
-    parser.add_argument("--sources", type=Path, default=DEFAULT_SOURCES)
     parser.add_argument(
         "--check",
         action="store_true",
@@ -167,9 +136,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     try:
         mihomo = resolve_mihomo(args.mihomo)
-        changed, stale = convert_all(
-            mihomo, args.rule_dir.resolve(), args.check, args.sources.resolve()
-        )
+        changed, stale = convert_all(mihomo, args.rule_dir.resolve(), args.check)
         if args.check and (changed or stale):
             print("Generated MRS files are out of date:", file=sys.stderr)
             for name in changed:
@@ -180,11 +147,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         verb = "checked" if args.check else "generated"
         print(
             f"MRS files {verb}: "
-            f"{len(discover_rule_sets(args.rule_dir)) + len(IPCIDR_RULE_SETS)}; "
+            f"{len(discover_rule_sets(args.rule_dir))}; "
             f"changed {len(changed)}, removed {len(stale)} stale files."
         )
         return 0
-    except (ConversionError, MrsConversionError, OSError) as exc:
+    except (MrsConversionError, OSError) as exc:
         print(f"MRS conversion failed: {exc}", file=sys.stderr)
         return 2
 

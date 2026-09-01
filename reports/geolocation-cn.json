@@ -26,13 +26,17 @@
     "regexp:^.+-mihayo\\.akamaized\\.net$"
   ],
   "sha256": {
-    "domain_list": "4a371f5c48c8ef7a7ddf8d4f3392b4d331819a159b4212cd15808234a51c0694",
+    "domain_list": "8b93df41fa13a5ae19ffb6f1a3746ea8d32e2fb8c2650721070048da2891ab4f",
     "domain_mrs": "d8eb26b5eadccf41a8938fe9873f537c1014f3180d0c9730ea6a2a2f7d250eba",
     "v2fly_export": "a76f6da012a2e1297e7573fa2a255b20a6e8b1ffd81dc459101a0a5d77a97e38"
   },
   "source_entries": 7706,
   "upstreams": {
-    "MetaCubeX/meta-rules-converter": "7dea27841a3579a633189830c98c08a0434e8b79",
+    "mrs_converter": {
+      "commit": "7dea27841a3579a633189830c98c08a0434e8b79",
+      "name": "MetaCubeX/meta-rules-converter",
+      "role": "MRS format generation only"
+    },
     "v2fly/domain-list-community": "654177bb71300a5448037afe98267c6926ef41a3"
   }
 }

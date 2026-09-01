@@ -2,10 +2,9 @@
 
 This project downloads and transforms public rule data from these upstream projects:
 
-- SukkaW Ruleset: <https://ruleset.skk.moe/> and <https://github.com/SukkaW/Surge>, AGPL-3.0.
-- MetaCubeX meta-rules-dat: <https://github.com/MetaCubeX/meta-rules-dat>, GPL-3.0.
+- appshubcc/bett-rules: <https://github.com/appshubcc/bett-rules>.
 - V2Fly domain-list-community: <https://github.com/v2fly/domain-list-community>, MIT.
-- MetaCubeX meta-rules-converter: <https://github.com/MetaCubeX/meta-rules-converter>, GPL-3.0.
+- MetaCubeX meta-rules-converter (MRS format generation only): <https://github.com/MetaCubeX/meta-rules-converter>, GPL-3.0.
 
 Generated rule files are derived from those upstream datasets. Preserve this notice,
 the upstream attribution, and the applicable upstream license terms when publishing

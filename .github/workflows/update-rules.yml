@@ -75,7 +75,7 @@ jobs:
           python src/convert_rules.py
           python src/convert_mrs.py
 
-      - name: Build official V2Fly geolocation-cn with MetaCubeX
+      - name: Build V2Fly geolocation-cn and compile MRS
         shell: bash
         run: |
           set -euo pipefail
@@ -109,8 +109,9 @@ jobs:
             -f "${v2fly_output}/geolocation-cn.dat" \
             -o "${meta_output}"
 
-          install -m 0644 "${meta_output}/geolocation-cn-clean.list" \
-            dist/mihomo/geolocation-cn.list
+          python src/convert_v2fly_geolocation_cn.py \
+            --v2fly-export "${v2fly_output}/geolocation-cn-clean.txt" \
+            --output dist/mihomo/geolocation-cn.list
           install -m 0644 "${meta_output}/geolocation-cn-clean.mrs" \
             dist/mihomo/geolocation-cn.mrs
           python src/convert_geolocation_cn_shadowrocket.py \
@@ -118,16 +119,20 @@ jobs:
             --output dist/shadowrocket/geolocation-cn.domain-set
           python src/validate_geolocation_cn.py \
             --v2fly-export "${v2fly_output}/geolocation-cn-clean.txt" \
-            --meta-list dist/mihomo/geolocation-cn.list \
-            --meta-mrs dist/mihomo/geolocation-cn.mrs \
+            --domain-list dist/mihomo/geolocation-cn.list \
+            --domain-mrs dist/mihomo/geolocation-cn.mrs \
             --v2fly-commit "$(git -C "${v2fly_root}" rev-parse HEAD)" \
-            --converter-commit "$(git -C "${converter_root}" rev-parse HEAD)" \
+            --mrs-converter-commit "$(git -C "${converter_root}" rev-parse HEAD)" \
             --report reports/geolocation-cn.json
 
       - name: Verify generated files are deterministic
         run: |
           python src/convert_rules.py --check
           python src/convert_mrs.py --check
+          python src/convert_v2fly_geolocation_cn.py \
+            --v2fly-export "${RUNNER_TEMP}/v2fly-output/geolocation-cn-clean.txt" \
+            --output dist/mihomo/geolocation-cn.list \
+            --check
           python src/convert_geolocation_cn_shadowrocket.py --check
           git diff --check
 

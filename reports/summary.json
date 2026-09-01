@@ -1,883 +1,192 @@
 {
-  "apple_direct": {
-    "apple_cdn_domain_entries": 159,
-    "apple_cn_domain_entries": 9,
-    "duplicates_removed": 1,
-    "output_entries": 166,
-    "semantically_redundant_removed": 1,
-    "source_scope": [
-      "https://ruleset.skk.moe/Clash/domainset/apple_cdn.txt",
-      "https://ruleset.skk.moe/Clash/non_ip/apple_cn.txt"
-    ],
-    "sukka_markers_removed": 2
+  "conversion_policy": {
+    "semantic_minimization": false,
+    "source_order_preserved": true,
+    "source_rule_count_preserved": true,
+    "syntax_only": true,
+    "unsupported_or_noncanonical_rules": "fail",
+    "upstream_exact_duplicates": "preserve"
   },
-  "apple_services": {
-    "direct_rules_also_covered_by_services": [
-      {
-        "covered_by_services": [
-          "+.cdn-apple.com"
-        ],
-        "direct_rule": "+.app-site-association.cdn-apple.com"
-      },
-      {
-        "covered_by_services": [
-          "+.aaplimg.com"
-        ],
-        "direct_rule": "+.appldnld.g.aaplimg.com"
-      },
-      {
-        "covered_by_services": [
-          "+.cdn-apple.com"
-        ],
-        "direct_rule": "+.appleid.cdn-apple.com"
-      },
-      {
-        "covered_by_services": [
-          "+.apple-mapkit.com"
-        ],
-        "direct_rule": "+.cdn-cn1.apple-mapkit.com"
-      },
-      {
-        "covered_by_services": [
-          "+.apple-mapkit.com"
-        ],
-        "direct_rule": "+.cdn-cn2.apple-mapkit.com"
-      },
-      {
-        "covered_by_services": [
-          "+.apple-mapkit.com"
-        ],
-        "direct_rule": "+.cdn-cn3.apple-mapkit.com"
-      },
-      {
-        "covered_by_services": [
-          "+.apple-mapkit.com"
-        ],
-        "direct_rule": "+.cdn-cn4.apple-mapkit.com"
-      },
-      {
-        "covered_by_services": [
-          "+.apple-mapkit.com"
-        ],
-        "direct_rule": "+.cdn.apple-mapkit.com"
-      },
-      {
-        "covered_by_services": [
-          "+.apple-mapkit.com"
-        ],
-        "direct_rule": "+.cdn1.apple-mapkit.com"
-      },
-      {
-        "covered_by_services": [
-          "+.apple-mapkit.com"
-        ],
-        "direct_rule": "+.cdn2.apple-mapkit.com"
-      },
-      {
-        "covered_by_services": [
-          "+.apple-mapkit.com"
-        ],
-        "direct_rule": "+.cdn3.apple-mapkit.com"
-      },
-      {
-        "covered_by_services": [
-          "+.apple-mapkit.com"
-        ],
-        "direct_rule": "+.cdn4.apple-mapkit.com"
-      },
-      {
-        "covered_by_services": [
-          "+.aaplimg.com"
-        ],
-        "direct_rule": "+.cds-cdn.v.aaplimg.com"
-      },
-      {
-        "covered_by_services": [
-          "+.cdn-apple.com"
-        ],
-        "direct_rule": "+.cstat.cdn-apple.com"
-      },
-      {
-        "covered_by_services": [
-          "+.aaplimg.com"
-        ],
-        "direct_rule": "+.guzzoni-apple-com.v.aaplimg.com"
-      },
-      {
-        "covered_by_services": [
-          "+.iadsdk.apple.com"
-        ],
-        "direct_rule": "+.iadsdk.apple.com"
-      },
-      {
-        "covered_by_services": [
-          "+.push-apple.com.akadns.net"
-        ],
-        "direct_rule": "+.init-p01md-lb.push-apple.com.akadns.net"
-      },
-      {
-        "covered_by_services": [
-          "+.push-apple.com.akadns.net"
-        ],
-        "direct_rule": "+.init-p01st-lb.push-apple.com.akadns.net"
-      },
-      {
-        "covered_by_services": [
-          "+.push-apple.com.akadns.net"
-        ],
-        "direct_rule": "+.init-s01st-lb.push-apple.com.akadns.net"
-      },
-      {
-        "covered_by_services": [
-          "+.aaplimg.com"
-        ],
-        "direct_rule": "+.iosapps.itunes.g.aaplimg.com"
-      },
-      {
-        "covered_by_services": [
-          "+.cdn-apple.com"
-        ],
-        "direct_rule": "+.mensura.cdn-apple.com"
-      },
-      {
-        "covered_by_services": [
-          "+.cdn-apple.com"
-        ],
-        "direct_rule": "+.ml.cdn-apple.com"
-      },
-      {
-        "covered_by_services": [
-          "+.aaplimg.com"
-        ],
-        "direct_rule": "+.osxapps.itunes.g.aaplimg.com"
-      },
-      {
-        "covered_by_services": [
-          "+.cdn-apple.com"
-        ],
-        "direct_rule": "+.publicassets.cdn-apple.com"
-      },
-      {
-        "covered_by_services": [
-          "+.cdn-apple.com"
-        ],
-        "direct_rule": "+.shazam-insights.cdn-apple.com"
-      },
-      {
-        "covered_by_services": [
-          "+.cdn-apple.com"
-        ],
-        "direct_rule": "+.store.storeimages.cdn-apple.com"
-      },
-      {
-        "covered_by_services": [
-          "+.aaplimg.com"
-        ],
-        "direct_rule": "+.swallow-apple-com.v.aaplimg.com"
-      },
-      {
-        "covered_by_services": [
-          "+.aaplimg.com"
-        ],
-        "direct_rule": "+.swcdn.g.aaplimg.com"
-      },
-      {
-        "covered_by_services": [
-          "+.cdn-apple.com"
-        ],
-        "direct_rule": "+.updates-http.cdn-apple.com"
-      },
-      {
-        "covered_by_services": [
-          "+.cdn-apple.com"
-        ],
-        "direct_rule": "+.updates.cdn-apple.com"
-      }
-    ],
-    "duplicates_removed": 0,
-    "expanded_suffixes": [
-      "apple.com"
-    ],
-    "ignored_non_domain_rules": {
-      "IP-CIDR": 1,
-      "PROCESS-NAME": 8
-    },
-    "output_entries": 164,
-    "required_rule_order": [
-      "apple-direct",
-      "apple-services"
-    ],
-    "semantically_redundant_removed": 0,
-    "shadowrocket_output_generated": true,
-    "source_scope": [
-      "https://ruleset.skk.moe/Clash/non_ip/apple_services.txt",
-      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/apple.list"
-    ],
-    "suffix_expansion_matches": {
-      "apple.com": 150
-    },
-    "suffix_expansion_unique_entries_including_apex": 149,
-    "sukka_directly_converted_entries": 15,
-    "sukka_domain_entries": 16,
-    "sukka_marker_removed": 1
-  },
-  "china_ip": {
-    "china_ip": {
-      "behavior": "ipcidr",
-      "duplicates_removed": 0,
-      "ip_version": 4,
-      "output_entries": 3906,
-      "source": "https://ruleset.skk.moe/Clash/ip/china_ip.txt"
-    },
-    "china_ip_ipv6": {
-      "behavior": "ipcidr",
-      "duplicates_removed": 0,
-      "ip_version": 6,
-      "output_entries": 3397,
-      "source": "https://ruleset.skk.moe/Clash/ip/china_ip_ipv6.txt"
-    }
-  },
-  "domestic": {
-    "converted_source_entries": 864,
-    "duplicates_removed": 0,
-    "output_entries": 864,
-    "semantically_redundant_removed": 0,
-    "sukka_marker_removed": 1,
-    "wildcard_rules_dropped": 1
-  },
-  "global": {
-    "base_domain_entries": 1259,
-    "base_excluded_fragments": {
-      "blogspot": 0,
-      "browserleaks": 0,
-      "sci-hub": 0
-    },
-    "branch_source_entries": 1576,
-    "branches": {
-      "discord": {
-        "entries_after_exclusions": 28,
-        "excluded_fragments": {
-          "blogspot": 0,
-          "browserleaks": 0,
-          "sci-hub": 0
-        },
-        "source_entries": 28
-      },
-      "dropbox": {
-        "entries_after_exclusions": 16,
-        "excluded_fragments": {
-          "blogspot": 0,
-          "browserleaks": 0,
-          "sci-hub": 0
-        },
-        "source_entries": 16
-      },
-      "facebook": {
-        "entries_after_exclusions": 396,
-        "excluded_fragments": {
-          "blogspot": 0,
-          "browserleaks": 0,
-          "sci-hub": 0
-        },
-        "source_entries": 396
-      },
-      "google": {
-        "entries_after_exclusions": 998,
-        "excluded_fragments": {
-          "blogspot": 73,
-          "browserleaks": 0,
-          "sci-hub": 0
-        },
-        "source_entries": 1071
-      },
-      "pinterest": {
-        "entries_after_exclusions": 52,
-        "excluded_fragments": {
-          "blogspot": 0,
-          "browserleaks": 0,
-          "sci-hub": 0
-        },
-        "source_entries": 52
-      },
-      "whatsapp": {
-        "entries_after_exclusions": 13,
-        "excluded_fragments": {
-          "blogspot": 0,
-          "browserleaks": 0,
-          "sci-hub": 0
-        },
-        "source_entries": 13
-      }
-    },
-    "dropped_keywords": [
-      "blogspot",
-      "browserleaks",
-      "sci-hub"
-    ],
-    "duplicates_removed": 71,
-    "expanded_keywords": [
-      "discord",
-      "dropbox",
-      "facebook",
-      "google",
-      "pinterest",
-      "whatsapp"
-    ],
-    "output_entries": 2252,
-    "semantically_redundant_removed": 439,
-    "shadowrocket_output_generated": true,
-    "source_scope": [
-      "https://ruleset.skk.moe/Clash/non_ip/global.txt",
-      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/discord.list",
-      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/dropbox.list",
-      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/facebook.list",
-      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google.list",
-      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/pinterest.list",
-      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/whatsapp.list"
-    ],
-    "sukka_marker_removed": 1
-  },
-  "microsoft": {
-    "cdn_duplicates_removed": 0,
-    "cdn_output_entries": 51,
-    "cdn_rules_also_covered_by_proxy": [
-      {
-        "cdn_rule": "res-1.cdn.office.net",
-        "covered_by_proxy": [
-          "+.office.net"
-        ]
-      },
-      {
-        "cdn_rule": "res-2.cdn.office.net",
-        "covered_by_proxy": [
-          "+.office.net"
-        ]
-      },
-      {
-        "cdn_rule": "res-h3.public.cdn.office.net",
-        "covered_by_proxy": [
-          "+.office.net"
-        ]
-      },
-      {
-        "cdn_rule": "res.cdn.office.net",
-        "covered_by_proxy": [
-          "+.office.net"
-        ]
-      },
-      {
-        "cdn_rule": "statics.teams.cdn.office.net",
-        "covered_by_proxy": [
-          "+.office.net"
-        ]
-      },
-      {
-        "cdn_rule": "+.azuremigrate.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.azuremigratetest.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.azurestackhub.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.azurestackhubuat.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.b.c2r.ts.cdn.office.net",
-        "covered_by_proxy": [
-          "+.office.net"
-        ]
-      },
-      {
-        "cdn_rule": "+.cbdstest.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.collaborate.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.collaborateppe.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.ctldl.windowsupdate.com",
-        "covered_by_proxy": [
-          "+.windowsupdate.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.dl.delivery.mp.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.download.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.download.visualstudio.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.download.windowsupdate.com",
-        "covered_by_proxy": [
-          "+.windowsupdate.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.dreamspark.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.dreamsparkuat.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.f.c2r.ts.cdn.office.net",
-        "covered_by_proxy": [
-          "+.office.net"
-        ]
-      },
-      {
-        "cdn_rule": "+.itacademy.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.itacademyuat.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.lex.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.lexuat.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.mbs.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.mpnbenefits.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.mpnbenefitsrtl.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.mpnbenefitsrtluat.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.msdn.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.msdprod-ad.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.msproduct.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.myvs.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.oemsoc.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.oemsocuat.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.officecdn.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.officemkt.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.officemktuat.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.osrelease.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.rsm.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.sdx.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.software.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.storecorefulfillment.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.storeedge.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.surface.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.surface.downloads.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.vlportal.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.volic.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.vscode.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.vz.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      },
-      {
-        "cdn_rule": "+.windbg.download.prss.microsoft.com",
-        "covered_by_proxy": [
-          "+.microsoft.com"
-        ]
-      }
-    ],
-    "cdn_semantically_redundant_removed": 0,
-    "cdn_source": "https://ruleset.skk.moe/Clash/non_ip/microsoft_cdn.txt",
-    "cdn_source_domain_entries": 51,
-    "keyword_expansion_matches": {
-      "1drv": 1,
-      "hotmail": 6,
-      "microsoft": 180
-    },
-    "keyword_expansion_unique_entries": 186,
-    "proxy_base_domain_entries": 80,
-    "proxy_duplicates_removed": 0,
-    "proxy_output_entries": 212,
-    "proxy_semantically_redundant_removed": 54,
-    "proxy_sources": [
-      "https://ruleset.skk.moe/Clash/non_ip/microsoft.txt",
-      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.list"
-    ],
-    "required_rule_order": [
-      "microsoft-cdn",
-      "microsoft"
-    ],
-    "shadowrocket_output_generated": false,
-    "sukka_markers_removed": 2
-  },
-  "schema_version": 6,
-  "shadowrocket": {
+  "schema_version": 7,
+  "shadowrocket_domains": {
     "ai": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 179,
-      "semantically_redundant_removed": 0,
       "source_entries": 179
     },
     "apple": {
-      "duplicates_removed": 2,
-      "output_entries": 1585,
-      "semantically_redundant_removed": 205,
+      "exact_duplicates_preserved": {
+        "np-edge.itunes.apple.com": 2,
+        "play-edge.itunes.apple.com": 2
+      },
+      "order_preserved": true,
+      "output_entries": 1792,
       "source_entries": 1792
     },
     "apple-cn": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 296,
-      "semantically_redundant_removed": 0,
       "source_entries": 296
     },
     "ehentai": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 8,
-      "semantically_redundant_removed": 0,
       "source_entries": 8
     },
     "facebook": {
-      "duplicates_removed": 0,
-      "output_entries": 394,
-      "semantically_redundant_removed": 2,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
+      "output_entries": 396,
       "source_entries": 396
     },
     "geolocation-non-cn": {
-      "duplicates_removed": 0,
-      "output_entries": 33439,
-      "semantically_redundant_removed": 678,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
+      "output_entries": 34117,
       "source_entries": 34117
     },
     "github": {
-      "duplicates_removed": 0,
-      "output_entries": 59,
-      "semantically_redundant_removed": 5,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
+      "output_entries": 64,
       "source_entries": 64
     },
     "google": {
-      "duplicates_removed": 0,
-      "output_entries": 846,
-      "semantically_redundant_removed": 225,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
+      "output_entries": 1071,
       "source_entries": 1071
     },
     "instagram": {
-      "duplicates_removed": 0,
-      "output_entries": 72,
-      "semantically_redundant_removed": 2,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
+      "output_entries": 74,
       "source_entries": 74
     },
     "microsoft": {
-      "duplicates_removed": 2,
-      "output_entries": 637,
-      "semantically_redundant_removed": 109,
+      "exact_duplicates_preserved": {
+        "+.sharepoint.cn": 2,
+        "developer.microsoft.com": 2
+      },
+      "order_preserved": true,
+      "output_entries": 748,
       "source_entries": 748
     },
     "microsoft-cn": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 189,
-      "semantically_redundant_removed": 0,
       "source_entries": 189
     },
     "pikpak": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 7,
-      "semantically_redundant_removed": 0,
       "source_entries": 7
     },
     "private": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 130,
-      "semantically_redundant_removed": 0,
       "source_entries": 130
     },
     "steam": {
-      "duplicates_removed": 0,
-      "output_entries": 59,
-      "semantically_redundant_removed": 1,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
+      "output_entries": 60,
       "source_entries": 60
     },
     "telegram": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 21,
-      "semantically_redundant_removed": 0,
       "source_entries": 21
     },
     "threads": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 2,
-      "semantically_redundant_removed": 0,
       "source_entries": 2
     },
     "tiktok": {
-      "duplicates_removed": 0,
-      "output_entries": 35,
-      "semantically_redundant_removed": 1,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
+      "output_entries": 36,
       "source_entries": 36
     },
     "twitch": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 34,
-      "semantically_redundant_removed": 0,
       "source_entries": 34
     },
     "twitter": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 24,
-      "semantically_redundant_removed": 0,
       "source_entries": 24
     },
     "youtube": {
-      "duplicates_removed": 0,
-      "output_entries": 177,
-      "semantically_redundant_removed": 1,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
+      "output_entries": 178,
       "source_entries": 178
     }
   },
-  "shadowrocket_ip": {
+  "shadowrocket_ip_and_asn": {
     "cn-ip": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 10673,
       "source_entries": 10673
     },
     "facebook-ip": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 82,
       "source_entries": 82
     },
     "google-ip": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 944,
       "source_entries": 944
     },
     "private-ip": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 18,
       "source_entries": 18
     },
     "steam-asn": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 23,
       "source_entries": 23
     },
     "telegram-ip": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 12,
       "source_entries": 12
     },
     "tiktok-ip": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 115,
       "source_entries": 115
     },
     "twitter-ip": {
-      "duplicates_removed": 0,
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
       "output_entries": 685,
       "source_entries": 685
     }
   },
   "sources": {
-    "bett/asn/steam-asn": {
-      "bytes": 374,
-      "sha256": "78a89a4b5cb9331ddcd7082e39908f149ab391a98d78599066a272a2b54e91f6",
-      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/asn/AS32590.list"
-    },
-    "bett/geoip/cn-ip": {
-      "bytes": 171312,
-      "sha256": "b64a13c625ff9b0d50db28dcc9d10510694bf505b174d9b2b9adfe4523eff9d1",
-      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/cn.list"
-    },
-    "bett/geoip/facebook-ip": {
-      "bytes": 1329,
-      "sha256": "7eb48df382269dff7fed77e65301a047e3585407dd2d05db4355e3de6063c65e",
-      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/facebook.list"
-    },
-    "bett/geoip/google-ip": {
-      "bytes": 15089,
-      "sha256": "7bf2f6d3c5435097ba020ecb93bd3574b97b2906b5a7acfdd349ed4bd06aa6c0",
-      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/google.list"
-    },
-    "bett/geoip/private-ip": {
-      "bytes": 222,
-      "sha256": "06ae700eaba0fb7b812e699acf3e9fe8167344443ecc7fcfad0ca54c90ad100c",
-      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/private.list"
-    },
-    "bett/geoip/telegram-ip": {
-      "bytes": 191,
-      "sha256": "271a96cc22155f8aefbe0b282384b611c4e2d17b87e264bb6e0b6e94c019407a",
-      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/telegram.list"
-    },
-    "bett/geoip/tiktok-ip": {
-      "bytes": 1776,
-      "sha256": "f36a20898caa278f9581acb90bc47a4a34e4fcebc89340bfc19fa59abc9071c4",
-      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/tiktok.list"
-    },
-    "bett/geoip/twitter-ip": {
-      "bytes": 10727,
-      "sha256": "a0d02d847e2ef19ec158c68b389cd8da007b34d369e027736a9ecc70ddb4076c",
-      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/twitter.list"
-    },
     "bett/geosite/ai": {
       "bytes": 3431,
       "sha256": "a80b4f748c7f2af5f2bdd044c9c9e9c8a866f5ac9d5db0a135da43cfc5e8a50b",
@@ -948,6 +257,11 @@
       "sha256": "63e7cfe27eedb6660abd763618129cf46e3a39ebf436886bfb8a8eedde5b49bb",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/steam.list"
     },
+    "bett/geosite/steam-cn-download-validation": {
+      "bytes": 752,
+      "sha256": "46c1ca51a0b7a8342efe8be5870a393e61abc72bdbc7a272787164b9dd13cc08",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/category-game-platforms-download@cn.list"
+    },
     "bett/geosite/telegram": {
       "bytes": 293,
       "sha256": "2448b2699519cd258b10232fcacd01e89b7db04c8ce7fc860a4962518370a329",
@@ -978,123 +292,55 @@
       "sha256": "e95f241fa4357918fc1066390c352aad750b571ddea15e3421d30c84e947ac10",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/youtube.list"
     },
-    "metacubex/apple": {
-      "bytes": 36860,
-      "sha256": "f79ca1167920a8f930217fdb6e23f00f06784c074dd3faa1d6859e612158c8bc",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/apple.list"
+    "bett/shadowrocket_asns/steam-asn": {
+      "bytes": 374,
+      "sha256": "78a89a4b5cb9331ddcd7082e39908f149ab391a98d78599066a272a2b54e91f6",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/asn/AS32590.list"
     },
-    "metacubex/game-download": {
-      "bytes": 752,
-      "sha256": "46c1ca51a0b7a8342efe8be5870a393e61abc72bdbc7a272787164b9dd13cc08",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-game-platforms-download@cn.list"
+    "bett/shadowrocket_ips/cn-ip": {
+      "bytes": 171312,
+      "sha256": "b64a13c625ff9b0d50db28dcc9d10510694bf505b174d9b2b9adfe4523eff9d1",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/cn.list"
     },
-    "metacubex/global/discord": {
-      "bytes": 542,
-      "sha256": "9f2530e2dc4117a27851256d731908931064bc6c9fefe43f69cc164804a33456",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/discord.list"
+    "bett/shadowrocket_ips/facebook-ip": {
+      "bytes": 1329,
+      "sha256": "7eb48df382269dff7fed77e65301a047e3585407dd2d05db4355e3de6063c65e",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/facebook.list"
     },
-    "metacubex/global/dropbox": {
-      "bytes": 312,
-      "sha256": "08b94c5a0979054b356d45c4befc78a61345b3ba2d272a91ba57da5c3ab29ba9",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/dropbox.list"
+    "bett/shadowrocket_ips/google-ip": {
+      "bytes": 15089,
+      "sha256": "7bf2f6d3c5435097ba020ecb93bd3574b97b2906b5a7acfdd349ed4bd06aa6c0",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/google.list"
     },
-    "metacubex/global/facebook": {
-      "bytes": 7120,
-      "sha256": "c596908eb3c2227cd9d7b9974f8fed38ad4439118a0a10c4f63c69181313fd9e",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/facebook.list"
+    "bett/shadowrocket_ips/private-ip": {
+      "bytes": 222,
+      "sha256": "06ae700eaba0fb7b812e699acf3e9fe8167344443ecc7fcfad0ca54c90ad100c",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/private.list"
     },
-    "metacubex/global/google": {
-      "bytes": 18231,
-      "sha256": "aded9fabc5b88743a0aba91e1a28a11d278f7ae6ae3e2871f8360bd6831f6105",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google.list"
+    "bett/shadowrocket_ips/telegram-ip": {
+      "bytes": 191,
+      "sha256": "271a96cc22155f8aefbe0b282384b611c4e2d17b87e264bb6e0b6e94c019407a",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/telegram.list"
     },
-    "metacubex/global/pinterest": {
-      "bytes": 865,
-      "sha256": "746287c3d7a99ed19edef7dfec4244b50cae8a5db22c2ceffe6f377245296226",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/pinterest.list"
+    "bett/shadowrocket_ips/tiktok-ip": {
+      "bytes": 1776,
+      "sha256": "f36a20898caa278f9581acb90bc47a4a34e4fcebc89340bfc19fa59abc9071c4",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/tiktok.list"
     },
-    "metacubex/global/whatsapp": {
-      "bytes": 218,
-      "sha256": "5554ce8069e2b3ca3222f112b2192652e96e5574be9096f71579191c8d498bfc",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/whatsapp.list"
-    },
-    "metacubex/microsoft": {
-      "bytes": 15481,
-      "sha256": "fd2700483156d60f4ab62bef4ace84da4ed10f643b6f753df7175412cd6ffc4e",
-      "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.list"
-    },
-    "sukka/apple-cdn": {
-      "bytes": 4787,
-      "sha256": "353e7f1244fe816019036274f13762ecaf25c29b3f4a01ab952fc3f1281626d3",
-      "url": "https://ruleset.skk.moe/Clash/domainset/apple_cdn.txt"
-    },
-    "sukka/apple-cn": {
-      "bytes": 826,
-      "sha256": "a31f9e98c5a4fdd585a7c78b6f3a1994015ab54a57a3d82057bd17f278f6a76f",
-      "url": "https://ruleset.skk.moe/Clash/non_ip/apple_cn.txt"
-    },
-    "sukka/apple-services": {
-      "bytes": 1157,
-      "sha256": "9c32e8eb6e1d334a85b972791a0afc4b0fc81f57d3a80902a50c9168269f7602",
-      "url": "https://ruleset.skk.moe/Clash/non_ip/apple_services.txt"
-    },
-    "sukka/china-ip": {
-      "bytes": 61244,
-      "sha256": "91322184959939ac955f486857b19ceaaff1299743821dd4446e0877647c2ff8",
-      "url": "https://ruleset.skk.moe/Clash/ip/china_ip.txt"
-    },
-    "sukka/china-ip-ipv6": {
-      "bytes": 56998,
-      "sha256": "f0814774655490aaaade6ab6bf622cce6b7967cc8fd41918d77893384ca1f091",
-      "url": "https://ruleset.skk.moe/Clash/ip/china_ip_ipv6.txt"
-    },
-    "sukka/domestic": {
-      "bytes": 22532,
-      "sha256": "e86dead64f2ca26ad980ba5ffa7d41c4a82a0fa8acec371a239a52719a387ec4",
-      "url": "https://ruleset.skk.moe/Clash/non_ip/domestic.txt"
-    },
-    "sukka/global": {
-      "bytes": 33221,
-      "sha256": "70639efaab105eba6b4b677c941a4085ae7ef108c55296879395267b8e0e29b3",
-      "url": "https://ruleset.skk.moe/Clash/non_ip/global.txt"
-    },
-    "sukka/microsoft": {
-      "bytes": 2714,
-      "sha256": "1cc7293548c9f251adf9e373a57bfef3501f6e6756d8234aed5415a5ead4e439",
-      "url": "https://ruleset.skk.moe/Clash/non_ip/microsoft.txt"
-    },
-    "sukka/microsoft-cdn": {
-      "bytes": 3024,
-      "sha256": "2e9f22761edfd2c4ee92d3f6af31ec7cea26d3e1a4184b94fbb7849cd88c8b2f",
-      "url": "https://ruleset.skk.moe/Clash/non_ip/microsoft_cdn.txt"
+    "bett/shadowrocket_ips/twitter-ip": {
+      "bytes": 10727,
+      "sha256": "a0d02d847e2ef19ec158c68b389cd8da007b34d369e027736a9ecc70ddb4076c",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/twitter.list"
     }
   },
   "steam_cn_download": {
-    "allowlist_missing_from_sources": [],
-    "duplicates_removed": 0,
-    "full_steam_provider": "MetaCubeX meta-rules-dat steam.mrs",
-    "output_entries": [
-      "alibaba.cdn.steampipe.steamcontent.com",
-      "cdn-ali.content.steamchina.com",
-      "cdn-qc.content.steamchina.com",
-      "cdn-ws.content.steamchina.com",
-      "dl.steam.clngaa.com",
-      "lv.queniujq.cn",
-      "st-bak.viv.wanwang.space",
-      "st.dl.bscstorage.net",
-      "st.dl.eccdnx.com",
-      "trts.baishancdnx.cn",
-      "xz.pphimalayanrt.com"
-    ],
-    "required_rule_order": [
-      "steam-cn-download",
-      "steam"
-    ],
-    "reviewed_allowlist_entries": 11,
-    "semantically_redundant_removed": 0,
-    "source_scope": [
-      "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-game-platforms-download@cn.list"
-    ],
-    "steam_named_unreviewed_count": 0
+    "canonical_source": "config/steam-cn-download-allowlist.txt",
+    "order_preserved": true,
+    "output_entries": 11,
+    "source_entries": 11,
+    "validation_source": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/category-game-platforms-download@cn.list",
+    "validation_source_exact_duplicates": {
+      "uplaypc-s-ubisoft.cdn.ubionline.com.cn": 2
+    }
   }
 }
