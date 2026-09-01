@@ -233,7 +233,7 @@
       "behavior": "ipcidr",
       "duplicates_removed": 0,
       "ip_version": 6,
-      "output_entries": 3406,
+      "output_entries": 3397,
       "source": "https://ruleset.skk.moe/Clash/ip/china_ip_ipv6.txt"
     }
   },
@@ -991,7 +991,7 @@
     },
     "metacubex/apple": {
       "bytes": 36860,
-      "sha256": "b9fd350b40adfeb996cd7c106cdf245be189a6cedcaec77cae62b8570eb4aee3",
+      "sha256": "e0d867e10f06ecefc5436f47ffd5679bf7a57c3e69489f64057ddaf347d1d392",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/apple.list"
     },
     "metacubex/game-download": {
@@ -1016,7 +1016,7 @@
     },
     "metacubex/global/google": {
       "bytes": 18231,
-      "sha256": "d0e082328e370ecfd618c4a4d24aefd8ffe8168e81b03b73f977333f2439aba9",
+      "sha256": "038f4ab273cda78c919cdedb0802b8cfd642f93d22c674a9f30bce9d55ff0bf4",
       "url": "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google.list"
     },
     "metacubex/global/pinterest": {
@@ -1055,8 +1055,8 @@
       "url": "https://ruleset.skk.moe/Clash/ip/china_ip.txt"
     },
     "sukka/china-ip-ipv6": {
-      "bytes": 57169,
-      "sha256": "9c497b1c0f9b893e9a2291d67ef8184a78648ecb37531e9d0d97358da79acf00",
+      "bytes": 56998,
+      "sha256": "f0814774655490aaaade6ab6bf622cce6b7967cc8fd41918d77893384ca1f091",
       "url": "https://ruleset.skk.moe/Clash/ip/china_ip_ipv6.txt"
     },
     "sukka/domestic": {
