@@ -2,6 +2,12 @@ name: Update generated rules
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/update-rules.yml"
+      - "config/**"
+      - "src/**"
+      - "tests/**"
   schedule:
     # 18:23 UTC = 02:23 Asia/Shanghai (the following day).
     - cron: "23 18 * * *"
