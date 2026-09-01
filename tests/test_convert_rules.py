@@ -1,14 +1,4 @@
-from __future__ import annotations
-
-import sys
-import unittest
-from pathlib import Path
-
-
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "src"))
-
-from convert_rules import (  # noqa: E402
+from __future__ import annotations\n\nimport sys\nimport unittest\nfrom pathlib import Path\n\n\nROOT = Path(__file__).resolve().parents[1]\nsys.path.insert(0, str(ROOT / "src"))\n\nfrom convert_rules import (  # noqa: E402
     APPLE_EXPANDED_SUFFIXES,
     ConversionError,
     DomainRule,
@@ -28,12 +18,7 @@ from convert_rules import (  # noqa: E402
     parse_mixed_ipcidr_text,
     render_rules,
     render_shadowrocket_ip_rules,
-    rule_covers_domain,
-    semantic_minimize,
-)
-
-
-class ConverterTests(unittest.TestCase):
+    rule_covers_domain,\n    semantic_minimize,\n)\n\n\nclass ConverterTests(unittest.TestCase):
     def test_steam_cn_allowlist_is_the_reviewed_metacubex_subset(self) -> None:
         entries = [
             line.strip()
@@ -94,6 +79,14 @@ class ConverterTests(unittest.TestCase):
         )
         for forbidden in ("apple-ip", "microsoft-ip", "steam-ip", "openai-ip"):
             self.assertNotIn(forbidden, config["bett"]["shadowrocket_ips"])
+        self.assertNotIn("geolocation-cn", config["bett"]["shadowrocket_domains"])
+
+    def test_self_built_geolocation_shadowrocket_output_is_external(self) -> None:
+        self.assertTrue(
+            is_externally_managed_output(
+                ROOT / "dist" / "shadowrocket" / "geolocation-cn.domain-set"
+            )
+        )
 
     def test_rejects_wrong_ip_family(self) -> None:
         with self.assertRaises(ConversionError):
@@ -123,34 +116,8 @@ class ConverterTests(unittest.TestCase):
         )
 
     def test_parse_non_classical_domain_text(self) -> None:
-        rules = parse_domain_text("example.com\n+.example.org\n", "test")
-        self.assertEqual(
-            rules,
-            [DomainRule("exact", "example.com"), DomainRule("suffix", "example.org")],
-        )
-
-    def test_rejects_unknown_wildcards(self) -> None:
-        with self.assertRaises(ConversionError):
-            parse_domain_text("*.example.com\n", "test")
-
-    def test_accepts_private_single_label_hostname(self) -> None:
-        rules = parse_domain_text("internal\n", "test")
-        self.assertEqual(rules, [DomainRule("exact", "internal")])
-
-    def test_only_reviewed_qhimgs_wildcard_is_droppable(self) -> None:
-        self.assertTrue(is_droppable_domestic_wildcard("*.qhimgs?.com"))
-        self.assertFalse(is_droppable_domestic_wildcard("*.example?.com"))
-
-    def test_semantic_minimize_removes_covered_exact_rule(self) -> None:
-        rules, duplicates, redundant = semantic_minimize(
-            [
-                DomainRule("suffix", "example.com"),
-                DomainRule("exact", "cdn.example.com"),
-                DomainRule("suffix", "example.com"),
-            ]
-        )
-        self.assertEqual(rules, [DomainRule("suffix", "example.com")])
-        self.assertEqual(duplicates, 1)
+        rules = parse_domain_text("example.com\n+.example.org\n", "test")\n        self.assertEqual(\n            rules,\n            [DomainRule("exact", "example.com"), DomainRule("suffix", "example.org")],\n        )\n\n    def test_rejects_unknown_wildcards(self) -> None:\n        with self.assertRaises(ConversionError):\n            parse_domain_text("*.example.com\n", "test")\n\n    def test_accepts_private_single_label_hostname(self) -> None:\n        rules = parse_domain_text("internal\n", "test")\n        self.assertEqual(rules, [DomainRule("exact", "internal")])\n\n    def test_only_reviewed_qhimgs_wildcard_is_droppable(self) -> None:\n        self.assertTrue(is_droppable_domestic_wildcard("*.qhimgs?.com"))\n        self.assertFalse(is_droppable_domestic_wildcard("*.example?.com"))\n\n    def test_semantic_minimize_removes_covered_exact_rule(self) -> None:
+        rules, duplicates, redundant = semantic_minimize(\n            [\n                DomainRule("suffix", "example.com"),\n                DomainRule("exact", "cdn.example.com"),\n                DomainRule("suffix", "example.com"),\n            ]\n        )\n        self.assertEqual(rules, [DomainRule("suffix", "example.com")])\n        self.assertEqual(duplicates, 1)
         self.assertEqual(redundant, 1)
 
     def test_semantic_minimize_preserves_apex_for_subdomain_suffix(self) -> None:
@@ -171,18 +138,8 @@ class ConverterTests(unittest.TestCase):
         )
         self.assertEqual(duplicates, 0)
         self.assertEqual(redundant, 2)
-
-    def test_suffix_coverage(self) -> None:
-        rule = DomainRule("suffix", "example.com")
-        self.assertTrue(rule_covers_domain(rule, "example.com"))
-        self.assertTrue(rule_covers_domain(rule, "cdn.example.com"))
-        self.assertFalse(rule_covers_domain(rule, "notexample.com"))
-
-    def test_target_rendering(self) -> None:
-        rules = [DomainRule("exact", "a.example"), DomainRule("suffix", "example.com")]
-        self.assertEqual(render_rules(rules, "mihomo"), "a.example\n+.example.com\n")
-        self.assertEqual(
-            render_rules(rules, "shadowrocket"), "a.example\n.example.com\n"
+\n    def test_suffix_coverage(self) -> None:\n        rule = DomainRule("suffix", "example.com")\n        self.assertTrue(rule_covers_domain(rule, "example.com"))\n        self.assertTrue(rule_covers_domain(rule, "cdn.example.com"))\n        self.assertFalse(rule_covers_domain(rule, "notexample.com"))\n\n    def test_target_rendering(self) -> None:
+        rules = [DomainRule("exact", "a.example"), DomainRule("suffix", "example.com")]\n        self.assertEqual(render_rules(rules, "mihomo"), "a.example\n+.example.com\n")\n        self.assertEqual(\n            render_rules(rules, "shadowrocket"), "a.example\n.example.com\n"
         )
 
     def test_classical_parser_has_explicit_skip_and_keyword_policy(self) -> None:
@@ -285,7 +242,4 @@ class ConverterTests(unittest.TestCase):
         self.assertEqual(counts["blogspot"], 1)
         self.assertEqual(counts["browserleaks"], 1)
         self.assertEqual(counts["sci-hub"], 0)
-
-
-if __name__ == "__main__":
-    unittest.main()
+\n\nif __name__ == "__main__":\n    unittest.main()\n

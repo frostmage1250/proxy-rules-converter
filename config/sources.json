@@ -1,5 +1,4 @@
-{
-  "sukka": {
+{\n  "sukka": {
     "domestic": "https://ruleset.skk.moe/Clash/non_ip/domestic.txt",
     "global": "https://ruleset.skk.moe/Clash/non_ip/global.txt",
     "apple_cdn": "https://ruleset.skk.moe/Clash/domainset/apple_cdn.txt",
@@ -48,8 +47,7 @@
       "github": "github.list",
       "pikpak": "pikpak.list",
       "ehentai": "ehentai.list",
-      "geolocation-non-cn": "geolocation-!cn.list",
-      "geolocation-cn": "geolocation-cn.list"
+      "geolocation-non-cn": "geolocation-!cn.list"
     },
     "shadowrocket_ips": {
       "private-ip": "private.list",
@@ -65,4 +63,4 @@
     }
   }
 }
-
+\n

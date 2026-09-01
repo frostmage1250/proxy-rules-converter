@@ -1,28 +1,9 @@
-name: Update generated rules
-
-on:
-  workflow_dispatch:
-  schedule:
-    # 18:23 UTC = 02:23 Asia/Shanghai (the following day).
-    - cron: "23 18 * * *"
-
-permissions:
+name: Update generated rules\n\non:\n  workflow_dispatch:\n  schedule:\n    # 18:23 UTC = 02:23 Asia/Shanghai (the following day).\n    - cron: "23 18 * * *"\n\npermissions:
   contents: write
-
-concurrency:
-  group: update-generated-rules
-  cancel-in-progress: false
-
-jobs:
-  update:
+\nconcurrency:\n  group: update-generated-rules\n  cancel-in-progress: false\n\njobs:\n  update:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v6
-
-      - name: Set up Python
+\n    steps:\n      - name: Check out repository\n        uses: actions/checkout@v6\n\n      - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.13"
@@ -60,11 +41,7 @@ jobs:
           echo "${RUNNER_TEMP}" >> "${GITHUB_PATH}"
           echo "Using latest stable Mihomo ${mihomo_version}."
           "${RUNNER_TEMP}/mihomo" -v
-
-      - name: Run unit tests
-        run: python -m unittest discover -s tests -v
-
-      - name: Fetch, convert, and validate rules
+\n      - name: Run unit tests\n        run: python -m unittest discover -s tests -v\n\n      - name: Fetch, convert, and validate rules
         run: |
           python src/convert_rules.py
           python src/convert_mrs.py
@@ -107,6 +84,9 @@ jobs:
             dist/mihomo/geolocation-cn.list
           install -m 0644 "${meta_output}/geolocation-cn-clean.mrs" \
             dist/mihomo/geolocation-cn.mrs
+          python src/convert_geolocation_cn_shadowrocket.py \
+            --input dist/mihomo/geolocation-cn.list \
+            --output dist/shadowrocket/geolocation-cn.domain-set
           python src/validate_geolocation_cn.py \
             --v2fly-export "${v2fly_output}/geolocation-cn-clean.txt" \
             --meta-list dist/mihomo/geolocation-cn.list \
@@ -119,17 +99,7 @@ jobs:
         run: |
           python src/convert_rules.py --check
           python src/convert_mrs.py --check
+          python src/convert_geolocation_cn_shadowrocket.py --check
           git diff --check
-
-      - name: Commit changed generated files
-        shell: bash
-        run: |
-          git add -A -- dist reports
-          if git diff --cached --quiet; then
-            echo "No generated rule changes."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "chore: update generated rules"
-          git push
+\n      - name: Commit changed generated files\n        shell: bash\n        run: |\n          git add -A -- dist reports
+          if git diff --cached --quiet; then\n            echo "No generated rule changes."\n            exit 0\n          fi\n          git config user.name "github-actions[bot]"\n          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"\n          git commit -m "chore: update generated rules"\n          git push\n
