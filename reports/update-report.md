@@ -4,7 +4,7 @@ This report is deterministic; no build timestamp is embedded.
 
 ## China IP (Mihomo only)
 
-- IPv4 output entries: 3905
+- IPv4 output entries: 3906
 - IPv6 output entries: 3397
 - Both providers are compiled with Mihomo behavior `ipcidr`.
 - No Shadowrocket IP provider is generated.
@@ -80,7 +80,7 @@ Final entries:
 
 ## Shadowrocket
 
-- Generated bett-rules domain sets: 21
+- Generated bett-rules domain sets: 20
 - Generated bett-rules IP/ASN sets: 8
 - Generated Steam-China domain set: 1
 - Static hand-maintained domain sets: 2
