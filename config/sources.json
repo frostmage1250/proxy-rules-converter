@@ -1,4 +1,5 @@
-{\n  "sukka": {
+{
+  "sukka": {
     "domestic": "https://ruleset.skk.moe/Clash/non_ip/domestic.txt",
     "global": "https://ruleset.skk.moe/Clash/non_ip/global.txt",
     "apple_cdn": "https://ruleset.skk.moe/Clash/domainset/apple_cdn.txt",
@@ -63,4 +64,4 @@
     }
   }
 }
-\n
+
