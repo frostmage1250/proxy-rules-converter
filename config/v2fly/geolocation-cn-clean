@@ -1,0 +1,3 @@
+# Resolve the official V2Fly category with the official parser, while dropping
+# entries explicitly tagged as advertisements.
+include:geolocation-cn @-ads

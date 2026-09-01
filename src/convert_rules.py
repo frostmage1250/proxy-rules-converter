@@ -45,13 +45,22 @@ STATIC_OUTPUTS = frozenset(
         "dist/shadowrocket/bilibili-pcdn.list",
     }
 )
+EXTERNALLY_MANAGED_OUTPUTS = frozenset(
+    {
+        "dist/mihomo/geolocation-cn.list",
+        "reports/geolocation-cn.json",
+    }
+)
 MANAGED_OUTPUT_ROOTS = (ROOT / "dist", ROOT / "reports")
 
 
 def is_externally_managed_output(path: Path) -> bool:
     """Return whether another repository generator owns this output."""
 
-    return path.parent == ROOT / "dist" / "mihomo" and path.suffix == ".mrs"
+    relative = path.relative_to(ROOT).as_posix()
+    return (
+        path.parent == ROOT / "dist" / "mihomo" and path.suffix == ".mrs"
+    ) or relative in EXTERNALLY_MANAGED_OUTPUTS
 
 
 class ConversionError(RuntimeError):

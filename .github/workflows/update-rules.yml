@@ -16,7 +16,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
 
     steps:
       - name: Check out repository
@@ -26,6 +26,11 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.13"
+
+      - name: Set up Go for official rule generators
+        uses: actions/setup-go@v6
+        with:
+          go-version: stable
 
       - name: Install latest stable official Mihomo converter
         shell: bash
@@ -63,6 +68,52 @@ jobs:
         run: |
           python src/convert_rules.py
           python src/convert_mrs.py
+
+      - name: Build official V2Fly geolocation-cn with MetaCubeX
+        shell: bash
+        run: |
+          set -euo pipefail
+          v2fly_root="${RUNNER_TEMP}/domain-list-community"
+          v2fly_output="${RUNNER_TEMP}/v2fly-output"
+          converter_root="${RUNNER_TEMP}/meta-rules-converter"
+          meta_output="${RUNNER_TEMP}/meta-output"
+
+          git clone --depth 1 \
+            https://github.com/v2fly/domain-list-community.git \
+            "${v2fly_root}"
+          cp config/v2fly/geolocation-cn-clean \
+            "${v2fly_root}/data/geolocation-cn-clean"
+          mkdir -p "${v2fly_output}"
+          (
+            cd "${v2fly_root}"
+            go run . \
+              --datprofile="${GITHUB_WORKSPACE}/config/v2fly/dat-profile.json" \
+              --outputdir="${v2fly_output}" \
+              --exportlists=geolocation-cn-clean
+          )
+
+          git clone --depth 1 \
+            https://github.com/MetaCubeX/meta-rules-converter.git \
+            "${converter_root}"
+          (
+            cd "${converter_root}"
+            go build -trimpath -o "${RUNNER_TEMP}/meta-rules-converter" .
+          )
+          "${RUNNER_TEMP}/meta-rules-converter" geosite \
+            -f "${v2fly_output}/geolocation-cn.dat" \
+            -o "${meta_output}"
+
+          install -m 0644 "${meta_output}/geolocation-cn-clean.list" \
+            dist/mihomo/geolocation-cn.list
+          install -m 0644 "${meta_output}/geolocation-cn-clean.mrs" \
+            dist/mihomo/geolocation-cn.mrs
+          python src/validate_geolocation_cn.py \
+            --v2fly-export "${v2fly_output}/geolocation-cn-clean.txt" \
+            --meta-list dist/mihomo/geolocation-cn.list \
+            --meta-mrs dist/mihomo/geolocation-cn.mrs \
+            --v2fly-commit "$(git -C "${v2fly_root}" rev-parse HEAD)" \
+            --converter-commit "$(git -C "${converter_root}" rev-parse HEAD)" \
+            --report reports/geolocation-cn.json
 
       - name: Verify generated files are deterministic
         run: |

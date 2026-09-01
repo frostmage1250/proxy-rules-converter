@@ -1,0 +1,9 @@
+[
+  {
+    "name": "geolocation-cn.dat",
+    "mode": "allowlist",
+    "lists": [
+      "geolocation-cn-clean"
+    ]
+  }
+]

@@ -28,6 +28,8 @@ IPCIDR_RULE_SETS = (
     ("china_ip", "china-ip", 4),
     ("china_ip_ipv6", "china-ip-ipv6", 6),
 )
+EXTERNALLY_COMPILED_DOMAIN_LISTS = frozenset({"geolocation-cn.list"})
+EXTERNALLY_COMPILED_MRS = frozenset({"geolocation-cn.mrs"})
 
 
 class MrsConversionError(RuntimeError):
@@ -42,7 +44,7 @@ class RuleSet:
 
 
 def discover_rule_sets(rule_dir: Path) -> list[RuleSet]:
-    """Map every Mihomo text provider to its same-named MRS output."""
+    """Map locally compiled Mihomo text providers to same-named MRS outputs."""
 
     return [
         RuleSet(
@@ -51,6 +53,7 @@ def discover_rule_sets(rule_dir: Path) -> list[RuleSet]:
             behavior="domain",
         )
         for source in sorted(rule_dir.glob("*.list"))
+        if source.name not in EXTERNALLY_COMPILED_DOMAIN_LISTS
     ]
 
 
@@ -127,7 +130,9 @@ def convert_all(
         ]
         expected = {rule_set.destination for rule_set in rule_sets}
         stale = sorted(
-            path.name for path in rule_dir.glob("*.mrs") if path not in expected
+            path.name
+            for path in rule_dir.glob("*.mrs")
+            if path not in expected and path.name not in EXTERNALLY_COMPILED_MRS
         )
         for rule_set in rule_sets:
             candidate = temp_dir / rule_set.destination.name

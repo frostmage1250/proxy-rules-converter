@@ -113,6 +113,14 @@ class ConverterTests(unittest.TestCase):
         self.assertFalse(
             is_externally_managed_output(ROOT / "dist" / "shadowrocket" / "global.mrs")
         )
+        self.assertTrue(
+            is_externally_managed_output(
+                ROOT / "dist" / "mihomo" / "geolocation-cn.list"
+            )
+        )
+        self.assertTrue(
+            is_externally_managed_output(ROOT / "reports" / "geolocation-cn.json")
+        )
 
     def test_parse_non_classical_domain_text(self) -> None:
         rules = parse_domain_text("example.com\n+.example.org\n", "test")

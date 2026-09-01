@@ -67,6 +67,27 @@ type, removes duplicates and covered entries, and commits only changed generated
   Mihomo's official `ipcidr` converter behavior.
 - Do not generate corresponding Shadowrocket IP providers.
 
+### V2Fly geolocation-cn fallback
+
+- Build the routing fallback from the current official
+  `v2fly/domain-list-community` source with V2Fly's own Go generator. This is
+  required because its `@-attribute` include filters must not be interpreted by
+  older third-party parsers.
+- Add a local `geolocation-cn-clean` category containing
+  `include:geolocation-cn @-ads`. The official upstream category already removes
+  entries tagged `@!cn`; the local inclusion additionally removes entries tagged
+  `@ads`.
+- Assemble a DAT containing only that category, then use the current official
+  `MetaCubeX/meta-rules-converter` to publish `geolocation-cn.list` and
+  `geolocation-cn.mrs` for Mihomo.
+- Require at least 7,000 MRS-compatible rules; exact projection from V2Fly
+  `domain`/`full` entries; reviewed positive and negative hostname sentinels; and
+  zero retained `@ads`, `@!cn`, or keyword entries.
+- Domain MRS cannot represent V2Fly regular expressions. The three currently
+  reviewed regex entries are recorded in `reports/geolocation-cn.json`; any
+  change to that set fails the workflow for review instead of being silently
+  dropped.
+
 ### Bett-rules Shadowrocket providers
 
 - Fetch the reviewed service and geolocation inputs from the authoritative
@@ -96,6 +117,8 @@ dist/
 │  ├─ domestic.mrs
 │  ├─ global.list
 │  ├─ global.mrs
+│  ├─ geolocation-cn.list
+│  ├─ geolocation-cn.mrs
 │  ├─ microsoft-cdn.list
 │  ├─ microsoft-cdn.mrs
 │  ├─ microsoft.list
@@ -112,8 +135,10 @@ dist/
 
 Each Mihomo domain provider is published twice: a readable `.list` source with
 `format: text`, and a compact `.mrs` binary. The two China IP providers publish only
-their compact `.mrs` binaries; their downloaded text is temporary. All binaries are
-compiled by Mihomo's official `convert-ruleset` command. On every run, the workflow resolves the latest stable
+their compact `.mrs` binaries; their downloaded text is temporary. All binaries except
+`geolocation-cn.mrs` are compiled by Mihomo's official `convert-ruleset` command. The
+geolocation fallback is assembled by V2Fly's official generator and compiled by
+MetaCubeX's official converter. On every run, the workflow resolves the latest stable
 official Mihomo release through GitHub's `releases/latest` API, selects the compatible
 Linux AMD64 build, and verifies the asset's published SHA-256 digest before conversion.
 Pre-releases such as Alpha are intentionally excluded.
@@ -226,6 +251,15 @@ rule-providers:
     format: mrs
     url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/global.mrs"
     path: ./ruleset/global.mrs
+
+  geolocation_cn:
+    type: http
+    interval: 86400
+    proxy: MESL
+    behavior: domain
+    format: mrs
+    url: "https://fastly.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@main/dist/mihomo/geolocation-cn.mrs"
+    path: ./ruleset/geolocation-cn.mrs
 ```
 
 The relevant rule order is:
@@ -237,6 +271,8 @@ rules:
   - "RULE-SET,microsoft_cdn,Direct"
   - "RULE-SET,microsoft,MESL"
   - "RULE-SET,global,MESL"
+  # Late direct fallback, immediately before the non-CN proxy fallback/final rule.
+  - "RULE-SET,geolocation_cn,Direct"
 ```
 
 Keep `apple_direct` immediately before `apple_services`, and keep `microsoft_cdn`
