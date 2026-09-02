@@ -189,17 +189,17 @@
   "sources": {
     "bett/geosite/ai": {
       "bytes": 3431,
-      "sha256": "a80b4f748c7f2af5f2bdd044c9c9e9c8a866f5ac9d5db0a135da43cfc5e8a50b",
+      "sha256": "503eb1bef4096440cb3577b6dbb9f68cceae74990382d5d7a5d37d50a7c82a46",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/category-ai-!cn.list"
     },
     "bett/geosite/apple": {
       "bytes": 36860,
-      "sha256": "0a492dd23978d46143e7a0b6aee99aebff867068f15951af472c7f49960d38bc",
+      "sha256": "cf92f1fddc1298ffe07765b8852eca1c1ebae36e34c0102c54accd9b2087b234",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple.list"
     },
     "bett/geosite/apple-cn": {
       "bytes": 7000,
-      "sha256": "be153bef13d39eedd7b32d6a6203aeebb7eb3989b38a87e9a9ea8e8b4c5cad46",
+      "sha256": "5d1e5870cf51afa7dd9a9b3b07a6876d8d1a5b58ecdc3f5432b8fca6721f27f9",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple@cn.list"
     },
     "bett/geosite/ehentai": {
@@ -219,12 +219,12 @@
     },
     "bett/geosite/github": {
       "bytes": 1924,
-      "sha256": "a7c82a082fdd3f2a7051a75dbb1a2fee64e69db2f7001094187d2349563cb93f",
+      "sha256": "f5d67e6e0c8799bd292c8a012d579c8af37ee6a0af771299dd6500db4d1202fd",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/github.list"
     },
     "bett/geosite/google": {
       "bytes": 18231,
-      "sha256": "120edb54ae0169cdda7efe94288219ff717c14aeb61f8c92055f5d8d31fa9c94",
+      "sha256": "83cc78fbf34b1e9394ed0c98970bac975a75596b0b3be6c76db9c312fc824853",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/google.list"
     },
     "bett/geosite/instagram": {
@@ -234,12 +234,12 @@
     },
     "bett/geosite/microsoft": {
       "bytes": 15481,
-      "sha256": "053a99f75558f6d052b02228895d350428d2e26432ca437faa964c0b502f883b",
+      "sha256": "3f8a0624c994a2dc6c10cb64c8b27fc7a4756eec33e1c8cc72c22a7aafd7225d",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/microsoft.list"
     },
     "bett/geosite/microsoft-cn": {
       "bytes": 4235,
-      "sha256": "a2a50c22fb8a12439e8f6de2af90d870cbcee97195659f435971dda039e02269",
+      "sha256": "d2828c965877b7575ff51ffb29557056b94010f43b68f159e38338460468ba2c",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/microsoft@cn.list"
     },
     "bett/geosite/pikpak": {
