@@ -25,17 +25,17 @@
 - `github`: 64 source rules -> 64 output rules; order preserved.
 - `pikpak`: 7 source rules -> 7 output rules; order preserved.
 - `ehentai`: 8 source rules -> 8 output rules; order preserved.
-- `geolocation-non-cn`: 34117 source rules -> 34117 output rules; order preserved.
+- `geolocation-non-cn`: 34116 source rules -> 34116 output rules; order preserved.
 
 ## Bett Shadowrocket IP and ASN providers
 
 - `private-ip`: 18 source rules -> 18 output rules; order preserved.
-- `cn-ip`: 10673 source rules -> 10673 output rules; order preserved.
+- `cn-ip`: 10853 source rules -> 10853 output rules; order preserved.
 - `telegram-ip`: 12 source rules -> 12 output rules; order preserved.
 - `facebook-ip`: 82 source rules -> 82 output rules; order preserved.
-- `twitter-ip`: 685 source rules -> 685 output rules; order preserved.
+- `twitter-ip`: 676 source rules -> 676 output rules; order preserved.
 - `tiktok-ip`: 115 source rules -> 115 output rules; order preserved.
-- `google-ip`: 944 source rules -> 944 output rules; order preserved.
+- `google-ip`: 940 source rules -> 940 output rules; order preserved.
 - `steam-asn`: 23 source rules -> 23 output rules; order preserved.
 
 ## Steam China download
