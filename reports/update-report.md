@@ -25,7 +25,7 @@
 - `github`: 64 source rules -> 64 output rules; order preserved.
 - `pikpak`: 7 source rules -> 7 output rules; order preserved.
 - `ehentai`: 8 source rules -> 8 output rules; order preserved.
-- `geolocation-non-cn`: 34116 source rules -> 34116 output rules; order preserved.
+- `geolocation-non-cn`: 33437 source rules -> 33437 output rules; order preserved.
 
 ## Bett Shadowrocket IP and ASN providers
 
