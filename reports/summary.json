@@ -140,8 +140,8 @@
     "cn-ip": {
       "exact_duplicates_preserved": {},
       "order_preserved": true,
-      "output_entries": 10850,
-      "source_entries": 10850
+      "output_entries": 10871,
+      "source_entries": 10871
     },
     "facebook-ip": {
       "exact_duplicates_preserved": {},
@@ -182,24 +182,24 @@
     "twitter-ip": {
       "exact_duplicates_preserved": {},
       "order_preserved": true,
-      "output_entries": 666,
-      "source_entries": 666
+      "output_entries": 662,
+      "source_entries": 662
     }
   },
   "sources": {
     "bett/geosite/ai": {
       "bytes": 3431,
-      "sha256": "bdb22fc8ff9f59db0e160c436cb56312556db8d55459630e7830c4a17fa9717a",
+      "sha256": "1f7985c5f90b36339e3362370755968b039ef5feb9296b3469c0f46d564771aa",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/category-ai-!cn.list"
     },
     "bett/geosite/apple": {
       "bytes": 36860,
-      "sha256": "554a1b3b777ae9c32a210806ace142dac81a949535c9b3def2a310f71b939942",
+      "sha256": "79751c3fe9724dd21639a08f65b85ea6c4732fdfa4bb1db43363216a1ec97570",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple.list"
     },
     "bett/geosite/apple-cn": {
       "bytes": 7000,
-      "sha256": "f301c64e67e966fb76742815e35dfa5787ea27f31e54a17b1c14369fb13fffb5",
+      "sha256": "dc7a4e9f1aefa80fe08f02b567f93b9a6c69972f9ed60997caaf4c0d1d4fee96",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple@cn.list"
     },
     "bett/geosite/ehentai": {
@@ -219,12 +219,12 @@
     },
     "bett/geosite/github": {
       "bytes": 1924,
-      "sha256": "a7c82a082fdd3f2a7051a75dbb1a2fee64e69db2f7001094187d2349563cb93f",
+      "sha256": "f5d67e6e0c8799bd292c8a012d579c8af37ee6a0af771299dd6500db4d1202fd",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/github.list"
     },
     "bett/geosite/google": {
       "bytes": 18231,
-      "sha256": "9567bd9035adada4cb91b114636ad28e5063a509f117a27b8c4da5d76e6f61d3",
+      "sha256": "63b656a3f2c875cce630ff3595b50550cd900322fc54ce859fa20e506ac891f1",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/google.list"
     },
     "bett/geosite/instagram": {
@@ -234,12 +234,12 @@
     },
     "bett/geosite/microsoft": {
       "bytes": 15481,
-      "sha256": "3d6a65350065901cc3b62e6bec2e348e78a5d1417985a95f88ae8b5e396407a1",
+      "sha256": "cd2276628b8eda2e86540d3615f81a7c313b248e98e4dd44da6796a83a7ec127",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/microsoft.list"
     },
     "bett/geosite/microsoft-cn": {
       "bytes": 4235,
-      "sha256": "cad6cb3e1253def08646df6391ca79abfb22ddea030d3bc9487babf22d00af3b",
+      "sha256": "fdaface6af9503fadf8c68cb3a383dad0912ddf1b7fd8f0bd7e87af87121da1c",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/microsoft@cn.list"
     },
     "bett/geosite/pikpak": {
@@ -298,8 +298,8 @@
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/asn/AS32590.list"
     },
     "bett/shadowrocket_ips/cn-ip": {
-      "bytes": 174114,
-      "sha256": "6859dd4615b956310f2168f3471ff9c747e730d8dda771085f549bd706de6da2",
+      "bytes": 174495,
+      "sha256": "b4230c97dbb754a51848fae42e5206069deacd1a650d1ced365e3fa4d040f5f1",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/cn.list"
     },
     "bett/shadowrocket_ips/facebook-ip": {
@@ -309,7 +309,7 @@
     },
     "bett/shadowrocket_ips/google-ip": {
       "bytes": 15044,
-      "sha256": "d12ec5caa6515689d97b62fd88c3061415bc54f34445d08dd8dbf29831571dc7",
+      "sha256": "77853ff20173610a7059e4071a8746c8ba723816d90a7142eb5f9ce3e14b7d8d",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/google.list"
     },
     "bett/shadowrocket_ips/private-ip": {
@@ -328,8 +328,8 @@
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/tiktok.list"
     },
     "bett/shadowrocket_ips/twitter-ip": {
-      "bytes": 10418,
-      "sha256": "330731a73dfd34c1aa2ef5e881ab7b6027e7fc31e023eb8f583912bc79299930",
+      "bytes": 10352,
+      "sha256": "b7debf9b8e1b96e2941f2143ecc37914e381f452e304fe8472a716bf6c33184a",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/twitter.list"
     }
   },
