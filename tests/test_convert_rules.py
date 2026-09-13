@@ -96,12 +96,16 @@ class ConverterTests(unittest.TestCase):
         }
         provider_outputs = bett["mihomo_script_provider_outputs"]
         self.assertEqual(set(provider_outputs), expected_providers)
+        self.assertIsNone(provider_outputs["fakeip_filter"])
         published = (
             set(bett["shadowrocket_domains"])
             | set(bett["shadowrocket_ips"])
             | {"geolocation-cn"}
         )
-        self.assertLessEqual(set(provider_outputs.values()), published)
+        generated_outputs = {
+            output for output in provider_outputs.values() if output is not None
+        }
+        self.assertLessEqual(generated_outputs, published)
 
     def test_only_pcdn_bilibili_file_is_static(self) -> None:
         from convert_rules import STATIC_OUTPUTS

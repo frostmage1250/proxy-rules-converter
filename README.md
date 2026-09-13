@@ -22,6 +22,9 @@ The converter downloads the configured `appshubcc/bett-rules@meta` geosite, GeoI
 and ASN lists. `config/sources.json` also records the complete provider-to-output
 mapping selected by `frostmage1250/mihomo-script`, including providers used only by
 its DNS layer, so the Shadowrocket configuration repository can verify its scope.
+A `null` mapping records an intentionally non-portable provider: Mihomo's
+`fakeip_filter` contains syntax that Shadowrocket domain-set cannot represent and is
+handled by the Shadowrocket configuration's native Fake-IP behavior instead.
 It converts:
 
 - Mihomo `+.` domain suffix syntax to Shadowrocket `.` syntax.
