@@ -83,7 +83,25 @@ class ConverterTests(unittest.TestCase):
             (ROOT / "config" / "sources.json").read_text(encoding="utf-8")
         )
         self.assertEqual(set(config), {"bett"})
-        self.assertNotIn("geolocation-cn", config["bett"]["shadowrocket_domains"])
+        bett = config["bett"]
+        self.assertNotIn("geolocation-cn", bett["shadowrocket_domains"])
+        expected_providers = {
+            "private", "private_ip", "games_cn", "apple_cn", "microsoft_cn",
+            "geolocation-cn", "cn_ip", "geolocation-!cn", "fakeip_filter", "cn",
+            "youtube", "google", "google_ip", "ai", "github", "microsoft",
+            "microsoft_ip", "apple", "apple_ip", "telegram", "telegram_ip",
+            "steam", "steam_ip", "tiktok", "tiktok_ip", "twitter", "twitter_ip",
+            "instagram", "pikpak", "ehentai", "threads", "facebook",
+            "facebook_ip", "twitch",
+        }
+        provider_outputs = bett["mihomo_script_provider_outputs"]
+        self.assertEqual(set(provider_outputs), expected_providers)
+        published = (
+            set(bett["shadowrocket_domains"])
+            | set(bett["shadowrocket_ips"])
+            | {"geolocation-cn"}
+        )
+        self.assertLessEqual(set(provider_outputs.values()), published)
 
     def test_only_pcdn_bilibili_file_is_static(self) -> None:
         from convert_rules import STATIC_OUTPUTS

@@ -3,9 +3,47 @@
     "geosite_base": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite",
     "geoip_base": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip",
     "asn_base": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/asn",
+    "mihomo_script_url": "https://raw.githubusercontent.com/frostmage1250/mihomo-script/main/mihomoScript.js",
+    "mihomo_script_provider_outputs": {
+      "private": "private",
+      "private_ip": "private-ip",
+      "games_cn": "games-cn",
+      "apple_cn": "apple-cn",
+      "microsoft_cn": "microsoft-cn",
+      "geolocation-cn": "geolocation-cn",
+      "cn_ip": "cn-ip",
+      "geolocation-!cn": "geolocation-non-cn",
+      "fakeip_filter": "fakeip-filter",
+      "cn": "cn",
+      "youtube": "youtube",
+      "google": "google",
+      "google_ip": "google-ip",
+      "ai": "ai",
+      "github": "github",
+      "microsoft": "microsoft",
+      "microsoft_ip": "microsoft-ip",
+      "apple": "apple",
+      "apple_ip": "apple-ip",
+      "telegram": "telegram",
+      "telegram_ip": "telegram-ip",
+      "steam": "steam",
+      "steam_ip": "steam-ip",
+      "tiktok": "tiktok",
+      "tiktok_ip": "tiktok-ip",
+      "twitter": "twitter",
+      "twitter_ip": "twitter-ip",
+      "instagram": "instagram",
+      "pikpak": "pikpak",
+      "ehentai": "ehentai",
+      "threads": "threads",
+      "facebook": "facebook",
+      "facebook_ip": "facebook-ip",
+      "twitch": "twitch"
+    },
     "steam_cn_download_validation": "category-game-platforms-download@cn.list",
     "shadowrocket_domains": {
       "private": "private.list",
+      "games-cn": "category-games@cn.list",
       "steam": "steam.list",
       "apple-cn": "apple@cn.list",
       "apple": "apple.list",
@@ -24,20 +62,24 @@
       "github": "github.list",
       "pikpak": "pikpak.list",
       "ehentai": "ehentai.list",
-      "geolocation-non-cn": "geolocation-!cn.list"
+      "geolocation-non-cn": "geolocation-!cn.list",
+      "fakeip-filter": "fakeip-filter.list",
+      "cn": "cn.list"
     },
     "shadowrocket_ips": {
       "private-ip": "private.list",
       "cn-ip": "cn.list",
+      "google-ip": "google.list",
+      "microsoft-ip": "microsoft.list",
+      "apple-ip": "apple.list",
       "telegram-ip": "telegram.list",
-      "facebook-ip": "facebook.list",
-      "twitter-ip": "twitter.list",
+      "steam-ip": "steam.list",
       "tiktok-ip": "tiktok.list",
-      "google-ip": "google.list"
+      "twitter-ip": "twitter.list",
+      "facebook-ip": "facebook.list"
     },
     "shadowrocket_asns": {
       "steam-asn": "AS32590.list"
     }
   }
 }
-

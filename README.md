@@ -19,7 +19,10 @@ separately documented V2Fly `geolocation-cn` fallback.
 ### Bett to Shadowrocket
 
 The converter downloads the configured `appshubcc/bett-rules@meta` geosite, GeoIP,
-and ASN lists. It converts:
+and ASN lists. `config/sources.json` also records the complete provider-to-output
+mapping selected by `frostmage1250/mihomo-script`, including providers used only by
+its DNS layer, so the Shadowrocket configuration repository can verify its scope.
+It converts:
 
 - Mihomo `+.` domain suffix syntax to Shadowrocket `.` syntax.
 - IPv4 CIDRs to `IP-CIDR,<network>`.
@@ -61,7 +64,7 @@ dist/
 │  └─ steam-cn-download.mrs
 └─ shadowrocket/
    ├─ *.domain-set          # Bett geosite sets, geolocation-cn, Steam-China
-   ├─ *-ip.list             # Bett GeoIP sets
+   ├─ *-ip.list             # Bett GeoIP sets, including Apple/Microsoft/Steam
    ├─ steam-asn.list        # Bett AS32590 CIDRs
    └─ bilibili-pcdn.list    # static reviewed provider
 ```
