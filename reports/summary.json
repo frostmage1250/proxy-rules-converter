@@ -30,6 +30,12 @@
       "output_entries": 296,
       "source_entries": 296
     },
+    "cn": {
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
+      "output_entries": 109100,
+      "source_entries": 109100
+    },
     "ehentai": {
       "exact_duplicates_preserved": {},
       "order_preserved": true,
@@ -41,6 +47,12 @@
       "order_preserved": true,
       "output_entries": 396,
       "source_entries": 396
+    },
+    "games-cn": {
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
+      "output_entries": 37,
+      "source_entries": 37
     },
     "geolocation-non-cn": {
       "exact_duplicates_preserved": {},
@@ -137,11 +149,17 @@
     }
   },
   "shadowrocket_ip_and_asn": {
+    "apple-ip": {
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
+      "output_entries": 175,
+      "source_entries": 175
+    },
     "cn-ip": {
       "exact_duplicates_preserved": {},
       "order_preserved": true,
-      "output_entries": 10861,
-      "source_entries": 10861
+      "output_entries": 10784,
+      "source_entries": 10784
     },
     "facebook-ip": {
       "exact_duplicates_preserved": {},
@@ -152,8 +170,14 @@
     "google-ip": {
       "exact_duplicates_preserved": {},
       "order_preserved": true,
-      "output_entries": 937,
-      "source_entries": 937
+      "output_entries": 973,
+      "source_entries": 973
+    },
+    "microsoft-ip": {
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
+      "output_entries": 1068,
+      "source_entries": 1068
     },
     "private-ip": {
       "exact_duplicates_preserved": {},
@@ -166,6 +190,12 @@
       "order_preserved": true,
       "output_entries": 23,
       "source_entries": 23
+    },
+    "steam-ip": {
+      "exact_duplicates_preserved": {},
+      "order_preserved": true,
+      "output_entries": 35,
+      "source_entries": 35
     },
     "telegram-ip": {
       "exact_duplicates_preserved": {},
@@ -182,25 +212,30 @@
     "twitter-ip": {
       "exact_duplicates_preserved": {},
       "order_preserved": true,
-      "output_entries": 659,
-      "source_entries": 659
+      "output_entries": 652,
+      "source_entries": 652
     }
   },
   "sources": {
     "bett/geosite/ai": {
       "bytes": 3431,
-      "sha256": "06a0ca51a6c2658ec814623a1cef2e9ba2a6e11ab86dbf9cd994ac5515385d4b",
+      "sha256": "3791c31ca05b7c1c8a8c3ab13d037ea3d4bf660df7f699015fa133f2368e1251",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/category-ai-!cn.list"
     },
     "bett/geosite/apple": {
       "bytes": 36860,
-      "sha256": "7ecfd5cfa64c48577ce21d8e774ae347e0a0a2228829a05539283103248986ed",
+      "sha256": "0f0fd482196576ed5cb494c137385dfcd9bf1ea1b919dd6d8f582140b7340d22",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple.list"
     },
     "bett/geosite/apple-cn": {
       "bytes": 7000,
-      "sha256": "b985c0f8b10128bb2612b0d7ab57372522cca210805d5f7aa9e1e8e7024bcb67",
+      "sha256": "203ba4937c68fc8e8f5553264c19c46fedf47eb77c81e2bf08b048106223062c",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple@cn.list"
+    },
+    "bett/geosite/cn": {
+      "bytes": 1592427,
+      "sha256": "2ad00ea4c27ec6f9ed0f05c8e4672b374c1b157d5fbd41c233707ad10ebadf88",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/cn.list"
     },
     "bett/geosite/ehentai": {
       "bytes": 121,
@@ -211,6 +246,11 @@
       "bytes": 7120,
       "sha256": "c596908eb3c2227cd9d7b9974f8fed38ad4439118a0a10c4f63c69181313fd9e",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/facebook.list"
+    },
+    "bett/geosite/games-cn": {
+      "bytes": 749,
+      "sha256": "25a8846f4b39a4658ed8288b01646eca0fa12f44c049a137ee298138aae1f474",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/category-games@cn.list"
     },
     "bett/geosite/geolocation-non-cn": {
       "bytes": 521703,
@@ -224,7 +264,7 @@
     },
     "bett/geosite/google": {
       "bytes": 18231,
-      "sha256": "2e48262ec9147442c7826b2483261d7161909956f4121de158fb5a2203396b19",
+      "sha256": "43df8382ce54148423bc98f5063a87964ff3ab8ba11f67e703b65360c7e30a38",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/google.list"
     },
     "bett/geosite/instagram": {
@@ -234,12 +274,12 @@
     },
     "bett/geosite/microsoft": {
       "bytes": 15481,
-      "sha256": "3b7f3ec91e70a2c1e587905ed5fc6aab0f26c2423222e34be4623b29c2ecb516",
+      "sha256": "68b5e1e31289194770675139162a34c69dfdda091abf8145a42817889cdc26dd",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/microsoft.list"
     },
     "bett/geosite/microsoft-cn": {
       "bytes": 4235,
-      "sha256": "fdaface6af9503fadf8c68cb3a383dad0912ddf1b7fd8f0bd7e87af87121da1c",
+      "sha256": "cad6cb3e1253def08646df6391ca79abfb22ddea030d3bc9487babf22d00af3b",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/microsoft@cn.list"
     },
     "bett/geosite/pikpak": {
@@ -297,9 +337,14 @@
       "sha256": "78a89a4b5cb9331ddcd7082e39908f149ab391a98d78599066a272a2b54e91f6",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/asn/AS32590.list"
     },
+    "bett/shadowrocket_ips/apple-ip": {
+      "bytes": 2650,
+      "sha256": "674eff3d56c769a96e1511775c938cfb27b39acdc8f6bc7136dd45506fa32322",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/apple.list"
+    },
     "bett/shadowrocket_ips/cn-ip": {
-      "bytes": 174330,
-      "sha256": "7b9e9b34c89ca2711536913f6971332e3f951006e2fffccedcdc0e4111fa9895",
+      "bytes": 173097,
+      "sha256": "3fb9439f9a7458b61dba17ab4404b5873014289208ab73a9de766ae62722d647",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/cn.list"
     },
     "bett/shadowrocket_ips/facebook-ip": {
@@ -308,14 +353,24 @@
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/facebook.list"
     },
     "bett/shadowrocket_ips/google-ip": {
-      "bytes": 14985,
-      "sha256": "1247d4bec2d01ea5cd0d705bf2be81edf2a29ba48522f216c2f534dd67377249",
+      "bytes": 15539,
+      "sha256": "ab0b8c0420301379ac000e3036cb3601848f2d18252b1f243fe599cce7201f26",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/google.list"
+    },
+    "bett/shadowrocket_ips/microsoft-ip": {
+      "bytes": 16394,
+      "sha256": "be6364492a16a5f90db29c2a11deafe83343489ce0fb367b4375b9cdd7c2f3fd",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/microsoft.list"
     },
     "bett/shadowrocket_ips/private-ip": {
       "bytes": 222,
       "sha256": "06ae700eaba0fb7b812e699acf3e9fe8167344443ecc7fcfad0ca54c90ad100c",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/private.list"
+    },
+    "bett/shadowrocket_ips/steam-ip": {
+      "bytes": 556,
+      "sha256": "ad3b1ef3c38de732e01d671c96a9854691a5f1f50f1d490fd243cff954419ac4",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/steam.list"
     },
     "bett/shadowrocket_ips/telegram-ip": {
       "bytes": 191,
@@ -328,8 +383,8 @@
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/tiktok.list"
     },
     "bett/shadowrocket_ips/twitter-ip": {
-      "bytes": 10300,
-      "sha256": "33042b8da57cda2473c9fa75dab82cd409b3f7952af20de4ef96a6ae60f8b359",
+      "bytes": 10189,
+      "sha256": "381343ca9bce6d3dc35441e9715b9dce6f5eb1c874d1a17a3aeafa2e1a96f53d",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geoip/twitter.list"
     }
   },
