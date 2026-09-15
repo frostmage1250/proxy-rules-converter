@@ -16,30 +16,30 @@
 - `telegram`: 21 source rules -> 21 output rules; order preserved.
 - `youtube`: 178 source rules -> 178 output rules; order preserved.
 - `threads`: 2 source rules -> 2 output rules; order preserved.
-- `instagram`: 74 source rules -> 74 output rules; order preserved.
+- `meta`: 554 source rules -> 554 output rules; order preserved.
 - `facebook`: 396 source rules -> 396 output rules; order preserved.
 - `twitter`: 24 source rules -> 24 output rules; order preserved.
 - `twitch`: 34 source rules -> 34 output rules; order preserved.
-- `tiktok`: 36 source rules -> 36 output rules; order preserved.
+- `tiktok`: 37 source rules -> 37 output rules; order preserved.
 - `google`: 1071 source rules -> 1071 output rules; order preserved.
 - `ai`: 179 source rules -> 179 output rules; order preserved.
 - `github`: 64 source rules -> 64 output rules; order preserved.
 - `pikpak`: 7 source rules -> 7 output rules; order preserved.
 - `ehentai`: 8 source rules -> 8 output rules; order preserved.
-- `geolocation-non-cn`: 33437 source rules -> 33437 output rules; order preserved.
+- `geolocation-non-cn`: 33439 source rules -> 33439 output rules; order preserved.
 - `cn`: 109100 source rules -> 109100 output rules; order preserved.
 
 ## Bett Shadowrocket IP and ASN providers
 
 - `private-ip`: 18 source rules -> 18 output rules; order preserved.
-- `cn-ip`: 10785 source rules -> 10785 output rules; order preserved.
-- `google-ip`: 969 source rules -> 969 output rules; order preserved.
+- `cn-ip`: 10872 source rules -> 10872 output rules; order preserved.
+- `google-ip`: 968 source rules -> 968 output rules; order preserved.
 - `microsoft-ip`: 1068 source rules -> 1068 output rules; order preserved.
 - `apple-ip`: 175 source rules -> 175 output rules; order preserved.
 - `telegram-ip`: 12 source rules -> 12 output rules; order preserved.
 - `steam-ip`: 35 source rules -> 35 output rules; order preserved.
 - `tiktok-ip`: 115 source rules -> 115 output rules; order preserved.
-- `twitter-ip`: 647 source rules -> 647 output rules; order preserved.
+- `twitter-ip`: 639 source rules -> 639 output rules; order preserved.
 - `facebook-ip`: 82 source rules -> 82 output rules; order preserved.
 - `steam-asn`: 23 source rules -> 23 output rules; order preserved.
 
