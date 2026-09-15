@@ -91,7 +91,7 @@ class ConverterTests(unittest.TestCase):
             "youtube", "google", "google_ip", "ai", "github", "microsoft",
             "microsoft_ip", "apple", "apple_ip", "telegram", "telegram_ip",
             "steam", "steam_ip", "tiktok", "tiktok_ip", "twitter", "twitter_ip",
-            "instagram", "pikpak", "ehentai", "threads", "facebook",
+            "meta", "pikpak", "ehentai", "threads", "facebook",
             "facebook_ip", "twitch",
         }
         provider_outputs = bett["mihomo_script_provider_outputs"]
