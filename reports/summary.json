@@ -219,17 +219,17 @@
   "sources": {
     "bett/geosite/ai": {
       "bytes": 3431,
-      "sha256": "fcda26f6d0b85dfeafe9a9a9f74177258c8e595dfc32bb3722eeda29d2ecd558",
+      "sha256": "8ae0fd3c52d5cb83a42fc3d2517501c34264af447cd6535bc965e2edca75d8af",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/category-ai-!cn.list"
     },
     "bett/geosite/apple": {
       "bytes": 36860,
-      "sha256": "a98d1c7f342bdaa619a585e68aa481c3fb8645627245f8fb507cda360b97df93",
+      "sha256": "a59acab8f262307ff85b5f93098d8e8e857a47c1781d650002d12d75ceaa5a8b",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple.list"
     },
     "bett/geosite/apple-cn": {
       "bytes": 7000,
-      "sha256": "871ce72b7c0579f21be30ae4437422abb0e90ee96b7589ac59a4081e5d1cbcef",
+      "sha256": "d76c2e548f4300bc7dea80f21d8f1ad2e868d1da3c2ea08584a1516774d19a65",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple@cn.list"
     },
     "bett/geosite/cn": {
@@ -249,7 +249,7 @@
     },
     "bett/geosite/games-cn": {
       "bytes": 749,
-      "sha256": "9b64c9a5b0afdf7ffa865988e87ed7f8424526250fbdf956f6cc71d030c7f189",
+      "sha256": "0439ce2071538d75df576146c862916ccfcb62b282e75378fa2a1625500a9253",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/category-games@cn.list"
     },
     "bett/geosite/geolocation-non-cn": {
@@ -264,22 +264,22 @@
     },
     "bett/geosite/google": {
       "bytes": 18231,
-      "sha256": "b30fed0a62e219210cbf6cc3112f2e3fb0e753dd2c0ba686828f9997fb31e61a",
+      "sha256": "70e7ab8c119937582247ea82e9b93adec93cbf0a83cc5947b2bea076cf696a86",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/google.list"
     },
     "bett/geosite/meta": {
       "bytes": 9930,
-      "sha256": "ecbb3a49c35efe12f6016dca82ff1c83e55b31d7f32620d55b0c7424244afd0b",
+      "sha256": "629f9f3058d19cbf0b2ce3242ed0b79822b113b8931adf9017e8adab1b0cf9b4",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/meta.list"
     },
     "bett/geosite/microsoft": {
       "bytes": 15481,
-      "sha256": "942b8d51e4e5cb155db839e2e7a1d061198c9eb7c5e93b39b1477f99727d1693",
+      "sha256": "4c1a5b063ebdccb85680c7c0bc4cd5ed5f12d49eaeffee655c7ce35610c5618d",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/microsoft.list"
     },
     "bett/geosite/microsoft-cn": {
       "bytes": 4235,
-      "sha256": "fdaface6af9503fadf8c68cb3a383dad0912ddf1b7fd8f0bd7e87af87121da1c",
+      "sha256": "a2a50c22fb8a12439e8f6de2af90d870cbcee97195659f435971dda039e02269",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/microsoft@cn.list"
     },
     "bett/geosite/pikpak": {
