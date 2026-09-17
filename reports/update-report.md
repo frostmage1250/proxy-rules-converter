@@ -39,7 +39,7 @@
 - `telegram-ip`: 12 source rules -> 12 output rules; order preserved.
 - `steam-ip`: 35 source rules -> 35 output rules; order preserved.
 - `tiktok-ip`: 115 source rules -> 115 output rules; order preserved.
-- `twitter-ip`: 639 source rules -> 639 output rules; order preserved.
+- `twitter-ip`: 634 source rules -> 634 output rules; order preserved.
 - `facebook-ip`: 82 source rules -> 82 output rules; order preserved.
 - `steam-asn`: 23 source rules -> 23 output rules; order preserved.
 
