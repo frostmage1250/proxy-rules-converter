@@ -32,15 +32,15 @@
 ## Bett Shadowrocket IP and ASN providers
 
 - `private-ip`: 18 source rules -> 18 output rules; order preserved.
-- `cn-ip`: 10872 source rules -> 10872 output rules; order preserved.
-- `google-ip`: 968 source rules -> 968 output rules; order preserved.
-- `microsoft-ip`: 1068 source rules -> 1068 output rules; order preserved.
-- `apple-ip`: 175 source rules -> 175 output rules; order preserved.
+- `cn-ip`: 10900 source rules -> 10900 output rules; order preserved.
+- `google-ip`: 971 source rules -> 971 output rules; order preserved.
+- `microsoft-ip`: 1060 source rules -> 1060 output rules; order preserved.
+- `apple-ip`: 170 source rules -> 170 output rules; order preserved.
 - `telegram-ip`: 12 source rules -> 12 output rules; order preserved.
 - `steam-ip`: 35 source rules -> 35 output rules; order preserved.
 - `tiktok-ip`: 115 source rules -> 115 output rules; order preserved.
-- `twitter-ip`: 634 source rules -> 634 output rules; order preserved.
-- `facebook-ip`: 82 source rules -> 82 output rules; order preserved.
+- `twitter-ip`: 635 source rules -> 635 output rules; order preserved.
+- `facebook-ip`: 83 source rules -> 83 output rules; order preserved.
 - `steam-asn`: 23 source rules -> 23 output rules; order preserved.
 
 ## Steam China download
