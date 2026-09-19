@@ -32,8 +32,8 @@
 ## Bett Shadowrocket IP and ASN providers
 
 - `private-ip`: 18 source rules -> 18 output rules; order preserved.
-- `cn-ip`: 10900 source rules -> 10900 output rules; order preserved.
-- `google-ip`: 971 source rules -> 971 output rules; order preserved.
+- `cn-ip`: 10902 source rules -> 10902 output rules; order preserved.
+- `google-ip`: 966 source rules -> 966 output rules; order preserved.
 - `microsoft-ip`: 1060 source rules -> 1060 output rules; order preserved.
 - `apple-ip`: 170 source rules -> 170 output rules; order preserved.
 - `telegram-ip`: 12 source rules -> 12 output rules; order preserved.
