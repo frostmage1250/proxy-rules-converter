@@ -27,11 +27,9 @@ USER_AGENT = (
     "(+https://github.com/frostmage1250/proxy-rules-converter)"
 )
 DOMAIN_LABEL_RE = re.compile(r"^[a-z0-9_](?:[a-z0-9_-]{0,61}[a-z0-9_])?$", re.I)
-STATIC_OUTPUTS = frozenset({"dist/shadowrocket/bilibili-pcdn.list"})
 EXTERNALLY_MANAGED_OUTPUTS = frozenset(
     {
         "dist/mihomo/geolocation-cn.list",
-        "dist/shadowrocket/geolocation-cn.domain-set",
         "reports/geolocation-cn.json",
     }
 )
@@ -57,11 +55,6 @@ class DomainRule:
         if self.kind == "suffix":
             return f"+.{self.value}"
         if self.kind == "subdomain_suffix":
-            return f".{self.value}"
-        return self.value
-
-    def shadowrocket(self) -> str:
-        if self.kind in {"suffix", "subdomain_suffix"}:
             return f".{self.value}"
         return self.value
 
@@ -220,40 +213,13 @@ def sha256_text(text: str) -> str:
 
 
 def render_rules(rules: Sequence[DomainRule], target: str) -> str:
-    """Render one output line per input rule, in exactly the same order."""
+    """Render one Mihomo output line per input rule, preserving order."""
 
-    if target == "mihomo":
-        lines = [rule.mihomo() for rule in rules]
-    elif target == "shadowrocket":
-        lines = [rule.shadowrocket() for rule in rules]
-        projections: dict[str, set[str]] = collections.defaultdict(set)
-        for source_rule, output in zip(rules, lines):
-            projections[output].add(source_rule.mihomo())
-        collisions = {
-            output: sorted(sources)
-            for output, sources in projections.items()
-            if len(sources) > 1
-        }
-        if collisions:
-            raise ConversionError(
-                "Distinct source rules collapse to the same Shadowrocket rule: "
-                + json.dumps(collisions, ensure_ascii=False, sort_keys=True)
-            )
-    else:
+    if target != "mihomo":
         raise ConversionError(f"Unknown render target: {target}")
+    lines = [rule.mihomo() for rule in rules]
     if len(lines) != len(rules):
-        raise ConversionError(f"Rendering changed the {target} rule count")
-    return "\n".join(lines) + "\n"
-
-
-def render_shadowrocket_ip_rules(networks: Sequence[str]) -> str:
-    lines: list[str] = []
-    for value in networks:
-        network = ipaddress.ip_network(value, strict=True)
-        rule_type = "IP-CIDR" if network.version == 4 else "IP-CIDR6"
-        lines.append(f"{rule_type},{value}")
-    if len(lines) != len(networks):
-        raise ConversionError("Rendering changed the Shadowrocket IP rule count")
+        raise ConversionError("Rendering changed the Mihomo rule count")
     return "\n".join(lines) + "\n"
 
 
@@ -288,7 +254,6 @@ def managed_files() -> set[str]:
             for path in output_root.rglob("*")
             if path.is_file()
             for relative in [path.relative_to(ROOT).as_posix()]
-            if relative not in STATIC_OUTPUTS
             if not is_externally_managed_output(path)
         )
     return files
@@ -309,42 +274,6 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         return text
 
     bett = config["bett"]
-    domain_stats: dict[str, dict[str, object]] = {}
-    for output_name, source_leaf in bett["shadowrocket_domains"].items():
-        url = join_url(bett["geosite_base"], source_leaf)
-        text = download(f"bett/geosite/{output_name}", url)
-        rules = parse_domain_text(text, url)
-        duplicates = duplicate_counts([rule.mihomo() for rule in rules])
-        rendered = render_rules(rules, "shadowrocket")
-        if len(rendered.splitlines()) != len(rules):
-            raise ConversionError(f"Rule count changed while converting {url}")
-        outputs[f"dist/shadowrocket/{output_name}.domain-set"] = rendered
-        domain_stats[output_name] = {
-            "source_entries": len(rules),
-            "output_entries": len(rules),
-            "order_preserved": True,
-            "exact_duplicates_preserved": duplicates,
-        }
-
-    ip_stats: dict[str, dict[str, object]] = {}
-    for category, base_key in (
-        ("shadowrocket_ips", "geoip_base"),
-        ("shadowrocket_asns", "asn_base"),
-    ):
-        for output_name, source_leaf in bett[category].items():
-            url = join_url(bett[base_key], source_leaf)
-            text = download(f"bett/{category}/{output_name}", url)
-            networks, _ = parse_mixed_ipcidr_text(text, url)
-            duplicates = duplicate_counts(networks)
-            rendered = render_shadowrocket_ip_rules(networks)
-            outputs[f"dist/shadowrocket/{output_name}.list"] = rendered
-            ip_stats[output_name] = {
-                "source_entries": len(networks),
-                "output_entries": len(networks),
-                "order_preserved": True,
-                "exact_duplicates_preserved": duplicates,
-            }
-
     game_url = join_url(
         bett["geosite_base"], bett["steam_cn_download_validation"]
     )
@@ -366,9 +295,6 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
     outputs["dist/mihomo/steam-cn-download.list"] = render_rules(
         steam_rules, "mihomo"
     )
-    outputs["dist/shadowrocket/steam-cn-download.domain-set"] = render_rules(
-        steam_rules, "shadowrocket"
-    )
 
     reviewed_set = set(reviewed)
     steam_named_not_reviewed = [
@@ -383,7 +309,7 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
     )
 
     summary = {
-        "schema_version": 7,
+        "schema_version": 8,
         "conversion_policy": {
             "syntax_only": True,
             "source_order_preserved": True,
@@ -393,8 +319,6 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
             "unsupported_or_noncanonical_rules": "fail",
         },
         "sources": report_sources,
-        "shadowrocket_domains": domain_stats,
-        "shadowrocket_ip_and_asn": ip_stats,
         "steam_cn_download": {
             "canonical_source": allowlist_path.relative_to(ROOT).as_posix(),
             "validation_source": game_url,
@@ -415,33 +339,13 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         "- Every generated provider preserves source rule order and count.",
         "- Upstream exact duplicates are preserved; unsupported syntax and required normalization fail the build.",
         "",
-        "## Bett Shadowrocket domain providers",
+        "## Steam China download",
+        "",
+        f"- Canonical allowlist rules: {len(reviewed)}.",
+        "- Bett coverage validation passed.",
+        "- Mihomo output preserves allowlist order and count.",
         "",
     ]
-    for name, stats in domain_stats.items():
-        report_lines.append(
-            f"- `{name}`: {stats['source_entries']} source rules -> "
-            f"{stats['output_entries']} output rules; order preserved."
-        )
-    report_lines.extend(
-        ["", "## Bett Shadowrocket IP and ASN providers", ""]
-    )
-    for name, stats in ip_stats.items():
-        report_lines.append(
-            f"- `{name}`: {stats['source_entries']} source rules -> "
-            f"{stats['output_entries']} output rules; order preserved."
-        )
-    report_lines.extend(
-        [
-            "",
-            "## Steam China download",
-            "",
-            f"- Canonical allowlist rules: {len(reviewed)}.",
-            "- Bett coverage validation passed.",
-            "- Mihomo and Shadowrocket outputs preserve allowlist order and count.",
-            "",
-        ]
-    )
     outputs["reports/update-report.md"] = "\n".join(report_lines)
     return outputs
 

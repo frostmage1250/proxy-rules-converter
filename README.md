@@ -1,101 +1,54 @@
-# Mihomo and Shadowrocket rule converter
+# Mihomo rule converter
 
-This repository publishes reviewed Bett rules for Mihomo and Shadowrocket, plus the
-separately documented V2Fly `geolocation-cn` fallback.
+This repository publishes the reviewed Steam China download rules and a
+`geolocation-cn` set built from V2Fly domain data for Mihomo.
 
 ## Conversion policy
 
-- Perform only syntax changes required by the target client.
 - Preserve every source rule, its order, and the total rule count.
 - Do not semantically minimize, deduplicate, sort, replace, or silently ignore rules.
-- Preserve upstream exact duplicates in their original positions without special
-  handling or approval.
-- Stop the build when an unsupported rule, normalization requirement, source
-  disappearance, or target-format collision is detected, then request a maintainer
-  decision.
+- Preserve upstream exact duplicates in their original positions.
+- Stop the build when an unsupported rule, required normalization, or source
+  disappearance is detected.
 
-## Sources and outputs
-
-### Bett to Shadowrocket
-
-The converter downloads the configured `appshubcc/bett-rules@meta` geosite, GeoIP,
-and ASN lists. `config/sources.json` also records the complete provider-to-output
-mapping selected by `frostmage1250/mihomo-script`, including providers used only by
-its DNS layer, so the Shadowrocket configuration repository can verify its scope.
-A `null` mapping records an intentionally non-portable provider: Mihomo's
-`fakeip_filter` contains syntax that Shadowrocket domain-set cannot represent and is
-handled by the Shadowrocket configuration's native Fake-IP behavior instead.
-It converts:
-
-- Mihomo `+.` domain suffix syntax to Shadowrocket `.` syntax.
-- IPv4 CIDRs to `IP-CIDR,<network>`.
-- IPv6 CIDRs to `IP-CIDR6,<network>`.
-
-No other rule transformation is permitted. The output line at position N always
-corresponds to source rule N.
-
-### Steam China download
+## Steam China download
 
 `config/steam-cn-download-allowlist.txt` is the canonical reviewed 11-rule source.
-Every build verifies that Bett
-`category-game-platforms-download@cn.list` still covers all 11 entries, then emits the
-allowlist unchanged and in its original order for Mihomo and Shadowrocket.
+Every build verifies that Bett's
+`category-game-platforms-download@cn.list` still covers all 11 entries, then emits
+the allowlist unchanged and in its original order as a Mihomo text provider.
+The official Mihomo converter compiles its MRS file.
 
-### V2Fly geolocation-cn
+## V2Fly geolocation-cn
 
-This is the explicitly approved exception to the Bett-only rule-data policy.
-The workflow builds `geolocation-cn-clean` with V2Fly's official generator and
-MetaCubeX's official converter. The current three regular-expression rules cannot be
-represented by domain MRS and are explicitly pinned in
-`config/v2fly/geolocation-cn-regex.txt`; any change to that reviewed set stops the
-workflow. The generated Mihomo list is converted to Shadowrocket without changing its
-rule count or order.
+This is the approved exception to the Bett rule-data source. The workflow
+builds `geolocation-cn-clean` with V2Fly's official generator. The local
+`config/v2fly/geolocation-cn-clean` wrapper also contains the reviewed exact
+host `qq.ugcimg.cn`; domain rule sets do not include ports, so this rule
+covers the requested `qq.ugcimg.cn:443` connection.
 
-### Static file
-
-`dist/shadowrocket/bilibili-pcdn.list` is the only hand-maintained static provider.
-The converter never rewrites it.
+The current three regular-expression rules cannot be represented by domain
+MRS and are explicitly pinned in `config/v2fly/geolocation-cn-regex.txt`.
+Any change to that reviewed set stops the workflow. MetaCubeX is used only
+to compile the MRS format. The Mihomo text list is checked against the
+V2Fly export for identical order and count.
 
 ## Published files
 
 ```text
-dist/
-├─ mihomo/
-│  ├─ geolocation-cn.list
-│  ├─ geolocation-cn.mrs
-│  ├─ steam-cn-download.list
-│  └─ steam-cn-download.mrs
-└─ shadowrocket/
-   ├─ *.domain-set          # Bett geosite sets, geolocation-cn, Steam-China
-   ├─ *-ip.list             # Bett GeoIP sets, including Apple/Microsoft/Steam
-   ├─ steam-asn.list        # Bett AS32590 CIDRs
-   └─ bilibili-pcdn.list    # static reviewed provider
+dist/mihomo/
+├─ geolocation-cn.list
+├─ geolocation-cn.mrs
+├─ steam-cn-download.list
+└─ steam-cn-download.mrs
 ```
 
-Mihomo MRS files are produced by official converters. `steam-cn-download.mrs` is
-compiled with Mihomo's `convert-ruleset` command. `geolocation-cn.mrs` is produced by
-MetaCubeX's official converter from the V2Fly build.
-
-## Run locally
-
-Python 3.11 or newer is sufficient for text conversion. MRS generation additionally
-requires an official Mihomo executable in `PATH`, through `MIHOMO_BIN`, or with
-`--mihomo`.
-
-```bash
-python -m unittest discover -s tests -v
-python src/convert_rules.py
-python src/convert_mrs.py
-python src/convert_rules.py --check
-python src/convert_mrs.py --check
-python src/convert_geolocation_cn_shadowrocket.py --check
-```
+`reports/geolocation-cn.json` records the V2Fly source, converter commit,
+entry counts, sentinels, and output hashes. `reports/summary.json` and
+`reports/update-report.md` cover the Steam allowlist validation.
 
 ## Automation
 
-`.github/workflows/update-rules.yml` runs daily and on relevant source changes. It
-fetches fresh upstream files, runs all validation, regenerates the providers, checks
-determinism, and commits only changed files under `dist/` and `reports/`.
-
-Source mappings are in `config/sources.json`.
-
+`.github/workflows/update-rules.yml` runs every six hours and on relevant
+source changes. It fetches fresh upstream files, runs validation, regenerates
+the providers, checks determinism, and commits changed generated files.

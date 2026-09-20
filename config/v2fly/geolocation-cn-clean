@@ -1,3 +1,6 @@
 # Resolve the official V2Fly category with the official parser, while dropping
 # entries explicitly tagged as advertisements.
 include:geolocation-cn @-ads
+
+# User-maintained exact host; port 443 is not part of a domain rule.
+full:qq.ugcimg.cn

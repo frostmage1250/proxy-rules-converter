@@ -9,8 +9,8 @@ on:
       - "src/**"
       - "tests/**"
   schedule:
-    # 18:23 UTC = 02:23 Asia/Shanghai (the following day).
-    - cron: "23 18 * * *"
+    # Every 6 hours, after Mihomo and before Egern (UTC).
+    - cron: "23 0,6,12,18 * * *"
 
 permissions:
   contents: write
@@ -114,9 +114,6 @@ jobs:
             --output dist/mihomo/geolocation-cn.list
           install -m 0644 "${meta_output}/geolocation-cn-clean.mrs" \
             dist/mihomo/geolocation-cn.mrs
-          python src/convert_geolocation_cn_shadowrocket.py \
-            --input dist/mihomo/geolocation-cn.list \
-            --output dist/shadowrocket/geolocation-cn.domain-set
           python src/validate_geolocation_cn.py \
             --v2fly-export "${v2fly_output}/geolocation-cn-clean.txt" \
             --domain-list dist/mihomo/geolocation-cn.list \
@@ -133,7 +130,6 @@ jobs:
             --v2fly-export "${RUNNER_TEMP}/v2fly-output/geolocation-cn-clean.txt" \
             --output dist/mihomo/geolocation-cn.list \
             --check
-          python src/convert_geolocation_cn_shadowrocket.py --check
           git diff --check
 
       - name: Commit changed generated files

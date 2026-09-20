@@ -18,7 +18,6 @@ from convert_rules import (  # noqa: E402
     parse_ipcidr_text,
     parse_mixed_ipcidr_text,
     render_rules,
-    render_shadowrocket_ip_rules,
     rule_covers_domain,
 )
 
@@ -29,19 +28,9 @@ class ConverterTests(unittest.TestCase):
             "z.example\n+.example.com\na.example\n+.example.com\n", "test"
         )
         self.assertEqual(
-            render_rules(rules, "shadowrocket"),
-            "z.example\n.example.com\na.example\n.example.com\n",
+            render_rules(rules, "mihomo"),
+            "z.example\n+.example.com\na.example\n+.example.com\n",
         )
-
-    def test_distinct_shadowrocket_projection_collision_fails(self) -> None:
-        with self.assertRaises(ConversionError):
-            render_rules(
-                [
-                    DomainRule("suffix", "example.com"),
-                    DomainRule("subdomain_suffix", "example.com"),
-                ],
-                "shadowrocket",
-            )
 
     def test_noncanonical_domain_fails_instead_of_being_rewritten(self) -> None:
         for value in ("Example.com", "example.com.", " example.com"):
@@ -52,16 +41,6 @@ class ConverterTests(unittest.TestCase):
         for value in ("*.example.com", "DOMAIN,example.com"):
             with self.subTest(value=value), self.assertRaises(ConversionError):
                 parse_domain_text(value + "\n", "test")
-
-    def test_ip_conversion_preserves_order_and_count(self) -> None:
-        entries, duplicates = parse_mixed_ipcidr_text(
-            "2001:db8::/32\n1.1.1.0/24\n", "test"
-        )
-        self.assertEqual(duplicates, 0)
-        self.assertEqual(
-            render_shadowrocket_ip_rules(entries),
-            "IP-CIDR6,2001:db8::/32\nIP-CIDR,1.1.1.0/24\n",
-        )
 
     def test_ip_duplicates_are_reported_but_not_removed(self) -> None:
         entries, duplicates = parse_ipcidr_text(
@@ -78,48 +57,20 @@ class ConverterTests(unittest.TestCase):
         with self.assertRaises(ConversionError):
             parse_ipcidr_text("2001:db8::/32\n", "test", 4)
 
-    def test_bett_scope_is_explicit(self) -> None:
+    def test_bett_scope_is_steam_validation_only(self) -> None:
         config = json.loads(
             (ROOT / "config" / "sources.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(set(config), {"bett"})
-        bett = config["bett"]
-        self.assertNotIn("geolocation-cn", bett["shadowrocket_domains"])
-        expected_providers = {
-            "private", "private_ip", "games_cn", "apple_cn", "microsoft_cn",
-            "geolocation-cn", "cn_ip", "geolocation-!cn", "fakeip_filter", "cn",
-            "youtube", "google", "google_ip", "ai", "github", "microsoft",
-            "microsoft_ip", "apple", "apple_ip", "telegram", "telegram_ip",
-            "steam", "steam_ip", "tiktok", "tiktok_ip", "twitter", "twitter_ip",
-            "meta", "pikpak", "ehentai", "threads", "facebook",
-            "facebook_ip", "twitch",
-        }
-        provider_outputs = bett["mihomo_script_provider_outputs"]
-        self.assertEqual(set(provider_outputs), expected_providers)
-        self.assertIsNone(provider_outputs["fakeip_filter"])
-        published = (
-            set(bett["shadowrocket_domains"])
-            | set(bett["shadowrocket_ips"])
-            | {"geolocation-cn"}
-        )
-        generated_outputs = {
-            output for output in provider_outputs.values() if output is not None
-        }
-        self.assertLessEqual(generated_outputs, published)
-
-    def test_only_pcdn_bilibili_file_is_static(self) -> None:
-        from convert_rules import STATIC_OUTPUTS
-
         self.assertEqual(
-            STATIC_OUTPUTS, {"dist/shadowrocket/bilibili-pcdn.list"}
+            set(config["bett"]),
+            {"geosite_base", "steam_cn_download_validation"},
         )
 
     def test_geolocation_outputs_are_externally_managed(self) -> None:
-        self.assertTrue(
-            is_externally_managed_output(
-                ROOT / "dist" / "shadowrocket" / "geolocation-cn.domain-set"
+        for name in ("geolocation-cn.list", "geolocation-cn.mrs"):
+            self.assertTrue(
+                is_externally_managed_output(ROOT / "dist" / "mihomo" / name)
             )
-        )
 
     def test_suffix_coverage(self) -> None:
         rule = DomainRule("suffix", "example.com")
