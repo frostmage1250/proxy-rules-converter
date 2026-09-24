@@ -1,4 +1,17 @@
 {
+  "claude": {
+    "bett_entries": 8,
+    "bett_precedence": true,
+    "bett_source": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/anthropic.list",
+    "format": "mihomo-classical-yaml",
+    "includes_asn": 399358,
+    "includes_ip_cidr": true,
+    "includes_ip_cidr6": true,
+    "ntp_excluded": true,
+    "output_entries": 23,
+    "site_entries": 23,
+    "site_source": "https://ip.net.coffee/claude/site.html"
+  },
   "conversion_policy": {
     "semantic_minimization": false,
     "source_order_preserved": true,
@@ -9,10 +22,20 @@
   },
   "schema_version": 8,
   "sources": {
+    "bett/geosite/anthropic": {
+      "bytes": 153,
+      "sha256": "0155b69f43c57d61fa8152ae3372233b0660affd6d2b2c01315290f53a311b7f",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/anthropic.list"
+    },
     "bett/geosite/steam-cn-download-validation": {
       "bytes": 752,
       "sha256": "46c1ca51a0b7a8342efe8be5870a393e61abc72bdbc7a272787164b9dd13cc08",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/category-game-platforms-download@cn.list"
+    },
+    "ip.net.coffee/claude/site": {
+      "bytes": 33104,
+      "sha256": "878c91ea82c949c63440c997f0aa634aa4ca8d574c6b1f2edeb18751e6095f38",
+      "url": "https://ip.net.coffee/claude/site.html"
     }
   },
   "steam_cn_download": {
