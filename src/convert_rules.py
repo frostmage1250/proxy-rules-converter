@@ -14,6 +14,7 @@ import sys
 import tempfile
 import urllib.error
 import urllib.request
+from html.parser import HTMLParser
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Mapping, Sequence
@@ -57,6 +58,204 @@ class DomainRule:
         if self.kind == "subdomain_suffix":
             return f".{self.value}"
         return self.value
+
+
+
+CLAUDE_SITE_REQUIRED_TYPED_RULES = frozenset(
+    {
+        "DOMAIN-SUFFIX,anthropic.com",
+        "DOMAIN-SUFFIX,claude.ai",
+        "DOMAIN-SUFFIX,claude.com",
+        "DOMAIN-SUFFIX,clau.de",
+        "DOMAIN-SUFFIX,claudemcpclient.com",
+        "DOMAIN-SUFFIX,claudemcpcontent.com",
+        "DOMAIN-SUFFIX,claudeusercontent.com",
+        "DOMAIN,servd-anthropic-website.b-cdn.net",
+        "DOMAIN,anthropic.com.cdn.cloudflare.net",
+        "DOMAIN,anthropic.auth0.com",
+        "DOMAIN,anthropic-com.ghost.io",
+        "DOMAIN-SUFFIX,sentry.io",
+        "DOMAIN-SUFFIX,statsigapi.net",
+        "DOMAIN,browser-intake-us5-datadoghq.com",
+        "DOMAIN-KEYWORD,datadog",
+        "DOMAIN-KEYWORD,sift",
+        "DOMAIN-SUFFIX,intercom.io",
+        "DOMAIN-SUFFIX,intercomcdn.com",
+        "DOMAIN,cdn.usefathom.com",
+        "IP-CIDR,160.79.104.0/21,no-resolve",
+        "IP-CIDR6,2607:6bc0::/32,no-resolve",
+        "IP-ASN,399358,no-resolve",
+    }
+)
+CLAUDE_SITE_REQUIRED_KEYWORDS = ("datadog", "sentry", "sift")
+CLAUDE_CLASSICAL_RE = re.compile(
+    r"^(?:DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD),[^,]+$"
+    r"|^(?:IP-CIDR|IP-CIDR6|IP-ASN),[^,]+,no-resolve$"
+)
+
+
+class CodeBlockHTMLParser(HTMLParser):
+    """Collect visible text from preformatted blocks without third-party HTML packages."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.blocks: list[str] = []
+        self._pre_depth = 0
+        self._current: list[str] = []
+
+    def handle_starttag(
+        self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None:
+        del attrs
+        if tag.lower() == "pre":
+            if self._pre_depth == 0:
+                self._current = []
+            self._pre_depth += 1
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag.lower() != "pre" or self._pre_depth == 0:
+            return
+        self._pre_depth -= 1
+        if self._pre_depth == 0:
+            self.blocks.append("".join(self._current))
+            self._current = []
+
+    def handle_data(self, data: str) -> None:
+        if self._pre_depth:
+            self._current.append(data)
+
+
+def validate_claude_classical_rule(line: str, source: str) -> str:
+    if not CLAUDE_CLASSICAL_RE.fullmatch(line):
+        raise ConversionError(f"Unsupported Claude rule in {source}: {line}")
+    parts = line.split(",")
+    kind = parts[0]
+    value = parts[1]
+    if kind in {"DOMAIN", "DOMAIN-SUFFIX"}:
+        validate_canonical_domain(value, source, line)
+    elif kind == "DOMAIN-KEYWORD":
+        if not value or value != value.lower() or value.strip() != value:
+            raise ConversionError(f"Invalid Claude keyword in {source}: {line}")
+    elif kind in {"IP-CIDR", "IP-CIDR6"}:
+        try:
+            network = ipaddress.ip_network(value, strict=True)
+        except ValueError as exc:
+            raise ConversionError(f"Invalid Claude CIDR in {source}: {line}") from exc
+        expected_version = 4 if kind == "IP-CIDR" else 6
+        if network.version != expected_version or str(network) != value:
+            raise ConversionError(f"Noncanonical Claude CIDR in {source}: {line}")
+    elif kind == "IP-ASN":
+        if not value.isascii() or not value.isdecimal() or int(value) <= 0:
+            raise ConversionError(f"Invalid Claude ASN in {source}: {line}")
+    return line
+
+
+def extract_claude_site_rules(text: str, source: str) -> list[str]:
+    """Extract the site's typed Mihomo rules plus all keyword fallbacks, excluding NTP."""
+
+    probe = text.lstrip().lower()
+    if not probe.startswith("<!doctype") and not probe.startswith("<html"):
+        raise ConversionError(f"Claude site did not return HTML: {source}")
+
+    parser = CodeBlockHTMLParser()
+    parser.feed(text)
+    parser.close()
+
+    typed_candidates: list[list[str]] = []
+    fallback_keywords: list[str] = []
+    for block in parser.blocks:
+        normalized: list[str] = []
+        for raw in block.splitlines():
+            line = raw.strip()
+            if line.startswith("- "):
+                line = line[2:].strip()
+            if not line or line.startswith("#"):
+                continue
+            normalized.append(line)
+            match = re.fullmatch(r"keyword:\s*([a-z0-9_-]+)", line, re.I)
+            if match:
+                fallback_keywords.append(match.group(1).lower())
+        typed = [line for line in normalized if CLAUDE_CLASSICAL_RE.fullmatch(line)]
+        if CLAUDE_SITE_REQUIRED_TYPED_RULES.issubset(typed):
+            typed_candidates.append(typed)
+
+    if not typed_candidates:
+        raise ConversionError(
+            "Claude site no longer contains the reviewed complete typed rule block"
+        )
+
+    rules: list[str] = []
+    seen: set[str] = set()
+    for line in typed_candidates[0]:
+        validated = validate_claude_classical_rule(line, source)
+        if validated not in seen:
+            rules.append(validated)
+            seen.add(validated)
+
+    keyword_set = set(fallback_keywords)
+    missing_keywords = [
+        keyword
+        for keyword in CLAUDE_SITE_REQUIRED_KEYWORDS
+        if keyword not in keyword_set
+    ]
+    if missing_keywords:
+        raise ConversionError(
+            "Claude site keyword fallbacks disappeared: " + ", ".join(missing_keywords)
+        )
+    for keyword in CLAUDE_SITE_REQUIRED_KEYWORDS:
+        line = f"DOMAIN-KEYWORD,{keyword}"
+        if line not in seen:
+            rules.append(line)
+            seen.add(line)
+
+    if any("ntp" in rule.lower() for rule in rules):
+        raise ConversionError("NTP must not enter the Claude provider")
+    return rules
+
+
+def domain_rule_to_classical(rule: DomainRule) -> str:
+    if rule.kind == "exact":
+        return f"DOMAIN,{rule.value}"
+    if rule.kind == "suffix":
+        return f"DOMAIN-SUFFIX,{rule.value}"
+    raise ConversionError(
+        "Claude Bett source contains a subdomain-only suffix that classical rules "
+        f"cannot preserve: {rule.mihomo()}"
+    )
+
+
+def merge_claude_rules(
+    bett_rules: Sequence[DomainRule], site_rules: Sequence[str]
+) -> list[str]:
+    """Keep Bett first and append every site rule that adds matching coverage."""
+
+    merged = [domain_rule_to_classical(rule) for rule in bett_rules]
+    seen = set(merged)
+    for line in site_rules:
+        if line in seen:
+            continue
+        kind, value, *_ = line.split(",")
+        if kind == "DOMAIN" and any(
+            rule_covers_domain(rule, value) for rule in bett_rules
+        ):
+            continue
+        if kind == "DOMAIN-SUFFIX" and any(
+            rule.kind == "suffix" and rule_covers_domain(rule, value)
+            for rule in bett_rules
+        ):
+            continue
+        merged.append(line)
+        seen.add(line)
+
+    if any("ntp" in rule.lower() for rule in merged):
+        raise ConversionError("NTP must not enter the merged Claude provider")
+    return merged
+
+
+def render_classical_yaml(rules: Sequence[str]) -> str:
+    if not rules:
+        raise ConversionError("Claude provider would be empty")
+    return "payload:\n" + "".join(f"  - {rule}\n" for rule in rules)
 
 
 def normalize_domain(value: str) -> str:
@@ -308,6 +507,18 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         else ""
     )
 
+    anthropic_url = join_url(bett["geosite_base"], bett["anthropic"])
+    anthropic_text = download("bett/geosite/anthropic", anthropic_url)
+    anthropic_rules = parse_domain_text(anthropic_text, anthropic_url)
+
+    claude_site_url = config["claude_site"]["url"]
+    claude_site_text = download("ip.net.coffee/claude/site", claude_site_url)
+    claude_site_rules = extract_claude_site_rules(
+        claude_site_text, claude_site_url
+    )
+    claude_rules = merge_claude_rules(anthropic_rules, claude_site_rules)
+    outputs["dist/mihomo/claude.yaml"] = render_classical_yaml(claude_rules)
+
     summary = {
         "schema_version": 8,
         "conversion_policy": {
@@ -327,6 +538,19 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
             "order_preserved": True,
             "validation_source_exact_duplicates": game_duplicates,
         },
+        "claude": {
+            "bett_source": anthropic_url,
+            "site_source": claude_site_url,
+            "bett_entries": len(anthropic_rules),
+            "site_entries": len(claude_site_rules),
+            "output_entries": len(claude_rules),
+            "bett_precedence": True,
+            "ntp_excluded": True,
+            "includes_ip_cidr": True,
+            "includes_ip_cidr6": True,
+            "includes_asn": 399358,
+            "format": "mihomo-classical-yaml",
+        },
     }
     outputs["reports/summary.json"] = (
         json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
@@ -344,6 +568,14 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         f"- Canonical allowlist rules: {len(reviewed)}.",
         "- Bett coverage validation passed.",
         "- Mihomo output preserves allowlist order and count.",
+        "",
+        "## Claude",
+        "",
+        f"- Bett Anthropic rules: {len(anthropic_rules)} (primary source).",
+        f"- Claude site rules: {len(claude_site_rules)}.",
+        f"- Merged classical rules: {len(claude_rules)}.",
+        "- Authentication, telemetry, risk-control keywords, IPv4, IPv6, and AS399358 are retained.",
+        "- NTP rules are explicitly excluded.",
         "",
     ]
     outputs["reports/update-report.md"] = "\n".join(report_lines)

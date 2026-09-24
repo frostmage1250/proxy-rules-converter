@@ -1,7 +1,8 @@
 # Mihomo rule converter
 
-This repository publishes the reviewed Steam China download rules and a
-`geolocation-cn` set built from V2Fly domain data for Mihomo.
+This repository publishes reviewed Steam China download rules, a merged
+`Claude` classical provider, and a `geolocation-cn` set built from V2Fly
+domain data for Mihomo.
 
 ## Conversion policy
 
@@ -18,6 +19,21 @@ Every build verifies that Bett's
 `category-game-platforms-download@cn.list` still covers all 11 entries, then emits
 the allowlist unchanged and in its original order as a Mihomo text provider.
 The official Mihomo converter compiles its MRS file.
+
+
+## Claude
+
+\`dist/mihomo/claude.yaml\` is a Mihomo classical provider. Bett's
+\`anthropic.list\` is the primary source; the typed rules and keyword fallbacks
+published by \`https://ip.net.coffee/claude/site.html\` supply missing
+authentication, CDN, telemetry, risk-control, customer-support, IPv4, IPv6,
+and AS399358 coverage. Bett rules are emitted first, and site rules already
+covered by a Bett suffix are not duplicated.
+
+The extractor requires the reviewed complete site rule block and all three
+\`datadog\`, \`sentry\`, and \`sift\` keyword fallbacks. Any disappearance or
+unsupported syntax stops the build. NTP is explicitly excluded from the
+Claude provider.
 
 ## V2Fly geolocation-cn
 
@@ -37,6 +53,7 @@ V2Fly export for identical order and count.
 
 ```text
 dist/mihomo/
+├─ claude.yaml
 ├─ geolocation-cn.list
 ├─ geolocation-cn.mrs
 ├─ steam-cn-download.list
