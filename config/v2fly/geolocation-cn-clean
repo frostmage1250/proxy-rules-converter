@@ -2,5 +2,6 @@
 # entries explicitly tagged as advertisements.
 include:geolocation-cn @-ads
 
-# User-maintained exact host; port 443 is not part of a domain rule.
-full:qq.ugcimg.cn
+# User-maintained domain rules; ports are not part of domain rules.
+domain:ugcimg.cn
+full:dypnsapi-dualstack.aliyuncs.com

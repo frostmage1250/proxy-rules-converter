@@ -48,9 +48,10 @@ Claude provider.
 
 This is the approved exception to the Bett rule-data source. The workflow
 builds `geolocation-cn-clean` with V2Fly's official generator. The local
-`config/v2fly/geolocation-cn-clean` wrapper also contains the reviewed exact
-host `qq.ugcimg.cn`; domain rule sets do not include ports, so this rule
-covers the requested `qq.ugcimg.cn:443` connection.
+`config/v2fly/geolocation-cn-clean` wrapper adds the `ugcimg.cn` suffix
+(including the apex and all subdomains) and the exact host
+`dypnsapi-dualstack.aliyuncs.com`. Domain rule sets do not include ports;
+this exact rule covers connections to that host on port 443.
 
 The current three regular-expression rules cannot be represented by domain
 MRS and are explicitly pinned in `config/v2fly/geolocation-cn-regex.txt`.

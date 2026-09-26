@@ -15,7 +15,10 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_EXPECTED_REGEX = ROOT / "config" / "v2fly" / "geolocation-cn-regex.txt"
 DEFAULT_POSITIVE_HOSTS = (
     "qq.com",
+    "ugcimg.cn",
     "qq.ugcimg.cn",
+    "cdn.ugcimg.cn",
+    "dypnsapi-dualstack.aliyuncs.com",
     "taobao.com",
     "tmall.com",
     "jd.com",
