@@ -20,6 +20,7 @@ from convert_rules import DomainRule, parse_domain_text, render_rules, rule_cove
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCES = ROOT / "config" / "sources.json"
 DEFAULT_OUTPUT = ROOT / "dist" / "mihomo" / "ai.mrs"
+DEFAULT_TEXT_OUTPUT = ROOT / "dist" / "mihomo" / "ai.list"
 DEFAULT_REPORT = ROOT / "reports" / "ai.json"
 USER_AGENT = "rules-converter-action/2.0 (+https://github.com/frostmage1250/proxy-rules-converter)"
 AI_SUPPLEMENTS = (
@@ -83,6 +84,7 @@ def build(
     mihomo: Path,
     source_url: str,
     output: Path,
+    text_output: Path,
     report_path: Path,
     check: bool,
 ) -> bool:
@@ -109,6 +111,7 @@ def build(
             raise AIConversionError("Recompiled AI MRS changed a requested suffix or exact rule")
 
         candidate_bytes = candidate_mrs.read_bytes()
+        candidate_list_text = render_rules(candidate_rules, "mihomo")
         report = {
             "schema_version": 1,
             "source": source_url,
@@ -118,15 +121,19 @@ def build(
             "added_rules": [rule.mihomo() for rule in added],
             "output_rules": len(candidate_rules),
             "output_sha256": hashlib.sha256(candidate_bytes).hexdigest(),
+            "output_text_sha256": hashlib.sha256(candidate_list_text.encode("utf-8")).hexdigest(),
         }
         report_text = json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
         old_bytes = output.read_bytes() if output.exists() else None
         old_report = report_path.read_text(encoding="utf-8") if report_path.exists() else None
-        changed = old_bytes != candidate_bytes or old_report != report_text
+        old_text = text_output.read_text(encoding="utf-8") if text_output.exists() else None
+        changed = old_bytes != candidate_bytes or old_text != candidate_list_text or old_report != report_text
         if changed and not check:
             output.parent.mkdir(parents=True, exist_ok=True)
             report_path.parent.mkdir(parents=True, exist_ok=True)
             os.replace(candidate_mrs, output)
+            text_output.parent.mkdir(parents=True, exist_ok=True)
+            text_output.write_text(candidate_list_text, encoding="utf-8", newline="\n")
             report_path.write_text(report_text, encoding="utf-8", newline="\n")
         return changed
 
@@ -135,6 +142,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sources", type=Path, default=DEFAULT_SOURCES)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--text-output", type=Path, default=DEFAULT_TEXT_OUTPUT)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--mihomo", type=Path)
     parser.add_argument("--check", action="store_true")
@@ -144,7 +152,7 @@ def main() -> int:
         bett = config["bett"]
         source_url = bett["geosite_base"].rstrip("/") + "/" + bett["ai_mrs"].lstrip("/")
         changed = build(
-            resolve_mihomo(args.mihomo), source_url, args.output, args.report, args.check
+            resolve_mihomo(args.mihomo), source_url, args.output, args.text_output, args.report, args.check
         )
         if args.check and changed:
             raise AIConversionError("Generated AI MRS or provenance report is out of date")

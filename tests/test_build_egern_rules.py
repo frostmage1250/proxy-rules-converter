@@ -132,6 +132,15 @@ class EgernRuleConverterTests(unittest.TestCase):
         self.assertEqual(result["commit"], "bett-commit")
         self.assertEqual(result["path"], "geo/geosite/google.list")
 
+    def test_converter_ai_mrs_uses_same_run_text_projection(self):
+        provider = {
+            "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/ai.mrs"
+        }
+        result = resolve_provider_source(
+            provider, bett_commit="bett-commit", converter_commit="main"
+        )
+        self.assertEqual(result["path"], "dist/mihomo/ai.list")
+
     def test_rule_conversion_preserves_duplicates_spelling_and_count(self):
         domain_source = "example.com\n+.example.net\n+.example.net\n"
         domain_rule = parse_domain_list(domain_source)

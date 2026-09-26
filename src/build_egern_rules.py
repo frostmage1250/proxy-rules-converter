@@ -107,6 +107,7 @@ def resolve_provider_source(
     elif repository == CONVERTER_REPO and ref == "main":
         allowed = {
             "dist/mihomo/geolocation-cn.mrs": CONVERTER_GEOLOCATION_LIST_PATH,
+            "dist/mihomo/ai.mrs": "dist/mihomo/ai.list",
             CONVERTER_CLAUDE_RULE_PATH: CONVERTER_CLAUDE_RULE_PATH,
         }
         expected_source = allowed.get(published_path)
