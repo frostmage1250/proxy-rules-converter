@@ -5,3 +5,4 @@ include:geolocation-cn @-ads
 # User-maintained domain rules; ports are not part of domain rules.
 domain:ugcimg.cn
 full:dypnsapi-dualstack.aliyuncs.com
+full:upos-icdn-cqg101.solseed.cn

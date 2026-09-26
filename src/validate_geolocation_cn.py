@@ -19,6 +19,7 @@ DEFAULT_POSITIVE_HOSTS = (
     "qq.ugcimg.cn",
     "cdn.ugcimg.cn",
     "dypnsapi-dualstack.aliyuncs.com",
+    "upos-icdn-cqg101.solseed.cn",
     "taobao.com",
     "tmall.com",
     "jd.com",

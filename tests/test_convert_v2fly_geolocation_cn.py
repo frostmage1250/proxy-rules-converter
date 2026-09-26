@@ -22,6 +22,7 @@ class V2FlyGeolocationCnConverterTests(unittest.TestCase):
             export.write_text(
                 "domain:z.example\n"
                 "full:only.example\n"
+                "full:upos-icdn-cqg101.solseed.cn\n"
                 "domain:a.example:@cn\n"
                 "regexp:^x\\.cn$:@cn\n",
                 encoding="utf-8",
@@ -29,7 +30,7 @@ class V2FlyGeolocationCnConverterTests(unittest.TestCase):
             regex.write_text("regexp:^x\\.cn$\n", encoding="utf-8")
             result = convert(export, regex)
 
-        self.assertEqual(result, "+.z.example\nonly.example\n+.a.example\n")
+        self.assertEqual(result, "+.z.example\nonly.example\nupos-icdn-cqg101.solseed.cn\n+.a.example\n")
 
     def test_regex_change_stops_generation(self) -> None:
         with tempfile.TemporaryDirectory() as temp_name:
