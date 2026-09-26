@@ -2,7 +2,8 @@
   "bett": {
     "geosite_base": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite",
     "steam_cn_download_validation": "category-game-platforms-download@cn.list",
-    "anthropic": "anthropic.list"
+    "anthropic": "anthropic.list",
+    "ai_mrs": "category-ai-!cn.mrs"
   },
   "claude_site": {
     "url": "https://ip.net.coffee/claude/site.html"

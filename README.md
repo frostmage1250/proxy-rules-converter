@@ -1,8 +1,8 @@
 # Mihomo rule converter
 
-This repository publishes reviewed Steam China download rules, a merged
-`Claude` classical provider, and a `geolocation-cn` set built from V2Fly
-domain data for Mihomo.
+This repository publishes reviewed Steam China download rules, an extended
+Bett AI MRS provider, a merged `Claude` classical provider, and a
+`geolocation-cn` set built from V2Fly domain data for Mihomo.
 
 ## Conversion policy
 
@@ -20,6 +20,15 @@ Every build verifies that Bett's
 the allowlist unchanged and in its original order as a Mihomo text provider.
 The official Mihomo converter compiles its MRS file.
 
+
+## AI
+
+`dist/mihomo/ai.mrs` is built directly from Bett's
+`category-ai-!cn.mrs`. Mihomo decodes the upstream MRS to temporary text;
+the generator adds `+.webpubsub.azure.com`,
+`client-api.arkoselabs.com`, and `openai-api.arkoselabs.com` when they are
+not already covered, then recompiles with Mihomo. No AI text provider is
+published. `reports/ai.json` records the source and generated file hashes.
 
 ## Claude
 
@@ -53,6 +62,7 @@ V2Fly export for identical order and count.
 
 ```text
 dist/mihomo/
+├─ ai.mrs
 ├─ claude.yaml
 ├─ geolocation-cn.list
 ├─ geolocation-cn.mrs

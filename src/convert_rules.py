@@ -32,6 +32,7 @@ EXTERNALLY_MANAGED_OUTPUTS = frozenset(
     {
         "dist/mihomo/geolocation-cn.list",
         "reports/geolocation-cn.json",
+        "reports/ai.json",
     }
 )
 MANAGED_OUTPUT_ROOTS = (ROOT / "dist", ROOT / "reports")

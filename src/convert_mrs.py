@@ -20,7 +20,7 @@ from typing import Sequence
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RULE_DIR = ROOT / "dist" / "mihomo"
 EXTERNALLY_COMPILED_DOMAIN_LISTS = frozenset({"geolocation-cn.list"})
-EXTERNALLY_COMPILED_MRS = frozenset({"geolocation-cn.mrs"})
+EXTERNALLY_COMPILED_MRS = frozenset({"geolocation-cn.mrs", "ai.mrs"})
 
 
 class MrsConversionError(RuntimeError):

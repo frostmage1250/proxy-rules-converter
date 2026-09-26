@@ -75,6 +75,9 @@ jobs:
           python src/convert_rules.py
           python src/convert_mrs.py
 
+      - name: Extend Bett AI MRS
+        run: python src/build_ai_mrs.py
+
       - name: Build V2Fly geolocation-cn and compile MRS
         shell: bash
         run: |
@@ -126,6 +129,7 @@ jobs:
         run: |
           python src/convert_rules.py --check
           python src/convert_mrs.py --check
+          python src/build_ai_mrs.py --check
           python src/convert_v2fly_geolocation_cn.py \
             --v2fly-export "${RUNNER_TEMP}/v2fly-output/geolocation-cn-clean.txt" \
             --output dist/mihomo/geolocation-cn.list \
