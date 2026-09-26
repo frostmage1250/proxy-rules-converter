@@ -1,9 +1,9 @@
 {
   "domain_entries": 7785,
   "forbidden_attribute_entries": 0,
-  "full_entries": 27,
+  "full_entries": 28,
   "keyword_entries": 0,
-  "mrs_compatible_entries": 7812,
+  "mrs_compatible_entries": 7813,
   "negative_sentinels": [
     "wetv.vip",
     "jd.hk"
@@ -14,6 +14,7 @@
     "qq.ugcimg.cn",
     "cdn.ugcimg.cn",
     "dypnsapi-dualstack.aliyuncs.com",
+    "upos-icdn-cqg101.solseed.cn",
     "taobao.com",
     "tmall.com",
     "jd.com",
@@ -30,11 +31,11 @@
     "regexp:^.+-mihayo\\.akamaized\\.net$"
   ],
   "sha256": {
-    "domain_list": "e7c3cd00350ee0ee9f613183fff60fa10ce63ede00806102240dcfd70f65e399",
-    "domain_mrs": "62e26f6ba06fd2a70f01fd260d9b593850345fff4a105add22862de16fa4d845",
-    "v2fly_export": "de1db90f5a45923df70b4a2b29a7149698bbcc984984c3d62bceb4c70bf4e436"
+    "domain_list": "26ef53e238879d05d60134877ac43e1e2c2108b697d28d3d9b08b7f753572e1e",
+    "domain_mrs": "cfebbd0abf230c229e6baba01bf26e0004ad481f964a6371b42c0628ed4485e7",
+    "v2fly_export": "640b54b9c2d8e53c8fdc7349094b085628fba68a373cd47bdd6c8af8c7e897b7"
   },
-  "source_entries": 7815,
+  "source_entries": 7816,
   "upstreams": {
     "mrs_converter": {
       "commit": "7dea27841a3579a633189830c98c08a0434e8b79",

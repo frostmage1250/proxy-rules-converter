@@ -7,6 +7,7 @@
   "decoded_upstream_rules": 181,
   "output_rules": 184,
   "output_sha256": "052da89a8364b3216fea96c5a74918faf67388d262015846a1044d8bb3d41815",
+  "output_text_sha256": "866d48b39ce6f0a4f9a3c6b69da93f5f63b4a15bd38e163b368af3d360e2cc77",
   "schema_version": 1,
   "source": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/category-ai-!cn.mrs",
   "source_bytes": 1979,
