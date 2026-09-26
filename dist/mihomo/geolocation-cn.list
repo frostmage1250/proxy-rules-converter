@@ -6483,6 +6483,7 @@
 +.udesk.cn
 +.uewaf.com
 +.ufileos.com
++.ugcimg.cn
 +.ugediao.com
 +.uggame.com
 +.ugnas.cloud
@@ -7787,6 +7788,7 @@ api.alibabacloud.com
 api.blipsandchitz.me
 cn.alibabacloud.com
 ctdsb.clouddiffuse.xyz
+dypnsapi-dualstack.aliyuncs.com
 end-api.shallow.ink
 end.shallow.ink
 izattime.qcomgeo2.com
@@ -7804,7 +7806,6 @@ ntp5.aliyun.com
 ntp5.tencent.com
 ntp6.aliyun.com
 ntp7.aliyun.com
-qq.ugcimg.cn
 status.alibabacloud.com
 time.izatcloud.net
 time.xtracloud.net
