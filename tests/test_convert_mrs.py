@@ -18,6 +18,7 @@ class MrsConverterTests(unittest.TestCase):
             rule_dir = Path(temp_name)
             (rule_dir / "z.list").write_text("+.z.example\n", encoding="utf-8")
             (rule_dir / "a.list").write_text("a.example\n", encoding="utf-8")
+            (rule_dir / "ai.list").write_text("+.ai.example\n", encoding="utf-8")
             (rule_dir / "geolocation-cn.list").write_text(
                 "+.qq.com\n", encoding="utf-8"
             )
