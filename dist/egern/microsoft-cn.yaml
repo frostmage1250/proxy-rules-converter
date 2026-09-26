@@ -47,8 +47,8 @@ domain_set:
 - vscode.download.prss.microsoft.com
 - vz.download.prss.microsoft.com
 - windbg.download.prss.microsoft.com
-- bj1.api.bing.com
 - download.visualstudio.microsoft.com
+- bj1.api.bing.com
 domain_suffix_set:
 - dynamics.cn
 - engkoo.com
@@ -87,6 +87,11 @@ domain_suffix_set:
 - dcg.microsoft.com
 - dl.delivery.mp.microsoft.com
 - download.windowsupdate.com
+- microsoftreactor.cn
+- microsoftreactor.com.cn
+- reactorms.com.cn
+- microsoftnews.cn
+- msn.cn
 - xboxlive.cn
 - 21vbc.com
 - 21vbluecloud.com
@@ -184,8 +189,3 @@ domain_suffix_set:
 - ditu.live.com
 - r.bing.com
 - th.bing.com
-- microsoftreactor.cn
-- microsoftreactor.com.cn
-- reactorms.com.cn
-- microsoftnews.cn
-- msn.cn
