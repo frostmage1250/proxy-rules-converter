@@ -1,0 +1,14 @@
+{
+  "added_rules": [
+    "+.webpubsub.azure.com",
+    "client-api.arkoselabs.com",
+    "openai-api.arkoselabs.com"
+  ],
+  "decoded_upstream_rules": 181,
+  "output_rules": 184,
+  "output_sha256": "052da89a8364b3216fea96c5a74918faf67388d262015846a1044d8bb3d41815",
+  "schema_version": 1,
+  "source": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/category-ai-!cn.mrs",
+  "source_bytes": 1979,
+  "source_sha256": "4b1ff12acf3555ab212fac0f7d90f027f7a9f35329bd4d5d54c59a91d92cabc6"
+}
