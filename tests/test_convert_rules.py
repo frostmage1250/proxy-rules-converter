@@ -117,6 +117,18 @@ class ConverterTests(unittest.TestCase):
                 is_externally_managed_output(ROOT / "dist" / "mihomo" / name)
             )
 
+    def test_egern_and_ai_outputs_are_externally_managed(self) -> None:
+        for path in (
+            ROOT / "dist" / "mihomo" / "ai.list",
+            ROOT / "dist" / "egern" / "apns.yaml",
+            ROOT / "dist" / "egern" / "geolocation-cn.yaml",
+            ROOT / "reports" / "egern-source.json",
+        ):
+            self.assertTrue(is_externally_managed_output(path))
+        self.assertFalse(
+            is_externally_managed_output(ROOT / "dist" / "mihomo" / "steam-cn-download.list")
+        )
+
     def test_suffix_coverage(self) -> None:
         rule = DomainRule("suffix", "example.com")
         self.assertTrue(rule_covers_domain(rule, "example.com"))
