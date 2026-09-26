@@ -61,13 +61,13 @@ class ConverterTests(unittest.TestCase):
         with self.assertRaises(ConversionError):
             parse_ipcidr_text("2001:db8::/32\n", "test", 4)
 
-    def test_bett_scope_is_steam_validation_only(self) -> None:
+    def test_bett_sources_include_ai_mrs(self) -> None:
         config = json.loads(
             (ROOT / "config" / "sources.json").read_text(encoding="utf-8")
         )
         self.assertEqual(
             set(config["bett"]),
-            {"geosite_base", "steam_cn_download_validation", "anthropic"},
+            {"geosite_base", "steam_cn_download_validation", "anthropic", "ai_mrs"},
         )
 
 
