@@ -17,7 +17,7 @@ const exportCode = [
   "  rules: buildRules(),",
   "  groups: buildProxyGroups(new Map([",
   "    ['香港', [{name: '__香港__'}]],",
-  "    ['台湾省', [{name: '__台湾__'}]],
+  "    ['台湾省', [{name: '__台湾__'}]],",
   "    ['新加坡', [{name: '__新加坡__'}]],",
   "    ['日本', [{name: '__日本__'}]],",
   "    ['美国', [{name: '__美国__'}]],",
