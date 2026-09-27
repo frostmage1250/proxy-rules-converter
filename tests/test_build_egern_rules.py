@@ -145,6 +145,12 @@ class EgernRuleConverterTests(unittest.TestCase):
         self.assertEqual(result["commit"], "bett-commit")
         self.assertEqual(result["path"], "geo/geosite/google.list")
 
+    def test_bypass_japan_native_yaml_follows_canonical_source(self):
+        source = (ROOT / "config" / "bypass-japan.list").read_text(encoding="utf-8")
+        native = merge_ordered_rules(parse_domain_list(source))
+        self.assertEqual(native, {"domain_suffix_set": ["javdb.com", "hanime1.me"]})
+        self.assertEqual(source_rule_count(source), output_rule_count([native]))
+
     def test_converter_bypass_japan_mrs_uses_same_run_text_projection(self):
         provider = {
             "url": (
