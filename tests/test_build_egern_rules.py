@@ -10,6 +10,8 @@ sys.path.insert(0, str(ROOT / "src"))
 from build_egern_rules import (  # noqa: E402
     BuildError,
     output_rule_count,
+    merge_ordered_rules,
+    rule_sequence,
     parse_classical_rule_list,
     parse_classical_yaml_provider,
     parse_domain_list,
@@ -169,6 +171,36 @@ class EgernRuleConverterTests(unittest.TestCase):
         ip_rules = parse_ip_list(ip_source)
         self.assertEqual(source_rule_count(ip_source), output_rule_count(ip_rules))
         self.assertEqual(ip_rules[0], ip_rules[2])
+
+    def test_native_yaml_keeps_one_provider_and_per_type_duplicates(self):
+        source = parse_domain_list(
+            "a.example\n+.example.org\na.example\n+.example.org\n"
+        )
+        native = merge_ordered_rules(source)
+        self.assertEqual(
+            native,
+            {
+                "domain_set": ["a.example", "a.example"],
+                "domain_suffix_set": ["example.org", "example.org"],
+            },
+        )
+        self.assertEqual(output_rule_count([native]), source_rule_count(
+            "a.example\n+.example.org\na.example\n+.example.org\n"
+        ))
+        self.assertEqual(
+            rule_sequence(native),
+            [
+                ("domain_set", "a.example"),
+                ("domain_set", "a.example"),
+                ("domain_suffix_set", "example.org"),
+                ("domain_suffix_set", "example.org"),
+            ],
+        )
+        ip_native = merge_ordered_rules(parse_ip_list(
+            "1.1.1.1/24\n2001:db8::1/32\n1.1.1.1/24\n"
+        ))
+        self.assertEqual(ip_native["ip_cidr_set"], ["1.1.1.1/24", "1.1.1.1/24"])
+        self.assertTrue(ip_native["no_resolve"])
 
     def test_exact_geolocation_host_maps_to_domain_set(self):
         result = parse_domain_list("upos-icdn-cqg101.solseed.cn\n")

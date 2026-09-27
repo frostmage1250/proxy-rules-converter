@@ -155,6 +155,38 @@ def output_rule_count(rules: list[dict[str, Any]]) -> int:
     )
 
 
+def merge_ordered_rules(segments: list[dict[str, Any]]) -> dict[str, Any]:
+    """Collect native Egern fields without changing count or per-type order."""
+    native: dict[str, Any] = {}
+    has_ip = False
+    for segment in segments:
+        fields = [(field, values) for field, values in segment.items() if isinstance(values, list)]
+        if len(fields) != 1:
+            raise BuildError("Source segment must contain exactly one rule type")
+        field, values = fields[0]
+        if not values:
+            raise BuildError(f"Empty source segment: {field}")
+        native.setdefault(field, []).extend(values)
+        if field in {"ip_cidr_set", "ip_cidr6_set", "asn_set"}:
+            if segment.get("no_resolve") is not True:
+                raise BuildError(f"IP/ASN source must use no_resolve: {field}")
+            has_ip = True
+    if not native:
+        raise BuildError("Source produced an empty Egern rule set")
+    if has_ip:
+        native["no_resolve"] = True
+    return native
+
+
+def rule_sequence(rule: dict[str, Any]) -> list[tuple[str, str]]:
+    return [
+        (field, value)
+        for field, values in rule.items()
+        if isinstance(values, list)
+        for value in values
+    ]
+
+
 def source_lines(text: str) -> list[str]:
     return [
         line
@@ -340,7 +372,7 @@ def main() -> int:
         providers = model["providers"]
         validate_business_ip_pairs(model)
         wanted = referenced_providers(model)
-        generated: dict[str, dict[str, Any]] = {}
+        generated: dict[str, str] = {}
         source_records: list[dict[str, Any]] = []
 
         geo_report_text = (ROOT / CONVERTER_GEOLOCATION_REPORT_PATH).read_text(encoding="utf-8")
@@ -373,21 +405,22 @@ def main() -> int:
                 entries != geo_expected_entries or source_sha256 != geo_expected_sha256
             ):
                 raise BuildError("geolocation-cn disagrees with the converter report")
-            base = slug(name)
-            paths = [
-                f"dist/egern/{base}.yaml" if len(segments) == 1
-                else f"dist/egern/{base}-{index:04d}.yaml"
-                for index in range(1, len(segments) + 1)
-            ]
-            for path, segment in zip(paths, segments, strict=True):
-                generated[Path(path).name] = segment
-            sequence = [
+            filename = slug(name) + ".yaml"
+            output = f"dist/egern/{filename}"
+            native_rule = merge_ordered_rules(segments)
+            if output_rule_count([native_rule]) != source_entries:
+                raise BuildError(f"{name} native YAML changed the rule count")
+            source_sequence = [
                 (field, value)
                 for segment in segments
                 for field, values in segment.items()
                 if isinstance(values, list)
                 for value in values
             ]
+            rule_text = yaml.safe_dump(
+                native_rule, allow_unicode=True, sort_keys=False, width=1000
+            )
+            generated[filename] = rule_text
             record: dict[str, Any] = {
                 "provider": name,
                 "behavior": behavior,
@@ -395,13 +428,14 @@ def main() -> int:
                 "source_entries": source_entries,
                 "entries": entries,
                 "source_sha256": source_sha256,
-                "ordered_entries_sha256": hashlib.sha256(
-                    json.dumps(sequence, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+                "source_order_sha256": hashlib.sha256(
+                    json.dumps(source_sequence, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
                 ).hexdigest(),
-                "segments": [
-                    {"output": path, "entries": output_rule_count([segment])}
-                    for path, segment in zip(paths, segments, strict=True)
-                ],
+                "native_entries_sha256": hashlib.sha256(
+                    json.dumps(rule_sequence(native_rule), ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+                ).hexdigest(),
+                "output": output,
+                "output_sha256": hashlib.sha256(rule_text.encode("utf-8")).hexdigest(),
             }
             if name == "geolocation-cn":
                 record["expected_entries"] = geo_expected_entries
@@ -461,15 +495,11 @@ def main() -> int:
                 },
             )
 
-        yaml_options = dict(allow_unicode=True, sort_keys=False, width=1000)
         changed: list[str] = []
         for record in source_records:
-            for segment in record["segments"]:
-                filename = Path(segment["output"]).name
-                rule_text = yaml.safe_dump(generated[filename], **yaml_options)
-                segment["output_sha256"] = hashlib.sha256(rule_text.encode("utf-8")).hexdigest()
-                if write_or_check(RULE_DIR / filename, rule_text, args.check):
-                    changed.append(segment["output"])
+            filename = Path(record["output"]).name
+            if write_or_check(RULE_DIR / filename, generated[filename], args.check):
+                changed.append(record["output"])
         for stale in RULE_DIR.glob("*.yaml"):
             if stale.name not in generated:
                 changed.append(f"dist/egern/{stale.name}")
@@ -477,7 +507,7 @@ def main() -> int:
                     stale.unlink()
 
         report_data = {
-            "schema_version": 2,
+            "schema_version": 3,
             "mihomo_script": {"repository": MIHOMO_REPO, "commit": args.mihomo_commit},
             "bett_rules": {"repository": BETT_REPO, "branch": "meta", "commit": args.bett_commit},
             "apns_rules": {
@@ -499,7 +529,7 @@ def main() -> int:
             changed.append("reports/egern-source.json")
         if args.check and changed:
             raise BuildError("Generated files are out of date: " + ", ".join(changed))
-        print(f"Generated {len(generated)} Egern-native rule sets.")
+        print(f"Generated {len(generated)} one-file Egern-native rule sets.")
         return 0
     except (BuildError, OSError, ValueError, KeyError, json.JSONDecodeError, yaml.YAMLError) as exc:
         print(f"Build failed: {exc}", file=sys.stderr)
