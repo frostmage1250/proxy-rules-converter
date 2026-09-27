@@ -23,6 +23,7 @@ from typing import Iterable, Mapping, Sequence
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCES = ROOT / "config" / "sources.json"
 DEFAULT_STEAM_ALLOWLIST = ROOT / "config" / "steam-cn-download-allowlist.txt"
+BYPASS_JAPAN_LIST = ROOT / "config" / "bypass-japan.list"
 USER_AGENT = (
     "rules-converter-action/2.0 "
     "(+https://github.com/frostmage1250/proxy-rules-converter)"
@@ -498,6 +499,16 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         steam_rules, "mihomo"
     )
 
+    bypass_japan_rules = parse_domain_text(
+        BYPASS_JAPAN_LIST.read_text(encoding="utf-8"), str(BYPASS_JAPAN_LIST)
+    )
+    if bypass_japan_rules != [
+        DomainRule("suffix", "javdb.com"),
+        DomainRule("suffix", "hanime1.me"),
+    ]:
+        raise ConversionError("Bypass Japan source must contain the two reviewed suffixes in order")
+    outputs["dist/mihomo/bypass-japan.list"] = render_rules(bypass_japan_rules, "mihomo")
+
     reviewed_set = set(reviewed)
     steam_named_not_reviewed = [
         rule.mihomo()
@@ -541,6 +552,12 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
             "order_preserved": True,
             "validation_source_exact_duplicates": game_duplicates,
         },
+        "bypass_japan": {
+            "canonical_source": BYPASS_JAPAN_LIST.relative_to(ROOT).as_posix(),
+            "entries": len(bypass_japan_rules),
+            "output": "dist/mihomo/bypass-japan.list",
+            "behavior": "domain",
+        },
         "claude": {
             "bett_source": anthropic_url,
             "site_source": claude_site_url,
@@ -571,6 +588,11 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         f"- Canonical allowlist rules: {len(reviewed)}.",
         "- Bett coverage validation passed.",
         "- Mihomo output preserves allowlist order and count.",
+        "",
+        "## Bypass Japan",
+        "",
+        f"- Reviewed suffix rules: {len(bypass_japan_rules)}.",
+        "- Mihomo list and MRS, plus Egern native YAML, use the same two suffixes.",
         "",
         "## Claude",
         "",

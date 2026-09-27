@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from convert_rules import (  # noqa: E402
     CLAUDE_SITE_REQUIRED_TYPED_RULES,
+    BYPASS_JAPAN_LIST,
     ConversionError,
     DomainRule,
     duplicate_counts,
@@ -35,6 +36,15 @@ class ConverterTests(unittest.TestCase):
             render_rules(rules, "mihomo"),
             "z.example\n+.example.com\na.example\n+.example.com\n",
         )
+
+    def test_bypass_japan_source_has_exact_suffixes_in_order(self) -> None:
+        source = BYPASS_JAPAN_LIST.read_text(encoding="utf-8")
+        rules = parse_domain_text(source, str(BYPASS_JAPAN_LIST))
+        self.assertEqual(rules, [
+            DomainRule("suffix", "javdb.com"),
+            DomainRule("suffix", "hanime1.me"),
+        ])
+        self.assertEqual(render_rules(rules, "mihomo"), source)
 
     def test_noncanonical_domain_fails_instead_of_being_rewritten(self) -> None:
         for value in ("Example.com", "example.com.", " example.com"):

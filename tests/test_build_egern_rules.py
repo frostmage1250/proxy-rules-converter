@@ -145,6 +145,19 @@ class EgernRuleConverterTests(unittest.TestCase):
         self.assertEqual(result["commit"], "bett-commit")
         self.assertEqual(result["path"], "geo/geosite/google.list")
 
+    def test_converter_bypass_japan_mrs_uses_same_run_text_projection(self):
+        provider = {
+            "url": (
+                "https://raw.githubusercontent.com/frostmage1250/"
+                "proxy-rules-converter/main/dist/mihomo/bypass-japan.mrs"
+            )
+        }
+        result = resolve_provider_source(
+            provider, bett_commit="bett-commit", converter_commit="main"
+        )
+        self.assertEqual(result["repository"], "frostmage1250/proxy-rules-converter")
+        self.assertEqual(result["path"], "dist/mihomo/bypass-japan.list")
+
     def test_converter_ai_mrs_uses_same_run_text_projection(self):
         provider = {
             "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/ai.mrs"
