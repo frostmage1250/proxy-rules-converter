@@ -97,5 +97,5 @@ preserved entry counts, an ordered rule digest, and hashes of every segment.
 Generated geolocation-cn, AI, and Claude sources are read from this workflow's
 own Mihomo outputs after validation; Egern conversion uses text sources rather
 than decoding MRS binaries. The Egern profile repository consumes this report
-and only publishes its profile. Previously imported profiles can keep using older published URLs, but current
-profiles use the manifest's ordered segment URLs.
+and only publishes its profile. The previous single-file URLs are replaced by ordered segment URLs. Import
+the current Egern profile to pick up those references.
