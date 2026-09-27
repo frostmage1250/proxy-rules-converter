@@ -88,11 +88,14 @@ the providers, checks determinism, and commits changed generated files.
 The same workflow extracts the rule-provider model from the pinned Mihomo script,
 converts every referenced text provider to Egern-native YAML, and publishes
 `dist/egern/*.yaml`. It also converts the pinned
-`ttyyss2233/Tool/shadowrocket/rules/apns.list` to `dist/egern/apns.yaml`.
-`reports/egern-source.json` records the Mihomo, Bett, and APNs commits, exact
-source URLs and hashes, preserved entry counts, and hashes of published YAML.
+`ttyyss2233/Tool/shadowrocket/rules/apns.list` to ordered Egern YAML segments.
+Each segment contains one consecutive source rule type. The manifest lists
+those segments in source order, including duplicate rules, so a consumer can
+reference them in sequence without regrouping the source. `reports/egern-source.json`
+records the Mihomo, Bett, and APNs commits, exact source URLs and hashes,
+preserved entry counts, an ordered rule digest, and hashes of every segment.
 Generated geolocation-cn, AI, and Claude sources are read from this workflow's
 own Mihomo outputs after validation; Egern conversion uses text sources rather
 than decoding MRS binaries. The Egern profile repository consumes this report
-and only publishes its profile. Published `dist/egern` paths remain stable for
-previously imported profiles.
+and only publishes its profile. Previously imported profiles can keep using older published URLs, but current
+profiles use the manifest's ordered segment URLs.
