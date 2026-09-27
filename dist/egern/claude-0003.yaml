@@ -1,5 +1,4 @@
 domain_set:
-- servd-anthropic-website.b-cdn.net
 - anthropic.com.cdn.cloudflare.net
 - anthropic.auth0.com
 - anthropic-com.ghost.io

@@ -8,11 +8,9 @@
     "includes_ip_cidr": true,
     "includes_ip_cidr6": true,
     "ntp_excluded": true,
-    "output_entries": 33,
-    "site_entries": 25,
-    "site_source": "https://ip.net.coffee/claude/site.html",
-    "source_order_preserved": true,
-    "source_rule_count_preserved": true
+    "output_entries": 23,
+    "site_entries": 23,
+    "site_source": "https://ip.net.coffee/claude/site.html"
   },
   "conversion_policy": {
     "semantic_minimization": false,

@@ -13,7 +13,7 @@
 ## Claude
 
 - Bett Anthropic rules: 8 (primary source).
-- Claude site rules: 25.
-- Merged classical rules: 33.
+- Claude site rules: 23.
+- Merged classical rules: 23.
 - Authentication, telemetry, risk-control keywords, IPv4, IPv6, and AS399358 are retained.
 - NTP rules are explicitly excluded.

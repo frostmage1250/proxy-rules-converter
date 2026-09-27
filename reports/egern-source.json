@@ -859,8 +859,8 @@
     },
     {
       "behavior": "classical",
-      "entries": 33,
-      "ordered_entries_sha256": "e7299da4d57a8ea0604d22be0f00ae9a54f0e0c768d90ce33f41b84972c4cbd6",
+      "entries": 23,
+      "ordered_entries_sha256": "3896a8fa36d3dd35011edeb88f9e4f497afb5ed5497d0dd732c1e0ab1a6465c2",
       "provider": "claude",
       "provider_url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/claude.yaml",
       "segments": [
@@ -870,14 +870,14 @@
           "output_sha256": "d59de0ae1df57f0476b383e1912d3ae815e159339246241eeb4434df21a8209c"
         },
         {
-          "entries": 14,
+          "entries": 7,
           "output": "dist/egern/claude-0002.yaml",
-          "output_sha256": "098e9bfa1e6df88b48b2f64af2cc4caf6da34c8360f82fd3c9214ede682ac4bc"
+          "output_sha256": "717feda26a8b005aae7de359df614e781c70ce6ed16f4b86e3921ed5aa2a09c4"
         },
         {
-          "entries": 4,
+          "entries": 3,
           "output": "dist/egern/claude-0003.yaml",
-          "output_sha256": "0b1adb0ca5463cfaf7d56967f53d843758b604bf3263bfb7ea6f6c4939c8be42"
+          "output_sha256": "9719ed528f2b8bf8fea50ecf04407d16ce552aa00d061cd32ab44cfce9ca4aaa"
         },
         {
           "entries": 2,
@@ -920,18 +920,18 @@
           "output_sha256": "5f1f63e273b02a2883560e2392895fa54d260a7bbee5836c6ef4288c0bfa1114"
         },
         {
-          "entries": 3,
+          "entries": 1,
           "output": "dist/egern/claude-0012.yaml",
-          "output_sha256": "0da44de38f836fa9e93bdfc40106a0f7d30788ddf50d6313b55e18a345206b31"
+          "output_sha256": "6b3fa0a1e049322575bf80803950c6928eef6254c63a763a26aff78a3e7271cb"
         }
       ],
       "source_commit": null,
-      "source_entries": 33,
+      "source_entries": 23,
       "source_generated_in_same_run": true,
       "source_path": "dist/mihomo/claude.yaml",
       "source_ref": "main",
       "source_repository": "frostmage1250/proxy-rules-converter",
-      "source_sha256": "55613cf520dc8b17406785d8522dc101953a220ab17104661ac21b53233bcc6a",
+      "source_sha256": "3c48b735bb646dfcf13d2f049897d647540390efd5c94a0f385adafde66aa96b",
       "source_url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/claude.yaml"
     },
     {
