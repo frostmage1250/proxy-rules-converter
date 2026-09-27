@@ -86,7 +86,7 @@ class ConverterTests(unittest.TestCase):
             self.assertIn(f"DOMAIN-KEYWORD,{keyword}", rules)
         self.assertFalse(any("ntp" in rule.lower() for rule in rules))
 
-    def test_claude_merge_keeps_bett_then_all_site_rules(self) -> None:
+    def test_claude_merge_keeps_bett_first_and_site_supplements(self) -> None:
         bett = parse_domain_text(
             "+.anthropic.com\nservd-anthropic-website.b-cdn.net\n", "bett"
         )
@@ -104,8 +104,9 @@ class ConverterTests(unittest.TestCase):
                 "DOMAIN,servd-anthropic-website.b-cdn.net",
             ],
         )
-        self.assertEqual(merged[2:], site)
-        self.assertEqual(len(merged), len(bett) + len(site))
+        self.assertNotIn("DOMAIN,api.anthropic.com", merged)
+        self.assertIn("DOMAIN-SUFFIX,sentry.io", merged)
+        self.assertIn("IP-ASN,399358,no-resolve", merged)
         self.assertEqual(
             render_classical_yaml(merged).splitlines()[0], "payload:"
         )
