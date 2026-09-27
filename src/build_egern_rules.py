@@ -34,10 +34,6 @@ class BuildError(RuntimeError):
     pass
 
 
-def unique(values: list[str]) -> list[str]:
-    return list(dict.fromkeys(values))
-
-
 def slug(name: str) -> str:
     aliases = {
         "geolocation-!cn": "geolocation-non-cn",
@@ -150,124 +146,112 @@ def source_rule_count(text: str) -> int:
     )
 
 
-def output_rule_count(rule: dict[str, Any]) -> int:
-    return sum(len(value) for value in rule.values() if isinstance(value, list))
+def output_rule_count(rules: list[dict[str, Any]]) -> int:
+    return sum(
+        len(values)
+        for rule in rules
+        for values in rule.values()
+        if isinstance(values, list)
+    )
 
 
-def parse_domain_list(text: str) -> dict[str, Any]:
-    fields: dict[str, list[str]] = {
-        "domain_set": [],
-        "domain_keyword_set": [],
-        "domain_suffix_set": [],
-        "domain_regex_set": [],
-        "domain_wildcard_set": [],
-    }
-    for raw in text.splitlines():
-        line = raw.strip()
-        if not line or line.startswith(("#", ";", "//")):
-            continue
+def source_lines(text: str) -> list[str]:
+    return [
+        line
+        for raw in text.splitlines()
+        if (line := raw.strip()) and not line.startswith(("#", ";", "//"))
+    ]
+
+
+def append_ordered_rule(
+    segments: list[dict[str, Any]], field: str, value: str, *, no_resolve: bool = False
+) -> None:
+    if not value:
+        raise BuildError(f"Empty {field} rule")
+    if segments and field in segments[-1] and segments[-1].get("no_resolve", False) == no_resolve:
+        segments[-1][field].append(value)
+        return
+    segment: dict[str, Any] = {field: [value]}
+    if no_resolve:
+        segment["no_resolve"] = True
+    segments.append(segment)
+
+
+def parse_domain_list(text: str) -> list[dict[str, Any]]:
+    segments: list[dict[str, Any]] = []
+    for line in source_lines(text):
         if line.startswith("+."):
-            fields["domain_suffix_set"].append(line[2:])
+            field, value = "domain_suffix_set", line[2:]
         elif line.startswith("full:"):
-            fields["domain_set"].append(line[5:])
+            field, value = "domain_set", line[5:]
         elif line.startswith("domain:"):
-            fields["domain_suffix_set"].append(line[7:])
+            field, value = "domain_suffix_set", line[7:]
         elif line.startswith("keyword:"):
-            fields["domain_keyword_set"].append(line[8:])
+            field, value = "domain_keyword_set", line[8:]
         elif line.startswith(("regexp:", "regex:")):
-            fields["domain_regex_set"].append(line.split(":", 1)[1])
+            field, value = "domain_regex_set", line.split(":", 1)[1]
         elif "*" in line or "?" in line:
-            fields["domain_wildcard_set"].append(line)
+            field, value = "domain_wildcard_set", line
         else:
-            fields["domain_set"].append(line)
-    result = {key: value for key, value in fields.items() if value}
-    if not result:
+            field, value = "domain_set", line
+        append_ordered_rule(segments, field, value)
+    if not segments:
         raise BuildError("Domain source produced an empty rule set")
-    return result
+    return segments
 
 
-def parse_ip_list(text: str) -> dict[str, Any]:
-    ipv4: list[str] = []
-    ipv6: list[str] = []
-    for raw in text.splitlines():
-        line = raw.strip()
-        if not line or line.startswith(("#", ";", "//")):
-            continue
+def parse_ip_list(text: str) -> list[dict[str, Any]]:
+    segments: list[dict[str, Any]] = []
+    for line in source_lines(text):
         try:
             network = ipaddress.ip_network(line, strict=False)
         except ValueError as exc:
             raise BuildError(f"Invalid IP network {line!r}") from exc
-        target = ipv4 if network.version == 4 else ipv6
-        target.append(line)
-    result: dict[str, Any] = {"no_resolve": True}
-    if ipv4:
-        result["ip_cidr_set"] = ipv4
-    if ipv6:
-        result["ip_cidr6_set"] = ipv6
-    if len(result) == 1:
+        field = "ip_cidr_set" if network.version == 4 else "ip_cidr6_set"
+        append_ordered_rule(segments, field, line, no_resolve=True)
+    if not segments:
         raise BuildError("IP source produced an empty rule set")
-    return result
+    return segments
 
 
-def parse_classical_rule_list(text: str) -> dict[str, Any]:
-    fields: dict[str, list[str]] = {
-        "domain_set": [],
-        "domain_keyword_set": [],
-        "domain_suffix_set": [],
-        "ip_cidr_set": [],
-        "ip_cidr6_set": [],
-        "asn_set": [],
-    }
-    ip_rule_count = 0
-    no_resolve_ip_rule_count = 0
-    for raw in text.splitlines():
-        line = raw.strip()
-        if not line or line.startswith(("#", ";", "//")):
-            continue
+def parse_classical_rule_list(text: str) -> list[dict[str, Any]]:
+    segments: list[dict[str, Any]] = []
+    for line in source_lines(text):
         parts = [part.strip() for part in line.split(",")]
         kind = parts[0]
         if len(parts) < 2 or not parts[1]:
             raise BuildError(f"Invalid classical rule: {line!r}")
         value = parts[1]
-        if kind == "DOMAIN":
-            fields["domain_set"].append(value)
-        elif kind == "DOMAIN-KEYWORD":
-            fields["domain_keyword_set"].append(value)
-        elif kind == "DOMAIN-SUFFIX":
-            fields["domain_suffix_set"].append(value)
-        elif kind in {"IP-CIDR", "IP-CIDR6"}:
+        fields = {
+            "DOMAIN": "domain_set",
+            "DOMAIN-KEYWORD": "domain_keyword_set",
+            "DOMAIN-SUFFIX": "domain_suffix_set",
+            "IP-CIDR": "ip_cidr_set",
+            "IP-CIDR6": "ip_cidr6_set",
+            "IP-ASN": "asn_set",
+        }
+        field = fields.get(kind)
+        if field is None:
+            raise BuildError(f"Unsupported classical rule: {line!r}")
+        is_ip = kind in {"IP-CIDR", "IP-CIDR6", "IP-ASN"}
+        if is_ip and "no-resolve" not in parts[2:]:
+            raise BuildError(f"Classical IP/ASN rule must use no-resolve: {line!r}")
+        if kind in {"IP-CIDR", "IP-CIDR6"}:
             try:
                 network = ipaddress.ip_network(value, strict=False)
             except ValueError as exc:
                 raise BuildError(f"Invalid classical IP network {value!r}") from exc
-            expected_version = 4 if kind == "IP-CIDR" else 6
-            if network.version != expected_version:
+            if network.version != (4 if kind == "IP-CIDR" else 6):
                 raise BuildError(f"{kind} has the wrong address family: {value!r}")
-            target = "ip_cidr_set" if network.version == 4 else "ip_cidr6_set"
-            fields[target].append(value)
-            ip_rule_count += 1
-            no_resolve_ip_rule_count += int("no-resolve" in parts[2:])
-        elif kind == "IP-ASN":
-            if not re.fullmatch(r"(?:AS)?[1-9][0-9]*", value, re.I):
-                raise BuildError(f"Invalid classical ASN {value!r}")
-            fields["asn_set"].append(value)
-            ip_rule_count += 1
-            no_resolve_ip_rule_count += int("no-resolve" in parts[2:])
-        else:
-            raise BuildError(f"Unsupported classical rule: {line!r}")
-    if ip_rule_count != no_resolve_ip_rule_count:
-        raise BuildError("Every classical IP/ASN rule must use no-resolve")
-    result: dict[str, Any] = {
-        key: values for key, values in fields.items() if values
-    }
-    if ip_rule_count:
-        result["no_resolve"] = True
-    if not result or result == {"no_resolve": True}:
+        elif kind == "IP-ASN" and not re.fullmatch(r"(?:AS)?[1-9][0-9]*", value, re.I):
+            raise BuildError(f"Invalid classical ASN {value!r}")
+        append_ordered_rule(segments, field, value, no_resolve=is_ip)
+    if not segments:
         raise BuildError("Classical source produced an empty rule set")
-    return result
+    return segments
 
 
-def parse_classical_yaml_provider(text: str) -> tuple[dict[str, Any], int]:
+def parse_classical_yaml_provider(text: str) -> tuple[list[dict[str, Any]], int]:
     try:
         document = yaml.safe_load(text)
     except yaml.YAMLError as exc:
@@ -294,7 +278,7 @@ def referenced_providers(model: dict[str, Any]) -> list[str]:
     for key in model.get("dns", {}).get("nameserver-policy", {}):
         if isinstance(key, str) and key.startswith("rule-set:"):
             result.append(key.removeprefix("rule-set:"))
-    return unique(result)
+    return list(dict.fromkeys(result))
 
 
 def validate_business_ip_pairs(model: dict[str, Any]) -> None:
@@ -371,28 +355,73 @@ def main() -> int:
         ):
             raise BuildError("Invalid geolocation-cn report")
 
+        def register(
+            name: str,
+            behavior: str,
+            source: str,
+            segments: list[dict[str, Any]],
+            source_entries: int,
+            metadata: dict[str, Any],
+        ) -> None:
+            entries = output_rule_count(segments)
+            if entries != source_entries:
+                raise BuildError(
+                    f"{name} conversion changed the rule count: {source_entries} -> {entries}"
+                )
+            source_sha256 = hashlib.sha256(source.encode("utf-8")).hexdigest()
+            if name == "geolocation-cn" and (
+                entries != geo_expected_entries or source_sha256 != geo_expected_sha256
+            ):
+                raise BuildError("geolocation-cn disagrees with the converter report")
+            base = slug(name)
+            paths = [
+                f"dist/egern/{base}.yaml" if len(segments) == 1
+                else f"dist/egern/{base}-{index:04d}.yaml"
+                for index in range(1, len(segments) + 1)
+            ]
+            for path, segment in zip(paths, segments, strict=True):
+                generated[Path(path).name] = segment
+            sequence = [
+                (field, value)
+                for segment in segments
+                for field, values in segment.items()
+                if isinstance(values, list)
+                for value in values
+            ]
+            record: dict[str, Any] = {
+                "provider": name,
+                "behavior": behavior,
+                **metadata,
+                "source_entries": source_entries,
+                "entries": entries,
+                "source_sha256": source_sha256,
+                "ordered_entries_sha256": hashlib.sha256(
+                    json.dumps(sequence, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+                ).hexdigest(),
+                "segments": [
+                    {"output": path, "entries": output_rule_count([segment])}
+                    for path, segment in zip(paths, segments, strict=True)
+                ],
+            }
+            if name == "geolocation-cn":
+                record["expected_entries"] = geo_expected_entries
+            source_records.append(record)
+
         apns_url = (
             f"https://raw.githubusercontent.com/{APNS_REPO}/{args.apns_commit}/{APNS_PATH}"
         )
         apns_source = download_text(apns_url)
-        apns_rule = parse_classical_rule_list(apns_source)
-        apns_source_entries = source_rule_count(apns_source)
-        if output_rule_count(apns_rule) != apns_source_entries:
-            raise BuildError("APNs conversion changed the rule count")
-        generated[APNS_FILENAME] = apns_rule
-        source_records.append({
-            "provider": "apns",
-            "behavior": "classical",
-            "source_repository": APNS_REPO,
-            "source_ref": "main",
-            "source_commit": args.apns_commit,
-            "source_path": APNS_PATH,
-            "source_url": apns_url,
-            "output": f"dist/egern/{APNS_FILENAME}",
-            "source_entries": apns_source_entries,
-            "entries": output_rule_count(apns_rule),
-            "source_sha256": hashlib.sha256(apns_source.encode("utf-8")).hexdigest(),
-        })
+        register(
+            "apns", "classical", apns_source,
+            parse_classical_rule_list(apns_source), source_rule_count(apns_source),
+            {
+                "source_repository": APNS_REPO,
+                "source_ref": "main",
+                "source_commit": args.apns_commit,
+                "source_path": APNS_PATH,
+                "source_url": apns_url,
+            },
+        )
 
         for name in wanted:
             provider = providers.get(name)
@@ -407,64 +436,48 @@ def main() -> int:
                 source = download_text(source_info["url"])
             behavior = provider.get("behavior")
             if behavior == "domain":
-                rule = parse_domain_list(source)
+                segments = parse_domain_list(source)
                 source_entries = source_rule_count(source)
             elif behavior == "ipcidr":
-                rule = parse_ip_list(source)
+                segments = parse_ip_list(source)
                 source_entries = source_rule_count(source)
             elif behavior == "classical":
-                rule, source_entries = parse_classical_yaml_provider(source)
+                segments, source_entries = parse_classical_yaml_provider(source)
             else:
                 raise BuildError(f"Unsupported provider behavior {behavior!r} for {name}")
-
-            entries = output_rule_count(rule)
-            if entries != source_entries:
-                raise BuildError(
-                    f"{name} conversion changed the rule count: {source_entries} -> {entries}"
-                )
-            source_sha256 = hashlib.sha256(source.encode("utf-8")).hexdigest()
-            filename = slug(name) + ".yaml"
-            record: dict[str, Any] = {
-                "provider": name,
-                "behavior": behavior,
-                "provider_url": source_info["provider_url"],
-                "source_repository": source_info["repository"],
-                "source_ref": source_info["ref"],
-                "source_commit": (
-                    None if source_info["repository"] == CONVERTER_REPO
-                    else source_info["commit"]
-                ),
-                "source_path": source_info["path"],
-                "source_url": source_info["url"],
-                "source_generated_in_same_run": source_info["repository"] == CONVERTER_REPO,
-                "output": f"dist/egern/{filename}",
-                "source_entries": source_entries,
-                "entries": entries,
-                "source_sha256": source_sha256,
-            }
-            if name == "geolocation-cn":
-                if (
-                    source_info["repository"] != CONVERTER_REPO
-                    or source_info["path"] != CONVERTER_GEOLOCATION_LIST_PATH
-                    or entries != geo_expected_entries
-                    or source_sha256 != geo_expected_sha256
-                ):
-                    raise BuildError("geolocation-cn disagrees with the converter report")
-                record["expected_entries"] = geo_expected_entries
-            generated[filename] = rule
-            source_records.append(record)
+            register(
+                name, behavior, source, segments, source_entries,
+                {
+                    "provider_url": source_info["provider_url"],
+                    "source_repository": source_info["repository"],
+                    "source_ref": source_info["ref"],
+                    "source_commit": (
+                        None if source_info["repository"] == CONVERTER_REPO
+                        else source_info["commit"]
+                    ),
+                    "source_path": source_info["path"],
+                    "source_url": source_info["url"],
+                    "source_generated_in_same_run": source_info["repository"] == CONVERTER_REPO,
+                },
+            )
 
         yaml_options = dict(allow_unicode=True, sort_keys=False, width=1000)
         changed: list[str] = []
         for record in source_records:
-            filename = Path(record["output"]).name
-            rule_text = yaml.safe_dump(generated[filename], **yaml_options)
-            record["output_sha256"] = hashlib.sha256(rule_text.encode("utf-8")).hexdigest()
-            if write_or_check(RULE_DIR / filename, rule_text, args.check):
-                changed.append(record["output"])
+            for segment in record["segments"]:
+                filename = Path(segment["output"]).name
+                rule_text = yaml.safe_dump(generated[filename], **yaml_options)
+                segment["output_sha256"] = hashlib.sha256(rule_text.encode("utf-8")).hexdigest()
+                if write_or_check(RULE_DIR / filename, rule_text, args.check):
+                    changed.append(segment["output"])
+        for stale in RULE_DIR.glob("*.yaml"):
+            if stale.name not in generated:
+                changed.append(f"dist/egern/{stale.name}")
+                if not args.check:
+                    stale.unlink()
 
         report_data = {
-            "schema_version": 1,
+            "schema_version": 2,
             "mihomo_script": {"repository": MIHOMO_REPO, "commit": args.mihomo_commit},
             "bett_rules": {"repository": BETT_REPO, "branch": "meta", "commit": args.bett_commit},
             "apns_rules": {

@@ -187,14 +187,10 @@ def extract_claude_site_rules(text: str, source: str) -> list[str]:
             "Claude site no longer contains the reviewed complete typed rule block"
         )
 
-    rules: list[str] = []
-    seen: set[str] = set()
-    for line in typed_candidates[0]:
-        validated = validate_claude_classical_rule(line, source)
-        if validated not in seen:
-            rules.append(validated)
-            seen.add(validated)
-
+    rules = [
+        validate_claude_classical_rule(line, source)
+        for line in typed_candidates[0]
+    ]
     keyword_set = set(fallback_keywords)
     missing_keywords = [
         keyword
@@ -205,11 +201,8 @@ def extract_claude_site_rules(text: str, source: str) -> list[str]:
         raise ConversionError(
             "Claude site keyword fallbacks disappeared: " + ", ".join(missing_keywords)
         )
-    for keyword in CLAUDE_SITE_REQUIRED_KEYWORDS:
-        line = f"DOMAIN-KEYWORD,{keyword}"
-        if line not in seen:
-            rules.append(line)
-            seen.add(line)
+    # The fallback block is a second upstream source, appended in its own order.
+    rules.extend(f"DOMAIN-KEYWORD,{keyword}" for keyword in fallback_keywords)
 
     if any("ntp" in rule.lower() for rule in rules):
         raise ConversionError("NTP must not enter the Claude provider")
@@ -230,26 +223,10 @@ def domain_rule_to_classical(rule: DomainRule) -> str:
 def merge_claude_rules(
     bett_rules: Sequence[DomainRule], site_rules: Sequence[str]
 ) -> list[str]:
-    """Keep Bett first and append every site rule that adds matching coverage."""
+    """Keep every Bett rule, then every reviewed site rule in source order."""
 
     merged = [domain_rule_to_classical(rule) for rule in bett_rules]
-    seen = set(merged)
-    for line in site_rules:
-        if line in seen:
-            continue
-        kind, value, *_ = line.split(",")
-        if kind == "DOMAIN" and any(
-            rule_covers_domain(rule, value) for rule in bett_rules
-        ):
-            continue
-        if kind == "DOMAIN-SUFFIX" and any(
-            rule.kind == "suffix" and rule_covers_domain(rule, value)
-            for rule in bett_rules
-        ):
-            continue
-        merged.append(line)
-        seen.add(line)
-
+    merged.extend(site_rules)
     if any("ntp" in rule.lower() for rule in merged):
         raise ConversionError("NTP must not enter the merged Claude provider")
     return merged
@@ -548,6 +525,8 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
             "site_entries": len(claude_site_rules),
             "output_entries": len(claude_rules),
             "bett_precedence": True,
+            "source_order_preserved": True,
+            "source_rule_count_preserved": len(claude_rules) == len(anthropic_rules) + len(claude_site_rules),
             "ntp_excluded": True,
             "includes_ip_cidr": True,
             "includes_ip_cidr6": True,
