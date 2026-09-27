@@ -16,7 +16,8 @@ const exportCode = [
   "  providers: buildRuleProviders(),",
   "  rules: buildRules(),",
   "  groups: buildProxyGroups(new Map([",
-  "    ['台湾省', [{name: '__台湾__'}]],",
+  "    ['香港', [{name: '__香港__'}]],",
+  "    ['台湾省', [{name: '__台湾__'}]],
   "    ['新加坡', [{name: '__新加坡__'}]],",
   "    ['日本', [{name: '__日本__'}]],",
   "    ['美国', [{name: '__美国__'}]],",
@@ -35,4 +36,11 @@ const exportCode = [
 const sandbox = {};
 vm.createContext(sandbox);
 vm.runInContext(source + exportCode, sandbox, {timeout: 5000});
+const groupNames = new Set(sandbox.__egernModel.groups.map((group) => group.name));
+if (!groupNames.has("香港") || !groupNames.has("YouTube")) {
+  throw new Error("Mihomo model must expose Hong Kong and YouTube groups");
+}
+if (!sandbox.__egernModel.rules.includes("RULE-SET,youtube,YouTube")) {
+  throw new Error("Mihomo YouTube rule must target its own group");
+}
 process.stdout.write(JSON.stringify(sandbox.__egernModel, null, 2) + "\n");
