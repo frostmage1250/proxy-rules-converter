@@ -1,4 +1,10 @@
 {
+  "bypass_japan": {
+    "behavior": "domain",
+    "canonical_source": "config/bypass-japan.list",
+    "entries": 2,
+    "output": "dist/mihomo/bypass-japan.list"
+  },
   "claude": {
     "bett_entries": 8,
     "bett_precedence": true,

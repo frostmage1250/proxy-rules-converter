@@ -10,6 +10,11 @@
 - Bett coverage validation passed.
 - Mihomo output preserves allowlist order and count.
 
+## Bypass Japan
+
+- Reviewed suffix rules: 2.
+- Mihomo list and MRS, plus Egern native YAML, use the same two suffixes.
+
 ## Claude
 
 - Bett Anthropic rules: 8 (primary source).
