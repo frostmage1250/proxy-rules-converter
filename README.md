@@ -45,6 +45,19 @@ The extractor requires the reviewed complete site rule block and all three
 unsupported syntax stops the build. NTP is explicitly excluded from the
 Claude provider.
 
+## MCDN block
+
+The user-reviewed `config/mcdn-block.list` is the canonical source for
+**mcdn屏蔽**. Its four suffixes are `mcdn.bilivideo.com`,
+`mcdn.bilivideo.cn`, `edge.mountaintoys.cn`, and `h2.smtcdns.net`.
+Each suffix includes the apex and all subdomains.
+
+The workflow publishes `dist/mihomo/mcdn-block.mrs` (domain behavior) and
+`dist/egern/mcdn-block.yaml` (native `domain_suffix_set`). The readable
+`dist/mihomo/mcdn-block.list` preserves source order. Mihomo compiles the MRS;
+the workflow decodes it again to verify all four suffixes and compares the
+Egern YAML with the same canonical source. Consumers route this set to REJECT.
+
 ## V2Fly geolocation-cn
 
 This is the approved exception to the Bett rule-data source. The workflow
@@ -67,6 +80,8 @@ dist/mihomo/
 ├─ ai.list
 ├─ ai.mrs
 ├─ claude.yaml
+├─ mcdn-block.list
+├─ mcdn-block.mrs
 ├─ geolocation-cn.list
 ├─ geolocation-cn.mrs
 ├─ steam-cn-download.list

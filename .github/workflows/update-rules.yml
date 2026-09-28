@@ -151,6 +151,27 @@ jobs:
             --bett-commit "${bett_commit}" \
             --apns-commit "${apns_commit}"
 
+      - name: Verify MCDN MRS and Egern YAML coverage
+        shell: bash
+        run: |
+          mihomo convert-ruleset domain mrs dist/mihomo/mcdn-block.mrs "${RUNNER_TEMP}/mcdn-block-decoded.list"
+          python - "${RUNNER_TEMP}/mcdn-block-decoded.list" <<'PY'
+          import sys
+          from pathlib import Path
+          import yaml
+          sys.path.insert(0, "src")
+          from convert_rules import parse_domain_text
+          source = Path("config/mcdn-block.list").read_text(encoding="utf-8")
+          expected = parse_domain_text(source, "canonical MCDN source")
+          decoded = parse_domain_text(Path(sys.argv[1]).read_text(encoding="utf-8"), "decoded MCDN MRS")
+          assert len(expected) == len(decoded) == 4, "MCDN entry count changed"
+          assert set(expected) == set(decoded), "MCDN MRS changed the suffix scope"
+          assert Path("dist/mihomo/mcdn-block.list").read_text(encoding="utf-8") == source
+          native = yaml.safe_load(Path("dist/egern/mcdn-block.yaml").read_text(encoding="utf-8"))
+          assert native == {"domain_suffix_set": [rule.value for rule in expected]}, "MCDN YAML differs from source"
+          print("Verified all four MCDN suffixes in decoded MRS and Egern YAML.")
+          PY
+
       - name: Verify generated files are deterministic
         run: |
           python src/convert_rules.py --check
@@ -197,14 +218,14 @@ jobs:
           done < <(printf '%s\n' reports/egern-source.json; find dist/egern -maxdepth 1 -type f -name '*.yaml' -printf '%p\n' | sort)
           echo "Verified published Egern rules at ${published_commit}."
 
-      - name: Verify published Bypass Japan Mihomo files
+      - name: Verify published local Mihomo MRS files
         shell: bash
         run: |
           set -euo pipefail
           published_commit="$(git rev-parse HEAD)"
           remote_commit="$(git ls-remote origin refs/heads/main | cut -f1)"
           test "${published_commit}" = "${remote_commit}"
-          for file in dist/mihomo/bypass-japan.list dist/mihomo/bypass-japan.mrs; do
+          for file in dist/mihomo/bypass-japan.list dist/mihomo/bypass-japan.mrs dist/mihomo/mcdn-block.list dist/mihomo/mcdn-block.mrs; do
             test -s "${file}"
             remote_file="${RUNNER_TEMP}/published-${file//\//-}"
             curl --fail --location --silent --show-error \
@@ -212,4 +233,4 @@ jobs:
               --output "${remote_file}"
             cmp --silent "${file}" "${remote_file}"
           done
-          echo "Verified published Bypass Japan Mihomo files at ${published_commit}."
+          echo "Verified published local Mihomo MRS files at ${published_commit}."

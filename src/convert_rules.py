@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCES = ROOT / "config" / "sources.json"
 DEFAULT_STEAM_ALLOWLIST = ROOT / "config" / "steam-cn-download-allowlist.txt"
 BYPASS_JAPAN_LIST = ROOT / "config" / "bypass-japan.list"
+MCDN_BLOCK_LIST = ROOT / "config" / "mcdn-block.list"
 USER_AGENT = (
     "rules-converter-action/2.0 "
     "(+https://github.com/frostmage1250/proxy-rules-converter)"
@@ -509,6 +510,17 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         raise ConversionError("Bypass Japan source must contain the two reviewed suffixes in order")
     outputs["dist/mihomo/bypass-japan.list"] = render_rules(bypass_japan_rules, "mihomo")
 
+    mcdn_source = MCDN_BLOCK_LIST.read_text(encoding="utf-8")
+    mcdn_rules = parse_domain_text(mcdn_source, str(MCDN_BLOCK_LIST))
+    if mcdn_rules != [
+        DomainRule("suffix", "mcdn.bilivideo.com"),
+        DomainRule("suffix", "mcdn.bilivideo.cn"),
+        DomainRule("suffix", "edge.mountaintoys.cn"),
+        DomainRule("suffix", "h2.smtcdns.net"),
+    ]:
+        raise ConversionError("MCDN block source must contain the four reviewed suffixes in order")
+    outputs["dist/mihomo/mcdn-block.list"] = render_rules(mcdn_rules, "mihomo")
+
     reviewed_set = set(reviewed)
     steam_named_not_reviewed = [
         rule.mihomo()
@@ -534,7 +546,7 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
     outputs["dist/mihomo/claude.yaml"] = render_classical_yaml(claude_rules)
 
     summary = {
-        "schema_version": 8,
+        "schema_version": 9,
         "conversion_policy": {
             "syntax_only": True,
             "source_order_preserved": True,
@@ -556,6 +568,14 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
             "canonical_source": BYPASS_JAPAN_LIST.relative_to(ROOT).as_posix(),
             "entries": len(bypass_japan_rules),
             "output": "dist/mihomo/bypass-japan.list",
+            "behavior": "domain",
+        },
+        "mcdn_block": {
+            "name": "mcdn屏蔽",
+            "canonical_source": MCDN_BLOCK_LIST.relative_to(ROOT).as_posix(),
+            "source_sha256": sha256_text(mcdn_source),
+            "entries": len(mcdn_rules),
+            "outputs": ["dist/mihomo/mcdn-block.mrs", "dist/egern/mcdn-block.yaml"],
             "behavior": "domain",
         },
         "claude": {
@@ -593,6 +613,11 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         "",
         f"- Reviewed suffix rules: {len(bypass_japan_rules)}.",
         "- Mihomo list and MRS, plus Egern native YAML, use the same two suffixes.",
+        "",
+        "## MCDN block",
+        "",
+        f"- Reviewed suffix rules: {len(mcdn_rules)}.",
+        "- mcdn屏蔽: Mihomo domain MRS and Egern native YAML share the four reviewed suffixes.",
         "",
         "## Claude",
         "",

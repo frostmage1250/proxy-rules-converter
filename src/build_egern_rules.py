@@ -37,6 +37,7 @@ class BuildError(RuntimeError):
 def slug(name: str) -> str:
     aliases = {
         "geolocation-!cn": "geolocation-non-cn",
+        "mcdn屏蔽": "mcdn-block",
         "private_ip": "private-ip",
         "cn_ip": "cn-ip",
         "google_ip": "google-ip",
@@ -105,6 +106,7 @@ def resolve_provider_source(
             "dist/mihomo/geolocation-cn.mrs": CONVERTER_GEOLOCATION_LIST_PATH,
             "dist/mihomo/ai.mrs": "dist/mihomo/ai.list",
             "dist/mihomo/bypass-japan.mrs": "dist/mihomo/bypass-japan.list",
+            "dist/mihomo/mcdn-block.mrs": "dist/mihomo/mcdn-block.list",
             CONVERTER_CLAUDE_RULE_PATH: CONVERTER_CLAUDE_RULE_PATH,
         }
         expected_source = allowed.get(published_path)
@@ -373,7 +375,14 @@ def main() -> int:
         providers = model["providers"]
         validate_business_ip_pairs(model)
         wanted = referenced_providers(model)
-        generated: dict[str, str] = {}
+        # Publish the reviewed local set before consumers begin referencing it.
+        mcdn_source = (ROOT / "dist/mihomo/mcdn-block.list").read_text(encoding="utf-8")
+        mcdn_native = merge_ordered_rules(parse_domain_list(mcdn_source))
+        generated: dict[str, str] = {
+            "mcdn-block.yaml": yaml.safe_dump(
+                mcdn_native, allow_unicode=True, sort_keys=False, width=1000
+            )
+        }
         source_records: list[dict[str, Any]] = []
 
         geo_report_text = (ROOT / CONVERTER_GEOLOCATION_REPORT_PATH).read_text(encoding="utf-8")
@@ -497,10 +506,9 @@ def main() -> int:
             )
 
         changed: list[str] = []
-        for record in source_records:
-            filename = Path(record["output"]).name
-            if write_or_check(RULE_DIR / filename, generated[filename], args.check):
-                changed.append(record["output"])
+        for filename, rule_text in generated.items():
+            if write_or_check(RULE_DIR / filename, rule_text, args.check):
+                changed.append(f"dist/egern/{filename}")
         for stale in RULE_DIR.glob("*.yaml"):
             if stale.name not in generated:
                 changed.append(f"dist/egern/{stale.name}")
