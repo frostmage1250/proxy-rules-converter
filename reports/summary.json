@@ -29,15 +29,25 @@
   "mcdn_block": {
     "behavior": "domain",
     "canonical_source": "config/mcdn-block.list",
-    "entries": 4,
+    "deduplication": "identical rules; first occurrence retained",
+    "duplicates_removed": 2,
+    "entries": 35,
+    "excluded_entries": 1,
+    "excluded_rules": [
+      "||*pcdn*.biliapi.net^$important"
+    ],
+    "local_entries": 4,
     "name": "mcdn屏蔽",
     "outputs": [
       "dist/mihomo/mcdn-block.mrs",
       "dist/egern/mcdn-block.yaml"
     ],
-    "source_sha256": "cddecdbcac22e7b00667ca215bdb11f393557b7942245032e49993d967a7e830"
+    "source_sha256": "cddecdbcac22e7b00667ca215bdb11f393557b7942245032e49993d967a7e830",
+    "upstream_entries": 33,
+    "upstream_sha256": "33ced7c2daf1e4ced2e605f76d5f3b9d93cac698d601584cc7232a47b3128c4b",
+    "upstream_source": "https://raw.githubusercontent.com/xianhongtao/AdGuard-AntiPCDN-Rules/refs/heads/main/adguard.txt"
   },
-  "schema_version": 9,
+  "schema_version": 10,
   "sources": {
     "bett/geosite/anthropic": {
       "bytes": 153,
@@ -53,6 +63,11 @@
       "bytes": 33104,
       "sha256": "878c91ea82c949c63440c997f0aa634aa4ca8d574c6b1f2edeb18751e6095f38",
       "url": "https://ip.net.coffee/claude/site.html"
+    },
+    "mcdn/adguard": {
+      "bytes": 1159,
+      "sha256": "33ced7c2daf1e4ced2e605f76d5f3b9d93cac698d601584cc7232a47b3128c4b",
+      "url": "https://raw.githubusercontent.com/xianhongtao/AdGuard-AntiPCDN-Rules/refs/heads/main/adguard.txt"
     }
   },
   "steam_cn_download": {

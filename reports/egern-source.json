@@ -17,7 +17,7 @@
     "report_sha256": "0291169b18941f23485effa9b08195311cbbb5bd9ba75835cb61fef156ed0b91"
   },
   "mihomo_script": {
-    "commit": "4cec916c7467ef65c714e79034669183479839fb",
+    "commit": "39457421b30644b79e2fd4bd2214e8e703947710",
     "repository": "frostmage1250/mihomo-script"
   },
   "native_rule_sets": [
@@ -39,20 +39,20 @@
     },
     {
       "behavior": "domain",
-      "entries": 4,
-      "native_entries_sha256": "e62b3061a44888972b0d51c4e07fc944ea65606ced66803be85eafcb2b75619e",
+      "entries": 35,
+      "native_entries_sha256": "34687981c02e94e776e290207bc4369fc5dbbb06d6f2c440efd5a2449a7f37b2",
       "output": "dist/egern/mcdn-block.yaml",
-      "output_sha256": "18539f30b5dbca3db9e0582566a3d18e27e3d7024ce630ce1f950a5ca15824d5",
+      "output_sha256": "3f27b99ffb48806ce14d23c6189329c12ca11ca6a416c38ef48baf65ccf04bc7",
       "provider": "mcdn屏蔽",
       "provider_url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/mcdn-block.mrs",
       "source_commit": null,
-      "source_entries": 4,
+      "source_entries": 35,
       "source_generated_in_same_run": true,
-      "source_order_sha256": "e62b3061a44888972b0d51c4e07fc944ea65606ced66803be85eafcb2b75619e",
+      "source_order_sha256": "34687981c02e94e776e290207bc4369fc5dbbb06d6f2c440efd5a2449a7f37b2",
       "source_path": "dist/mihomo/mcdn-block.list",
       "source_ref": "main",
       "source_repository": "frostmage1250/proxy-rules-converter",
-      "source_sha256": "cddecdbcac22e7b00667ca215bdb11f393557b7942245032e49993d967a7e830",
+      "source_sha256": "2c6cf9c9c3de632b877d432321f7f156507750e9855d6bdb6badfd6118300976",
       "source_url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/mcdn-block.list"
     },
     {

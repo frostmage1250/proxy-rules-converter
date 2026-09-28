@@ -1,7 +1,7 @@
 # Generated rule report
 
 - Conversion policy: syntax only; no semantic minimization or sorting.
-- Every generated provider preserves source rule order and count.
+- Providers preserve source rule order and count, except explicitly deduplicated MCDN rules.
 - Upstream exact duplicates are preserved; unsupported syntax and required normalization fail the build.
 
 ## Steam China download
@@ -17,8 +17,11 @@
 
 ## MCDN block
 
-- Reviewed suffix rules: 4.
-- mcdn屏蔽: Mihomo domain MRS and Egern native YAML share the four reviewed suffixes.
+- Local rules: 4; accepted AdGuard rules: 33.
+- Identical duplicates removed: 2.
+- Shared suffix rules: 35.
+- The user-excluded *pcdn*.biliapi.net wildcard is omitted.
+- mcdn屏蔽: Mihomo domain MRS and Egern native YAML share the merged suffixes.
 
 ## Claude
 
