@@ -18,6 +18,7 @@ from build_egern_rules import (  # noqa: E402
     parse_ip_list,
     resolve_provider_source,
     source_rule_count,
+    slug,
 )
 
 class EgernRuleConverterTests(unittest.TestCase):
@@ -163,6 +164,25 @@ class EgernRuleConverterTests(unittest.TestCase):
         )
         self.assertEqual(result["repository"], "frostmage1250/proxy-rules-converter")
         self.assertEqual(result["path"], "dist/mihomo/bypass-japan.list")
+
+    def test_mcdn_provider_keeps_reviewed_suffix_scope_across_formats(self):
+        provider = {
+            "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/mcdn-block.mrs"
+        }
+        source_info = resolve_provider_source(
+            provider, bett_commit="bett-commit", converter_commit="converter-commit"
+        )
+        self.assertEqual(source_info["repository"], "frostmage1250/proxy-rules-converter")
+        self.assertEqual(source_info["commit"], "converter-commit")
+        self.assertEqual(source_info["path"], "dist/mihomo/mcdn-block.list")
+        self.assertEqual(slug("mcdn屏蔽"), "mcdn-block")
+        source = (ROOT / "config" / "mcdn-block.list").read_text(encoding="utf-8")
+        native = merge_ordered_rules(parse_domain_list(source))
+        self.assertEqual(native, {"domain_suffix_set": [
+            "mcdn.bilivideo.com", "mcdn.bilivideo.cn",
+            "edge.mountaintoys.cn", "h2.smtcdns.net",
+        ]})
+        self.assertEqual(source_rule_count(source), output_rule_count([native]))
 
     def test_converter_ai_mrs_uses_same_run_text_projection(self):
         provider = {
