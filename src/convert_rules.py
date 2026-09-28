@@ -263,6 +263,38 @@ def render_classical_yaml(rules: Sequence[str]) -> str:
     return "payload:\n" + "".join(f"  - {rule}\n" for rule in rules)
 
 
+def parse_mcdn_adguard(
+    text: str, source: str, excluded_rules: Sequence[str] = ()
+) -> list[DomainRule]:
+    """Convert AdGuard hostname blocks, skipping only explicitly excluded rules."""
+
+    rules: list[DomainRule] = []
+    for line_number, raw in enumerate(text.splitlines(), 1):
+        line = raw.lstrip("\ufeff") if line_number == 1 else raw
+        if not line.strip() or line.startswith("!"):
+            continue
+        if line in excluded_rules:
+            continue
+        match = re.fullmatch(r"\|\|([a-z0-9_.-]+)\^(?:\$important)?", line)
+        if match is None:
+            raise ConversionError(
+                f"Unsupported MCDN AdGuard rule in {source}:{line_number}: {line!r}"
+            )
+        hostname = validate_canonical_domain(match.group(1), source, line)
+        rules.append(DomainRule("suffix", hostname))
+    if not rules:
+        raise ConversionError(f"MCDN source returned no hostname blocks: {source}")
+    return rules
+
+
+def merge_mcdn_rules(
+    local_rules: Sequence[DomainRule], upstream_rules: Sequence[DomainRule]
+) -> list[DomainRule]:
+    """Deduplicate identical rules, retaining each first occurrence."""
+
+    return list(dict.fromkeys([*local_rules, *upstream_rules]))
+
+
 def normalize_domain(value: str) -> str:
     """Return a canonical spelling for validation; callers must not rewrite to it."""
 
@@ -463,7 +495,7 @@ def managed_files() -> set[str]:
     return files
 
 
-def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
+def build(sources_path: Path, allowlist_path: Path, mcdn_source_path: Path | None = None) -> Mapping[str, str]:
     config = json.loads(sources_path.read_text(encoding="utf-8"))
     outputs: dict[str, str] = {}
     report_sources: dict[str, dict[str, object]] = {}
@@ -519,7 +551,22 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         DomainRule("suffix", "h2.smtcdns.net"),
     ]:
         raise ConversionError("MCDN block source must contain the four reviewed suffixes in order")
-    outputs["dist/mihomo/mcdn-block.list"] = render_rules(mcdn_rules, "mihomo")
+    mcdn_config = config["mcdn_block"]
+    mcdn_url = mcdn_config["url"]
+    if mcdn_source_path is None:
+        mcdn_upstream = download("mcdn/adguard", mcdn_url)
+    else:
+        mcdn_upstream = mcdn_source_path.read_text(encoding="utf-8-sig")
+        report_sources["mcdn/adguard"] = {
+            "url": mcdn_url,
+            "sha256": sha256_text(mcdn_upstream),
+            "bytes": len(mcdn_upstream.encode("utf-8")),
+        }
+    mcdn_adguard_rules = parse_mcdn_adguard(
+        mcdn_upstream, mcdn_url, mcdn_config["excluded_rules"]
+    )
+    mcdn_merged_rules = merge_mcdn_rules(mcdn_rules, mcdn_adguard_rules)
+    outputs["dist/mihomo/mcdn-block.list"] = render_rules(mcdn_merged_rules, "mihomo")
 
     reviewed_set = set(reviewed)
     steam_named_not_reviewed = [
@@ -546,7 +593,7 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
     outputs["dist/mihomo/claude.yaml"] = render_classical_yaml(claude_rules)
 
     summary = {
-        "schema_version": 9,
+        "schema_version": 10,
         "conversion_policy": {
             "syntax_only": True,
             "source_order_preserved": True,
@@ -574,7 +621,17 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
             "name": "mcdn屏蔽",
             "canonical_source": MCDN_BLOCK_LIST.relative_to(ROOT).as_posix(),
             "source_sha256": sha256_text(mcdn_source),
-            "entries": len(mcdn_rules),
+            "upstream_source": mcdn_url,
+            "upstream_sha256": sha256_text(mcdn_upstream),
+            "excluded_rules": mcdn_config["excluded_rules"],
+            "excluded_entries": sum(
+                line in mcdn_config["excluded_rules"] for line in mcdn_upstream.splitlines()
+            ),
+            "local_entries": len(mcdn_rules),
+            "upstream_entries": len(mcdn_adguard_rules),
+            "duplicates_removed": len(mcdn_rules) + len(mcdn_adguard_rules) - len(mcdn_merged_rules),
+            "deduplication": "identical rules; first occurrence retained",
+            "entries": len(mcdn_merged_rules),
             "outputs": ["dist/mihomo/mcdn-block.mrs", "dist/egern/mcdn-block.yaml"],
             "behavior": "domain",
         },
@@ -600,7 +657,7 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         "# Generated rule report",
         "",
         "- Conversion policy: syntax only; no semantic minimization or sorting.",
-        "- Every generated provider preserves source rule order and count.",
+        "- Providers preserve source rule order and count, except explicitly deduplicated MCDN rules.",
         "- Upstream exact duplicates are preserved; unsupported syntax and required normalization fail the build.",
         "",
         "## Steam China download",
@@ -616,8 +673,11 @@ def build(sources_path: Path, allowlist_path: Path) -> Mapping[str, str]:
         "",
         "## MCDN block",
         "",
-        f"- Reviewed suffix rules: {len(mcdn_rules)}.",
-        "- mcdn屏蔽: Mihomo domain MRS and Egern native YAML share the four reviewed suffixes.",
+        f"- Local rules: {len(mcdn_rules)}; accepted AdGuard rules: {len(mcdn_adguard_rules)}.",
+        f"- Identical duplicates removed: {len(mcdn_rules) + len(mcdn_adguard_rules) - len(mcdn_merged_rules)}.",
+        f"- Shared suffix rules: {len(mcdn_merged_rules)}.",
+        "- The user-excluded *pcdn*.biliapi.net wildcard is omitted.",
+        "- mcdn屏蔽: Mihomo domain MRS and Egern native YAML share the merged suffixes.",
         "",
         "## Claude",
         "",
@@ -654,6 +714,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sources", type=Path, default=DEFAULT_SOURCES)
     parser.add_argument("--steam-allowlist", type=Path, default=DEFAULT_STEAM_ALLOWLIST)
+    parser.add_argument("--mcdn-source", type=Path, help="Already fetched AdGuard snapshot")
     parser.add_argument(
         "--check",
         action="store_true",
@@ -661,7 +722,7 @@ def main() -> int:
     )
     args = parser.parse_args()
     try:
-        outputs = build(args.sources.resolve(), args.steam_allowlist.resolve())
+        outputs = build(args.sources.resolve(), args.steam_allowlist.resolve(), args.mcdn_source)
         changed, stale = write_outputs(outputs, args.check)
         if args.check and (changed or stale):
             print("Generated files are out of date:", file=sys.stderr)

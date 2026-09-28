@@ -18,6 +18,8 @@ from convert_rules import (  # noqa: E402
     extract_claude_site_rules,
     is_externally_managed_output,
     merge_claude_rules,
+    merge_mcdn_rules,
+    parse_mcdn_adguard,
     parse_domain_text,
     parse_ipcidr_text,
     parse_mixed_ipcidr_text,
@@ -45,6 +47,38 @@ class ConverterTests(unittest.TestCase):
             DomainRule("suffix", "hanime1.me"),
         ])
         self.assertEqual(render_rules(rules, "mihomo"), source)
+
+    def test_mcdn_adguard_merge_removes_only_identical_rules(self) -> None:
+        local = parse_domain_text(
+            "+.mcdn.bilivideo.com\n+.edge.mountaintoys.cn\n", "local"
+        )
+        upstream = parse_mcdn_adguard(
+            "! comment\n||mcdn.bilivideo.com^$important\n"
+            "||mountaintoys.cn^$important\n||mountaintoys.cn^$important\n", "adguard"
+        )
+        self.assertEqual(merge_mcdn_rules(local, upstream), [
+            DomainRule("suffix", "mcdn.bilivideo.com"),
+            DomainRule("suffix", "edge.mountaintoys.cn"),
+            DomainRule("suffix", "mountaintoys.cn"),
+        ])
+
+    def test_mcdn_skips_only_user_excluded_wildcard(self) -> None:
+        excluded = "||*pcdn*.biliapi.net^$important"
+        rules = parse_mcdn_adguard(
+            excluded + "\n||pcdn.yximgs.com^$important\n",
+            "adguard", [excluded],
+        )
+        self.assertEqual(rules, [DomainRule("suffix", "pcdn.yximgs.com")])
+        with self.assertRaises(ConversionError):
+            parse_mcdn_adguard("||*other*.biliapi.net^$important\n", "adguard", [excluded])
+
+    def test_mcdn_adguard_rejects_unsupported_filters(self) -> None:
+        for source in (
+            "@@||example.com^", "||example.com^$third-party",
+            "||example.com/path", "||Example.com^", "<html>error</html>",
+        ):
+            with self.subTest(source=source), self.assertRaises(ConversionError):
+                parse_mcdn_adguard(source + "\n", "adguard")
 
     def test_noncanonical_domain_fails_instead_of_being_rewritten(self) -> None:
         for value in ("Example.com", "example.com.", " example.com"):

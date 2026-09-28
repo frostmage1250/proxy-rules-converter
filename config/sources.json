@@ -7,5 +7,11 @@
   },
   "claude_site": {
     "url": "https://ip.net.coffee/claude/site.html"
+  },
+  "mcdn_block": {
+    "url": "https://raw.githubusercontent.com/xianhongtao/AdGuard-AntiPCDN-Rules/refs/heads/main/adguard.txt",
+    "excluded_rules": [
+      "||*pcdn*.biliapi.net^$important"
+    ]
   }
 }

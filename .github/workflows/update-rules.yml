@@ -75,7 +75,10 @@ jobs:
 
       - name: Fetch, convert, and validate rules
         run: |
-          python src/convert_rules.py
+          curl --fail --location --silent --show-error \
+            "https://raw.githubusercontent.com/xianhongtao/AdGuard-AntiPCDN-Rules/refs/heads/main/adguard.txt" \
+            --output "${RUNNER_TEMP}/mcdn-adguard.txt"
+          python src/convert_rules.py --mcdn-source "${RUNNER_TEMP}/mcdn-adguard.txt"
           python src/convert_mrs.py
 
       - name: Extend Bett AI MRS
@@ -162,30 +165,9 @@ jobs:
             --bett-commit "${bett_commit}" \
             --apns-commit "${apns_commit}"
 
-      - name: Verify MCDN MRS and Egern YAML coverage
-        shell: bash
-        run: |
-          mihomo convert-ruleset domain mrs dist/mihomo/mcdn-block.mrs "${RUNNER_TEMP}/mcdn-block-decoded.list"
-          python - "${RUNNER_TEMP}/mcdn-block-decoded.list" <<'PY'
-          import sys
-          from pathlib import Path
-          import yaml
-          sys.path.insert(0, "src")
-          from convert_rules import parse_domain_text
-          source = Path("config/mcdn-block.list").read_text(encoding="utf-8")
-          expected = parse_domain_text(source, "canonical MCDN source")
-          decoded = parse_domain_text(Path(sys.argv[1]).read_text(encoding="utf-8"), "decoded MCDN MRS")
-          assert len(expected) == len(decoded) == 4, "MCDN entry count changed"
-          assert set(expected) == set(decoded), "MCDN MRS changed the suffix scope"
-          assert Path("dist/mihomo/mcdn-block.list").read_text(encoding="utf-8") == source
-          native = yaml.safe_load(Path("dist/egern/mcdn-block.yaml").read_text(encoding="utf-8"))
-          assert native == {"domain_suffix_set": [rule.value for rule in expected]}, "MCDN YAML differs from source"
-          print("Verified all four MCDN suffixes in decoded MRS and Egern YAML.")
-          PY
-
       - name: Verify generated files are deterministic
         run: |
-          python src/convert_rules.py --check
+          python src/convert_rules.py --mcdn-source "${RUNNER_TEMP}/mcdn-adguard.txt" --check
           python src/convert_mrs.py --check
           python src/build_ai_mrs.py --check
           python src/convert_v2fly_geolocation_cn.py \
@@ -199,6 +181,37 @@ jobs:
             --apns-commit "${APNS_COMMIT}" \
             --check
           git diff --check
+
+      - name: Verify merged MCDN MRS and Egern YAML coverage
+        shell: bash
+        run: |
+          mihomo convert-ruleset domain mrs dist/mihomo/mcdn-block.mrs "${RUNNER_TEMP}/mcdn-block-decoded.list"
+          python - "${RUNNER_TEMP}/mcdn-block-decoded.list" "${RUNNER_TEMP}/mcdn-adguard.txt" <<'PY'
+          import json, sys
+          from pathlib import Path
+          import yaml
+          sys.path.insert(0, "src")
+          from convert_rules import merge_mcdn_rules, parse_domain_text, parse_mcdn_adguard, render_rules, sha256_text
+          config = json.loads(Path("config/sources.json").read_text(encoding="utf-8"))["mcdn_block"]
+          local = parse_domain_text(Path("config/mcdn-block.list").read_text(encoding="utf-8"), "local MCDN")
+          upstream_text = Path(sys.argv[2]).read_text(encoding="utf-8-sig")
+          upstream = parse_mcdn_adguard(upstream_text, config["url"], config["excluded_rules"])
+          expected = merge_mcdn_rules(local, upstream)
+          decoded = parse_domain_text(Path(sys.argv[1]).read_text(encoding="utf-8"), "decoded MCDN MRS")
+          assert len(expected) == len(set(expected)), "MCDN duplicates remain"
+          assert len(expected) == len(decoded) and set(expected) == set(decoded), "MCDN MRS differs from merged source"
+          assert Path("dist/mihomo/mcdn-block.list").read_text(encoding="utf-8") == render_rules(expected, "mihomo")
+          native = yaml.safe_load(Path("dist/egern/mcdn-block.yaml").read_text(encoding="utf-8"))
+          assert native == {"domain_suffix_set": [rule.value for rule in expected]}, "MCDN YAML differs from merged source"
+          assert all(rule.kind == "suffix" and "*" not in rule.value for rule in expected)
+          assert not any(rule.value == "biliapi.net" for rule in expected), "Excluded wildcard was broadened"
+          report = json.loads(Path("reports/summary.json").read_text(encoding="utf-8"))["mcdn_block"]
+          assert report["entries"] == len(expected)
+          assert report["duplicates_removed"] == len(local) + len(upstream) - len(expected)
+          assert report["upstream_sha256"] == sha256_text(upstream_text)
+          assert report["excluded_rules"] == config["excluded_rules"]
+          print(f"Verified {len(expected)} shared MCDN suffixes; removed {report['duplicates_removed']} identical duplicates.")
+          PY
 
       - name: Commit changed generated files
         shell: bash

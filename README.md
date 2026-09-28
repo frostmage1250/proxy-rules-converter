@@ -47,16 +47,24 @@ Claude provider.
 
 ## MCDN block
 
-The user-reviewed `config/mcdn-block.list` is the canonical source for
-**mcdn屏蔽**. Its four suffixes are `mcdn.bilivideo.com`,
-`mcdn.bilivideo.cn`, `edge.mountaintoys.cn`, and `h2.smtcdns.net`.
-Each suffix includes the apex and all subdomains.
+The four local suffixes in `config/mcdn-block.list` are merged with
+[xianhongtao/AdGuard-AntiPCDN-Rules](https://github.com/xianhongtao/AdGuard-AntiPCDN-Rules/blob/main/adguard.txt).
+The user-excluded `||*pcdn*.biliapi.net^$important` wildcard is skipped;
+all other supported AdGuard hostname blocks become suffix rules, including
+their apex and subdomains. Unsupported syntax fails the build.
+
+MCDN is an explicit exception to duplicate preservation: only identical rules
+are removed, keeping their first occurrence and local rules first. Covered
+narrower suffixes are retained; no semantic minimization is performed.
 
 The workflow publishes `dist/mihomo/mcdn-block.mrs` (domain behavior) and
-`dist/egern/mcdn-block.yaml` (native `domain_suffix_set`). The readable
-`dist/mihomo/mcdn-block.list` preserves source order. Mihomo compiles the MRS;
-the workflow decodes it again to verify all four suffixes and compares the
-Egern YAML with the same canonical source. Consumers route this set to REJECT.
+`dist/egern/mcdn-block.yaml` (native `domain_suffix_set`), plus the readable
+`dist/mihomo/mcdn-block.list`. All three share the same merged suffixes.
+The AdGuard source is fetched once per workflow run; generation and the final
+deterministic check use that snapshot. The report records its URL, hash,
+excluded rules, input counts, removed duplicates, and final rule count.
+Final validation decodes the MRS and compares it and Egern YAML against the
+merged source. Existing consumer URLs and REJECT routing remain unchanged.
 
 ## V2Fly geolocation-cn
 
