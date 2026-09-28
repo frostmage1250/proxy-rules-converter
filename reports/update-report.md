@@ -15,6 +15,11 @@
 - Reviewed suffix rules: 2.
 - Mihomo list and MRS, plus Egern native YAML, use the same two suffixes.
 
+## MCDN block
+
+- Reviewed suffix rules: 4.
+- mcdn屏蔽: Mihomo domain MRS and Egern native YAML share the four reviewed suffixes.
+
 ## Claude
 
 - Bett Anthropic rules: 8 (primary source).

@@ -26,7 +26,18 @@
     "unsupported_or_noncanonical_rules": "fail",
     "upstream_exact_duplicates": "preserve"
   },
-  "schema_version": 8,
+  "mcdn_block": {
+    "behavior": "domain",
+    "canonical_source": "config/mcdn-block.list",
+    "entries": 4,
+    "name": "mcdn屏蔽",
+    "outputs": [
+      "dist/mihomo/mcdn-block.mrs",
+      "dist/egern/mcdn-block.yaml"
+    ],
+    "source_sha256": "cddecdbcac22e7b00667ca215bdb11f393557b7942245032e49993d967a7e830"
+  },
+  "schema_version": 9,
   "sources": {
     "bett/geosite/anthropic": {
       "bytes": 153,
