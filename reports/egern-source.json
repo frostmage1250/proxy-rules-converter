@@ -11,13 +11,13 @@
     "repository": "appshubcc/bett-rules"
   },
   "geolocation_cn": {
-    "expected_entries": 7813,
+    "expected_entries": 7814,
     "list_path": "dist/mihomo/geolocation-cn.list",
     "report_path": "reports/geolocation-cn.json",
-    "report_sha256": "0291169b18941f23485effa9b08195311cbbb5bd9ba75835cb61fef156ed0b91"
+    "report_sha256": "aca13c220a7456b97723e666730b6211c166c3f14114e2b26f2d59f7e8e80a81"
   },
   "mihomo_script": {
-    "commit": "39457421b30644b79e2fd4bd2214e8e703947710",
+    "commit": "8f133e4669920129dcf3b8602fba89b050d70d96",
     "repository": "frostmage1250/mihomo-script"
   },
   "native_rule_sets": [
@@ -579,21 +579,21 @@
     },
     {
       "behavior": "domain",
-      "entries": 7813,
-      "expected_entries": 7813,
-      "native_entries_sha256": "5ab6b09ff38870703ede7632beace3e8cdf27d87862af5abddebbae1222d395d",
+      "entries": 7814,
+      "expected_entries": 7814,
+      "native_entries_sha256": "6eba136c33a889c18a95def57558dd7667f56f41dda9fd21cf65c690ad8435c8",
       "output": "dist/egern/geolocation-cn.yaml",
-      "output_sha256": "aae6eb46156b19d47a440b464f6ad609c48f8240ba3c47cb314e7639ddcf5d6f",
+      "output_sha256": "6e335868652cb2ea86eff0782937e84069a14580a6d6b3f01f6597c0e5d4b008",
       "provider": "geolocation-cn",
       "provider_url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/geolocation-cn.mrs",
       "source_commit": null,
-      "source_entries": 7813,
+      "source_entries": 7814,
       "source_generated_in_same_run": true,
-      "source_order_sha256": "5ab6b09ff38870703ede7632beace3e8cdf27d87862af5abddebbae1222d395d",
+      "source_order_sha256": "6eba136c33a889c18a95def57558dd7667f56f41dda9fd21cf65c690ad8435c8",
       "source_path": "dist/mihomo/geolocation-cn.list",
       "source_ref": "main",
       "source_repository": "frostmage1250/proxy-rules-converter",
-      "source_sha256": "26ef53e238879d05d60134877ac43e1e2c2108b697d28d3d9b08b7f753572e1e",
+      "source_sha256": "8bb4d84bc1506d01622a1624656b94c1fd96e4ad2438d966a8f51236ef4f9635",
       "source_url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/geolocation-cn.list"
     },
     {
