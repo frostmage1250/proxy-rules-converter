@@ -243,6 +243,29 @@ jobs:
           print(f"Verified Apple merge: {report['bett_entries']} Bett entries plus {report['supplemented_entries']} Sukka supplements.")
           PY
 
+      - name: Verify Egern-only Private Relay publication
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import yaml
+          manifest = json.loads(Path("reports/egern-source.json").read_text(encoding="utf-8"))
+          records = manifest["egern_only_rule_sets"]
+          assert len(records) == 1 and records[0]["provider"] == "privaterelay"
+          record = records[0]
+          assert record["egern_only"] is True and record["behavior"] == "domain"
+          assert record["output"] == "dist/egern/privaterelay.yaml"
+          assert not any(Path("dist/mihomo").glob("*privaterelay*")), "Private Relay must remain Egern-only"
+          assert "privaterelay" not in [item["provider"] for item in manifest["native_rule_sets"]]
+          native = yaml.safe_load(Path(record["output"]).read_text(encoding="utf-8"))
+          assert set(native) <= {"domain_set", "domain_suffix_set"}
+          assert sum(len(values) for values in native.values()) == record["entries"]
+          assert record["bett_entries"] + record["supplemented_entries"] == record["entries"]
+          assert not any("7h15.ru1353t" in value for values in native.values() for value in values)
+          print(f"Verified Egern-only Private Relay: {record['bett_entries']} Bett rules plus {record['supplemented_entries']} Sukka rules.")
+          PY
+
       - name: Commit changed generated files
         shell: bash
         run: |

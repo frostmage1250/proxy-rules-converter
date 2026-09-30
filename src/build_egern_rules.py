@@ -17,6 +17,8 @@ from typing import Any
 
 import yaml
 
+from convert_rules import ConversionError, merge_apple_rules, parse_domain_text, render_rules
+
 ROOT = Path(__file__).resolve().parents[1]
 RULE_DIR = ROOT / "dist" / "egern"
 REPORT_PATH = ROOT / "reports" / "egern-source.json"
@@ -144,6 +146,31 @@ def download_text(url: str) -> str:
             return response.read().decode("utf-8-sig")
     except urllib.error.URLError as exc:
         raise BuildError(f"Failed to download {url}: {exc}") from exc
+
+
+def merge_privaterelay_sources(
+    bett_text: str, sukka_text: str, excluded_domains: list[str]
+) -> tuple[str, dict[str, Any]]:
+    """Retain Bett rules and append only uncovered Sukka endpoint scopes."""
+    if not bett_text.strip() or not sukka_text.strip():
+        raise BuildError("Private Relay upstream domain sets must be nonempty")
+    primary = parse_domain_text(bett_text, "Bett iCloud Private Relay")
+    excluded = set(excluded_domains)
+    supplement = [
+        rule for rule in parse_domain_text(sukka_text, "Sukka iCloud Private Relay")
+        if rule.value not in excluded
+    ]
+    if not primary or not supplement:
+        raise BuildError("Private Relay upstream domain sets must be nonempty")
+    merged = merge_apple_rules(primary, supplement)
+    return render_rules(merged, "mihomo"), {
+        "bett_entries": len(primary),
+        "sukka_eligible_entries": len(supplement),
+        "supplemented_entries": len(merged) - len(primary),
+        "supplemented_rules": [rule.mihomo() for rule in merged[len(primary):]],
+        "bett_order_and_duplicates_preserved": True,
+        "excluded_domains": excluded_domains,
+    }
 
 
 def source_rule_count(text: str) -> int:
@@ -519,6 +546,39 @@ def main() -> int:
                 },
             )
 
+        private_config = json.loads((ROOT / "config/sources.json").read_text(encoding="utf-8"))["privaterelay"]
+        bett_private_url = (
+            f"https://raw.githubusercontent.com/{BETT_REPO}/{args.bett_commit}/"
+            f"{private_config['bett_path']}"
+        )
+        sukka_private_url = private_config["sukka_url"]
+        bett_private_text = download_text(bett_private_url)
+        sukka_private_text = download_text(sukka_private_url)
+        private_source, private_merge = merge_privaterelay_sources(
+            bett_private_text, sukka_private_text, private_config["excluded_domains"]
+        )
+        register(
+            "privaterelay", "domain", private_source,
+            parse_domain_list(private_source), source_rule_count(private_source),
+            {
+                "egern_only": True,
+                **private_merge,
+                "upstream_sources": [
+                    {
+                        "name": "bett-rules", "repository": BETT_REPO,
+                        "ref": "meta", "commit": args.bett_commit,
+                        "path": private_config["bett_path"], "url": bett_private_url,
+                        "sha256": hashlib.sha256(bett_private_text.encode("utf-8")).hexdigest(),
+                    },
+                    {
+                        "name": "Sukka", "url": sukka_private_url,
+                        "sha256": hashlib.sha256(sukka_private_text.encode("utf-8")).hexdigest(),
+                    },
+                ],
+            },
+        )
+        egern_only_records = [source_records.pop()]
+
         changed: list[str] = []
         for filename, rule_text in generated.items():
             if write_or_check(RULE_DIR / filename, rule_text, args.check):
@@ -546,6 +606,7 @@ def main() -> int:
                 "expected_entries": geo_expected_entries,
             },
             "native_rule_sets": source_records,
+            "egern_only_rule_sets": egern_only_records,
         }
         report_text = json.dumps(report_data, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
         if write_or_check(REPORT_PATH, report_text, args.check):
@@ -554,7 +615,7 @@ def main() -> int:
             raise BuildError("Generated files are out of date: " + ", ".join(changed))
         print(f"Generated {len(generated)} one-file Egern-native rule sets.")
         return 0
-    except (BuildError, OSError, ValueError, KeyError, json.JSONDecodeError, yaml.YAMLError) as exc:
+    except (BuildError, ConversionError, OSError, ValueError, KeyError, json.JSONDecodeError, yaml.YAMLError) as exc:
         print(f"Build failed: {exc}", file=sys.stderr)
         return 2
 

@@ -11,6 +11,7 @@ from build_egern_rules import (  # noqa: E402
     BuildError,
     output_rule_count,
     merge_ordered_rules,
+    merge_privaterelay_sources,
     rule_sequence,
     parse_classical_rule_list,
     parse_classical_yaml_provider,
@@ -22,6 +23,39 @@ from build_egern_rules import (  # noqa: E402
 )
 
 class EgernRuleConverterTests(unittest.TestCase):
+    def test_privaterelay_merge_preserves_bett_and_exact_sukka_scopes(self):
+        base = "+.mask-api.icloud.com\n+.mask-h2.icloud.com\n+.mask.icloud.com\n"
+        source, report = merge_privaterelay_sources(
+            base,
+            "# generated\n7h15.ru1353t.1s.m4d3.by.5ukk4w.skk.moe\n"
+            "mask.icloud.com\nmask-h2.icloud.com\nmask-api.icloud.com\n"
+            "mask-canary.icloud.com\nmask.apple-dns.net\ncanary.mask.apple-dns.net\n",
+            ["7h15.ru1353t.1s.m4d3.by.5ukk4w.skk.moe"],
+        )
+        self.assertTrue(source.startswith(base))
+        self.assertEqual(report["bett_entries"], 3)
+        self.assertEqual(report["sukka_eligible_entries"], 6)
+        self.assertEqual(report["supplemented_rules"], [
+            "mask-canary.icloud.com", "mask.apple-dns.net", "canary.mask.apple-dns.net",
+        ])
+        native = merge_ordered_rules(parse_domain_list(source))
+        self.assertEqual(native, {
+            "domain_suffix_set": ["mask-api.icloud.com", "mask-h2.icloud.com", "mask.icloud.com"],
+            "domain_set": ["mask-canary.icloud.com", "mask.apple-dns.net", "canary.mask.apple-dns.net"],
+        })
+        self.assertEqual(source_rule_count(source), output_rule_count([native]))
+
+    def test_privaterelay_merge_preserves_primary_duplicates_and_rejects_empty_sets(self):
+        source, report = merge_privaterelay_sources(
+            "+.mask.icloud.com\n+.mask.icloud.com\n", "mask.icloud.com\n", []
+        )
+        self.assertEqual(source, "+.mask.icloud.com\n+.mask.icloud.com\n")
+        self.assertEqual(report["supplemented_entries"], 0)
+        with self.assertRaises(BuildError):
+            merge_privaterelay_sources("", "mask.icloud.com\n", [])
+        with self.assertRaises(BuildError):
+            merge_privaterelay_sources("+.mask.icloud.com\n", "", [])
+
     def test_apple_merge_resolves_to_same_run_list(self):
         result = resolve_provider_source(
             {"url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/apple-merged.mrs"},
