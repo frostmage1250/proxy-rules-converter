@@ -1,4 +1,33 @@
 {
+  "apple_merge": {
+    "behavior": "domain",
+    "bett_entries": 1792,
+    "bett_order_and_duplicates_preserved": true,
+    "bett_source": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple.list",
+    "excluded_domains": [
+      "7h15.ru1353t.1s.m4d3.by.5ukk4w.skk.moe",
+      "push-apple.com.akadns.net"
+    ],
+    "excluded_rule_types": [
+      "PROCESS-NAME",
+      "PROCESS-PATH",
+      "IP-CIDR",
+      "IP-CIDR6",
+      "IP-ASN"
+    ],
+    "output_entries": 1794,
+    "outputs": [
+      "dist/mihomo/apple-merged.mrs",
+      "dist/egern/apple-merged.yaml"
+    ],
+    "sukka_eligible_entries": 15,
+    "sukka_source": "https://ruleset.skk.moe/Clash/non_ip/apple_services.txt",
+    "supplemented_entries": 2,
+    "supplemented_rules": [
+      "+.appstore.com",
+      "+.organicfruitapps.com"
+    ]
+  },
   "bypass_japan": {
     "behavior": "domain",
     "canonical_source": "config/bypass-japan.list",
@@ -47,12 +76,17 @@
     "upstream_sha256": "33ced7c2daf1e4ced2e605f76d5f3b9d93cac698d601584cc7232a47b3128c4b",
     "upstream_source": "https://raw.githubusercontent.com/xianhongtao/AdGuard-AntiPCDN-Rules/refs/heads/main/adguard.txt"
   },
-  "schema_version": 10,
+  "schema_version": 11,
   "sources": {
     "bett/geosite/anthropic": {
       "bytes": 153,
       "sha256": "0155b69f43c57d61fa8152ae3372233b0660affd6d2b2c01315290f53a311b7f",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/anthropic.list"
+    },
+    "bett/geosite/apple": {
+      "bytes": 36860,
+      "sha256": "62fcf660a1cfcffee0fb8400d13044e3f66561c02eb3340bd06ef5fba3253caf",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple.list"
     },
     "bett/geosite/steam-cn-download-validation": {
       "bytes": 752,
@@ -68,6 +102,11 @@
       "bytes": 1159,
       "sha256": "33ced7c2daf1e4ced2e605f76d5f3b9d93cac698d601584cc7232a47b3128c4b",
       "url": "https://raw.githubusercontent.com/xianhongtao/AdGuard-AntiPCDN-Rules/refs/heads/main/adguard.txt"
+    },
+    "sukka/clash/apple-services": {
+      "bytes": 1157,
+      "sha256": "9c32e8eb6e1d334a85b972791a0afc4b0fc81f57d3a80902a50c9168269f7602",
+      "url": "https://ruleset.skk.moe/Clash/non_ip/apple_services.txt"
     }
   },
   "steam_cn_download": {

@@ -23,6 +23,14 @@
 - The user-excluded *pcdn*.biliapi.net wildcard is omitted.
 - mcdn屏蔽: Mihomo domain MRS and Egern native YAML share the merged suffixes.
 
+## Apple merge
+
+- Bett Apple rules retained: 1792.
+- Eligible Sukka domains: 15; uncovered scopes added: 2.
+- Bett entry order, spelling, and duplicates are preserved.
+- Sukka APNs push suffix, generator marker, process rules, and IP rules are excluded.
+- Mihomo MRS and Egern native YAML share the apple-merged domain source.
+
 ## Claude
 
 - Bett Anthropic rules: 8 (primary source).
