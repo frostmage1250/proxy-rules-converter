@@ -157,7 +157,11 @@ jobs:
           assert model["rules"].count("RULE-SET,mcdn屏蔽,REJECT") == 1, "Duplicate MCDN consumer rule"
           assert provider["format"] == "mrs" and provider["behavior"] == "domain"
           assert provider["url"] == "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/mcdn-block.mrs"
-          print("Verified pinned Mihomo consumer of the shared MCDN block set.")
+          apple = model["providers"]["apple"]
+          assert apple["format"] == "mrs" and apple["behavior"] == "domain"
+          assert apple["url"] == "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/apple-merged.mrs"
+          assert "path-in-bundle" not in apple
+          print("Verified pinned Mihomo consumers of the shared MCDN and Apple merge sets.")
           PY
           python src/build_egern_rules.py \
             --model "${RUNNER_TEMP}/mihomo-model.json" \
