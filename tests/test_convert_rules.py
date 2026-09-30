@@ -153,7 +153,7 @@ class ConverterTests(unittest.TestCase):
         )
         self.assertEqual(
             set(config["bett"]),
-            {"geosite_base", "steam_cn_download_validation", "anthropic", "ai_mrs"},
+            {"geosite_base", "steam_cn_download_validation", "anthropic", "ai_mrs", "apple"},
         )
 
 
