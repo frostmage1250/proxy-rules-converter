@@ -2,6 +2,7 @@
 
 This project downloads and transforms public rule data from these upstream projects:
 
+- SukkaW/Surge (Sukka Ruleset, Apple Services): <https://github.com/SukkaW/Surge>, AGPL-3.0; <https://ruleset.skk.moe/Clash/non_ip/apple_services.txt>.
 - appshubcc/bett-rules: <https://github.com/appshubcc/bett-rules>.
 - V2Fly domain-list-community: <https://github.com/v2fly/domain-list-community>, MIT.
 - MetaCubeX meta-rules-converter (MRS format generation only): <https://github.com/MetaCubeX/meta-rules-converter>, GPL-3.0.

@@ -419,6 +419,54 @@ def rule_covers_domain(rule: DomainRule, domain: str) -> bool:
     return domain != rule.value and domain.endswith("." + rule.value)
 
 
+def parse_sukka_apple_services(
+    text: str, source: str, excluded_domains: Sequence[str]
+) -> list[DomainRule]:
+    """Accept domain rules only; APNs, IPs, processes, and the marker stay separate."""
+    result: list[DomainRule] = []
+    excluded = set(excluded_domains)
+    ignored_types = {"PROCESS-NAME", "PROCESS-PATH", "IP-CIDR", "IP-CIDR6", "IP-ASN"}
+    for line in rule_lines(text, source):
+        fields = line.split(",")
+        rule_type = fields[0]
+        if rule_type in ignored_types:
+            continue
+        if rule_type not in {"DOMAIN", "DOMAIN-SUFFIX"} or len(fields) != 2:
+            raise ConversionError(f"Unsupported Apple Services rule in {source}: {line}")
+        domain = validate_canonical_domain(fields[1], source, line)
+        if any(domain == item or domain.endswith("." + item) for item in excluded):
+            continue
+        result.append(DomainRule("exact" if rule_type == "DOMAIN" else "suffix", domain))
+    if not result:
+        raise ConversionError(f"No eligible Apple Services domains in {source}")
+    return result
+
+
+def merge_apple_rules(
+    primary: Sequence[DomainRule], supplement: Sequence[DomainRule]
+) -> list[DomainRule]:
+    """Preserve every Bett entry, appending only uncovered Sukka domain scopes."""
+    merged = list(primary)
+    for candidate in supplement:
+        if candidate.kind == "exact":
+            covered = any(rule_covers_domain(rule, candidate.value) for rule in merged)
+        elif candidate.kind == "suffix":
+            covered = any(
+                (rule.kind == "suffix" and (
+                    candidate.value == rule.value
+                    or candidate.value.endswith("." + rule.value)
+                ))
+                or (rule.kind == "subdomain_suffix"
+                    and candidate.value.endswith("." + rule.value))
+                for rule in merged
+            )
+        else:
+            raise ConversionError(f"Unsupported Apple supplement kind: {candidate.kind}")
+        if not covered:
+            merged.append(candidate)
+    return merged
+
+
 def load_allowlist(path: Path) -> list[str]:
     entries = rule_lines(path.read_text(encoding="utf-8"), str(path))
     for entry in entries:
@@ -568,6 +616,19 @@ def build(sources_path: Path, allowlist_path: Path, mcdn_source_path: Path | Non
     mcdn_merged_rules = merge_mcdn_rules(mcdn_rules, mcdn_adguard_rules)
     outputs["dist/mihomo/mcdn-block.list"] = render_rules(mcdn_merged_rules, "mihomo")
 
+    apple_url = join_url(bett["geosite_base"], bett["apple"])
+    apple_text = download("bett/geosite/apple", apple_url)
+    apple_primary = parse_domain_text(apple_text, apple_url)
+    apple_config = config["apple_merge"]
+    sukka_url = apple_config["sukka_url"]
+    sukka_text = download("sukka/clash/apple-services", sukka_url)
+    apple_supplement = parse_sukka_apple_services(
+        sukka_text, sukka_url, apple_config["excluded_domains"]
+    )
+    apple_merged = merge_apple_rules(apple_primary, apple_supplement)
+    apple_added = apple_merged[len(apple_primary):]
+    outputs["dist/mihomo/apple-merged.list"] = render_rules(apple_merged, "mihomo")
+
     reviewed_set = set(reviewed)
     steam_named_not_reviewed = [
         rule.mihomo()
@@ -593,7 +654,7 @@ def build(sources_path: Path, allowlist_path: Path, mcdn_source_path: Path | Non
     outputs["dist/mihomo/claude.yaml"] = render_classical_yaml(claude_rules)
 
     summary = {
-        "schema_version": 10,
+        "schema_version": 11,
         "conversion_policy": {
             "syntax_only": True,
             "source_order_preserved": True,
@@ -633,6 +694,20 @@ def build(sources_path: Path, allowlist_path: Path, mcdn_source_path: Path | Non
             "deduplication": "identical rules; first occurrence retained",
             "entries": len(mcdn_merged_rules),
             "outputs": ["dist/mihomo/mcdn-block.mrs", "dist/egern/mcdn-block.yaml"],
+            "behavior": "domain",
+        },
+        "apple_merge": {
+            "bett_source": apple_url,
+            "sukka_source": sukka_url,
+            "bett_entries": len(apple_primary),
+            "sukka_eligible_entries": len(apple_supplement),
+            "supplemented_entries": len(apple_added),
+            "supplemented_rules": [rule.mihomo() for rule in apple_added],
+            "excluded_domains": apple_config["excluded_domains"],
+            "excluded_rule_types": ["PROCESS-NAME", "PROCESS-PATH", "IP-CIDR", "IP-CIDR6", "IP-ASN"],
+            "bett_order_and_duplicates_preserved": True,
+            "output_entries": len(apple_merged),
+            "outputs": ["dist/mihomo/apple-merged.mrs", "dist/egern/apple-merged.yaml"],
             "behavior": "domain",
         },
         "claude": {
@@ -678,6 +753,14 @@ def build(sources_path: Path, allowlist_path: Path, mcdn_source_path: Path | Non
         f"- Shared suffix rules: {len(mcdn_merged_rules)}.",
         "- The user-excluded *pcdn*.biliapi.net wildcard is omitted.",
         "- mcdn屏蔽: Mihomo domain MRS and Egern native YAML share the merged suffixes.",
+        "",
+        "## Apple merge",
+        "",
+        f"- Bett Apple rules retained: {len(apple_primary)}.",
+        f"- Eligible Sukka domains: {len(apple_supplement)}; uncovered scopes added: {len(apple_added)}.",
+        "- Bett entry order, spelling, and duplicates are preserved.",
+        "- Sukka APNs push suffix, generator marker, process rules, and IP rules are excluded.",
+        "- Mihomo MRS and Egern native YAML share the apple-merged domain source.",
         "",
         "## Claude",
         "",

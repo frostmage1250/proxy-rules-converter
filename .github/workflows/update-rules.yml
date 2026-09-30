@@ -213,6 +213,32 @@ jobs:
           print(f"Verified {len(expected)} shared MCDN suffixes; removed {report['duplicates_removed']} identical duplicates.")
           PY
 
+      - name: Verify merged Apple domain MRS and Egern YAML
+        shell: bash
+        run: |
+          mihomo convert-ruleset domain mrs dist/mihomo/apple-merged.mrs "${RUNNER_TEMP}/apple-merged-decoded.list"
+          python - "${RUNNER_TEMP}/apple-merged-decoded.list" <<'PY'
+          import json, sys
+          from pathlib import Path
+          import yaml
+          sys.path.insert(0, "src")
+          from convert_rules import parse_domain_text, merge_apple_rules
+          from build_egern_rules import parse_domain_list, merge_ordered_rules
+          source = Path("dist/mihomo/apple-merged.list").read_text(encoding="utf-8")
+          original = parse_domain_text(source, "Apple merged list")
+          decoded = parse_domain_text(Path(sys.argv[1]).read_text(encoding="utf-8"), "Apple decoded MRS")
+          assert len(merge_apple_rules(decoded, original)) == len(decoded), "MRS lost Apple domain coverage"
+          assert len(merge_apple_rules(original, decoded)) == len(original), "MRS broadened Apple domain coverage"
+          native = yaml.safe_load(Path("dist/egern/apple-merged.yaml").read_text(encoding="utf-8"))
+          assert native == merge_ordered_rules(parse_domain_list(source)), "Apple YAML differs from merged source"
+          assert set(native) <= {"domain_set", "domain_suffix_set"}, "Non-domain rules entered Apple merge"
+          report = json.loads(Path("reports/summary.json").read_text(encoding="utf-8"))["apple_merge"]
+          assert report["output_entries"] == len(original)
+          assert report["bett_entries"] + report["supplemented_entries"] == len(original)
+          assert not any("push-apple.com.akadns.net" in rule for rule in report["supplemented_rules"])
+          print(f"Verified Apple merge: {report['bett_entries']} Bett entries plus {report['supplemented_entries']} Sukka supplements.")
+          PY
+
       - name: Commit changed generated files
         shell: bash
         run: |
@@ -249,7 +275,7 @@ jobs:
           published_commit="$(git rev-parse HEAD)"
           remote_commit="$(git ls-remote origin refs/heads/main | cut -f1)"
           test "${published_commit}" = "${remote_commit}"
-          for file in dist/mihomo/bypass-japan.list dist/mihomo/bypass-japan.mrs dist/mihomo/mcdn-block.list dist/mihomo/mcdn-block.mrs; do
+          for file in dist/mihomo/apple-merged.list dist/mihomo/apple-merged.mrs dist/mihomo/bypass-japan.list dist/mihomo/bypass-japan.mrs dist/mihomo/mcdn-block.list dist/mihomo/mcdn-block.mrs; do
             test -s "${file}"
             remote_file="${RUNNER_TEMP}/published-${file//\//-}"
             curl --fail --location --silent --show-error \

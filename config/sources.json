@@ -3,7 +3,8 @@
     "geosite_base": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite",
     "steam_cn_download_validation": "category-game-platforms-download@cn.list",
     "anthropic": "anthropic.list",
-    "ai_mrs": "category-ai-!cn.mrs"
+    "ai_mrs": "category-ai-!cn.mrs",
+    "apple": "apple.list"
   },
   "claude_site": {
     "url": "https://ip.net.coffee/claude/site.html"
@@ -12,6 +13,13 @@
     "url": "https://raw.githubusercontent.com/xianhongtao/AdGuard-AntiPCDN-Rules/refs/heads/main/adguard.txt",
     "excluded_rules": [
       "||*pcdn*.biliapi.net^$important"
+    ]
+  },
+  "apple_merge": {
+    "sukka_url": "https://ruleset.skk.moe/Clash/non_ip/apple_services.txt",
+    "excluded_domains": [
+      "7h15.ru1353t.1s.m4d3.by.5ukk4w.skk.moe",
+      "push-apple.com.akadns.net"
     ]
   }
 }
