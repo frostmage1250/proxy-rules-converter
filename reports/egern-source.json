@@ -10,6 +10,48 @@
     "commit": "cfec5ac87567f84d1b06629eaf1cc481bfc11e9a",
     "repository": "appshubcc/bett-rules"
   },
+  "egern_only_rule_sets": [
+    {
+      "behavior": "domain",
+      "bett_entries": 3,
+      "bett_order_and_duplicates_preserved": true,
+      "egern_only": true,
+      "entries": 6,
+      "excluded_domains": [
+        "7h15.ru1353t.1s.m4d3.by.5ukk4w.skk.moe"
+      ],
+      "native_entries_sha256": "dd481a8f2e7058483c4bbee6b41f2945f7042781a804b9cb0095e24bad4a5b43",
+      "output": "dist/egern/privaterelay.yaml",
+      "output_sha256": "057aecc4a799e7e64a2106f7b2609c21a53c9f351d243315b7fa24c2dab12242",
+      "provider": "privaterelay",
+      "source_entries": 6,
+      "source_order_sha256": "dd481a8f2e7058483c4bbee6b41f2945f7042781a804b9cb0095e24bad4a5b43",
+      "source_sha256": "328335b20b80b1a54aeed81be7522f4221fdf253f2770705515e409e6c75d59d",
+      "sukka_eligible_entries": 6,
+      "supplemented_entries": 3,
+      "supplemented_rules": [
+        "mask.apple-dns.net",
+        "mask-canary.icloud.com",
+        "canary.mask.apple-dns.net"
+      ],
+      "upstream_sources": [
+        {
+          "commit": "cfec5ac87567f84d1b06629eaf1cc481bfc11e9a",
+          "name": "bett-rules",
+          "path": "geo/geosite/icloudprivaterelay.list",
+          "ref": "meta",
+          "repository": "appshubcc/bett-rules",
+          "sha256": "19d752f38c2999695b945629f1ba7be61e591222340fc50204600ed4b3e246d4",
+          "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/cfec5ac87567f84d1b06629eaf1cc481bfc11e9a/geo/geosite/icloudprivaterelay.list"
+        },
+        {
+          "name": "Sukka",
+          "sha256": "118e0ab653e296c8c588c9dbcee303d3ea9692031ec62aa2d9d01980670a53a8",
+          "url": "https://ruleset.skk.moe/Clash/domainset/icloud_private_relay.txt"
+        }
+      ]
+    }
+  ],
   "geolocation_cn": {
     "expected_entries": 7814,
     "list_path": "dist/mihomo/geolocation-cn.list",
