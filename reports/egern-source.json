@@ -17,7 +17,7 @@
     "report_sha256": "aca13c220a7456b97723e666730b6211c166c3f14114e2b26f2d59f7e8e80a81"
   },
   "mihomo_script": {
-    "commit": "59af4cc26d5f069d121c0193f6906c350c2daeb0",
+    "commit": "56214f519956fe088ff0ee0c9f7547d3a8ce296b",
     "repository": "frostmage1250/mihomo-script"
   },
   "native_rule_sets": [
@@ -147,21 +147,21 @@
     },
     {
       "behavior": "domain",
-      "entries": 1792,
-      "native_entries_sha256": "5520c04c31624067f8cf0c57f546cc1d542192783cbdde641e73bcd0b5add546",
-      "output": "dist/egern/apple.yaml",
-      "output_sha256": "4708ef91fcaf0a354796dc4d508089e78862a80569128999f31995430247ee67",
+      "entries": 1794,
+      "native_entries_sha256": "145f07cc487e5fd9017bb4c108e168b5f6170c3a2287df896a719357aee6efd8",
+      "output": "dist/egern/apple-merged.yaml",
+      "output_sha256": "17ecbb48fb6a7a81e5abf64aaf70bf5ef9c64db4577e57ff15ab02a56c8861e0",
       "provider": "apple",
-      "provider_url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/apple.mrs",
-      "source_commit": "cfec5ac87567f84d1b06629eaf1cc481bfc11e9a",
-      "source_entries": 1792,
-      "source_generated_in_same_run": false,
-      "source_order_sha256": "004fb232a551b1899761612b1bb8b8c724705f364d33fe6dbd6dd099b6bf3871",
-      "source_path": "geo/geosite/apple.list",
-      "source_ref": "meta",
-      "source_repository": "appshubcc/bett-rules",
-      "source_sha256": "62fcf660a1cfcffee0fb8400d13044e3f66561c02eb3340bd06ef5fba3253caf",
-      "source_url": "https://raw.githubusercontent.com/appshubcc/bett-rules/cfec5ac87567f84d1b06629eaf1cc481bfc11e9a/geo/geosite/apple.list"
+      "provider_url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/apple-merged.mrs",
+      "source_commit": null,
+      "source_entries": 1794,
+      "source_generated_in_same_run": true,
+      "source_order_sha256": "f2adaf7a86c80b25cc45bb8802405462c975c4cc3a74a298b9a7923798487210",
+      "source_path": "dist/mihomo/apple-merged.list",
+      "source_ref": "main",
+      "source_repository": "frostmage1250/proxy-rules-converter",
+      "source_sha256": "56530577c4e149f47685750682b390d18da17f30d488f4a3e69fbf6a1c4d9030",
+      "source_url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/apple-merged.list"
     },
     {
       "behavior": "ipcidr",
