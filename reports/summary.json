@@ -31,8 +31,20 @@
   "bypass_japan": {
     "behavior": "domain",
     "canonical_source": "config/bypass-japan.list",
-    "entries": 2,
-    "output": "dist/mihomo/bypass-japan.list"
+    "deduplication": "identical rules; first occurrence retained; local rules first",
+    "duplicates_removed": 2,
+    "entries": 6520,
+    "local_entries": 2,
+    "output": "dist/mihomo/bypass-japan.list",
+    "outputs": [
+      "dist/mihomo/bypass-japan.mrs",
+      "dist/egern/bypass-japan.yaml"
+    ],
+    "policy_group": "pron",
+    "regex_entries_excluded": 140,
+    "upstream_domain_entries": 6520,
+    "upstream_sha256": "f52f9ac23908f9b099c21decbf2cd81a6e204582e1d606b2c1d50ed27270a426",
+    "upstream_source": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/classical/category-porn.list"
   },
   "claude": {
     "bett_entries": 8,
@@ -76,7 +88,7 @@
     "upstream_sha256": "33ced7c2daf1e4ced2e605f76d5f3b9d93cac698d601584cc7232a47b3128c4b",
     "upstream_source": "https://raw.githubusercontent.com/xianhongtao/AdGuard-AntiPCDN-Rules/refs/heads/main/adguard.txt"
   },
-  "schema_version": 11,
+  "schema_version": 12,
   "sources": {
     "bett/geosite/anthropic": {
       "bytes": 153,
@@ -87,6 +99,11 @@
       "bytes": 36860,
       "sha256": "f2c777c650804748a63b5b4f4c18be928509cd60b0a4906f83daa85745555695",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple.list"
+    },
+    "bett/geosite/category-porn": {
+      "bytes": 191185,
+      "sha256": "f52f9ac23908f9b099c21decbf2cd81a6e204582e1d606b2c1d50ed27270a426",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/classical/category-porn.list"
     },
     "bett/geosite/steam-cn-download-validation": {
       "bytes": 752,

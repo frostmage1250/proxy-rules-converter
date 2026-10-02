@@ -1,7 +1,7 @@
 # Generated rule report
 
 - Conversion policy: syntax only; no semantic minimization or sorting.
-- Providers preserve source rule order and count, except explicitly deduplicated MCDN rules.
+- Providers preserve source rule order and count, except explicitly merged providers.
 - Upstream exact duplicates are preserved; unsupported syntax and required normalization fail the build.
 
 ## Steam China download
@@ -10,10 +10,13 @@
 - Bett coverage validation passed.
 - Mihomo output preserves allowlist order and count.
 
-## Bypass Japan
+## pron
 
-- Reviewed suffix rules: 2.
-- Mihomo list and MRS, plus Egern native YAML, use the same two suffixes.
+- Local rules: 2; category-porn domain rules: 6520.
+- Regex rules excluded: 140.
+- Identical duplicates removed: 2.
+- Shared domain rules: 6520.
+- Mihomo list and MRS, plus Egern native YAML, use the same merged non-regex rules.
 
 ## MCDN block
 

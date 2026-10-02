@@ -59,7 +59,7 @@
     "report_sha256": "4bfbe513a8cb7ae0458b5efcf8f5f9c2eeb58b51b56ca90203d81470c8b306e7"
   },
   "mihomo_script": {
-    "commit": "e11ecde450cbf1839344b8ad63888184a0682977",
+    "commit": "c904c91d02d1cd951d74b1e14b87bc4c1b93b5d3",
     "repository": "frostmage1250/mihomo-script"
   },
   "native_rule_sets": [
@@ -585,20 +585,20 @@
     },
     {
       "behavior": "domain",
-      "entries": 2,
-      "native_entries_sha256": "f9f251fbe2504ac3afeb0e9beb2f12a3fa6ef82e4c1835b9ad1a048922eaf468",
+      "entries": 6520,
+      "native_entries_sha256": "e632ee808e1797f6eba5a987724159b4b53cba9d8d1a090894bd418e83a14200",
       "output": "dist/egern/bypass-japan.yaml",
-      "output_sha256": "6b19b74de529e3f968315af6b3353b9904a4047d81d2203f595d4f5c9e30fb77",
+      "output_sha256": "588dd96c57389e96db45b433a6fe7407cfe2aa865d5cd5c9b1990af54d416990",
       "provider": "bypass_japan",
       "provider_url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/bypass-japan.mrs",
       "source_commit": null,
-      "source_entries": 2,
+      "source_entries": 6520,
       "source_generated_in_same_run": true,
-      "source_order_sha256": "f9f251fbe2504ac3afeb0e9beb2f12a3fa6ef82e4c1835b9ad1a048922eaf468",
+      "source_order_sha256": "96bd3b99ebea843e59ad79d2e4a21c591c617f0f5f8da6713df4fb0b052df600",
       "source_path": "dist/mihomo/bypass-japan.list",
       "source_ref": "main",
       "source_repository": "frostmage1250/proxy-rules-converter",
-      "source_sha256": "9e74a68fb509df55017434101997ab47c44b948fb2e3ad50557112340c5bd3b4",
+      "source_sha256": "2d2975343c07e748ede9725a14a1799a61c5c9290c83bc5a64e4d8b1af537125",
       "source_url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/bypass-japan.list"
     },
     {
