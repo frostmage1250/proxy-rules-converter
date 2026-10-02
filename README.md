@@ -66,6 +66,23 @@ excluded rules, input counts, removed duplicates, and final rule count.
 Final validation decodes the MRS and compares it and Egern YAML against the
 merged source. Existing consumer URLs and REJECT routing remain unchanged.
 
+## pron
+
+The `pron` policy group (formerly 绕过日本) uses the merged
+`dist/mihomo/bypass-japan.mrs` and `dist/egern/bypass-japan.yaml` providers.
+The existing `javdb.com` and `hanime1.me` suffixes in
+`config/bypass-japan.list` are merged with Bett's
+[`category-porn` classical list](https://github.com/appshubcc/bett-rules/blob/meta/geo/geosite/classical/category-porn.list).
+All `DOMAIN-REGEX` rules are explicitly excluded; `DOMAIN` and
+`DOMAIN-SUFFIX` retain their original matching scope.
+
+This is an explicit exception to duplicate preservation: identical rules are
+removed, keeping local rules first and the first occurrence of each upstream
+rule. No suffix minimization or sorting is applied. The workflow fetches one
+source snapshot for generation and deterministic validation; the report records
+its hash, excluded regex count, removed duplicate count, and final rule count.
+Existing provider URLs remain valid.
+
 ## V2Fly geolocation-cn
 
 This is the approved exception to the Bett rule-data source. The workflow

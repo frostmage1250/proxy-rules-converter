@@ -295,6 +295,33 @@ def merge_mcdn_rules(
     return list(dict.fromkeys([*local_rules, *upstream_rules]))
 
 
+def parse_bypass_japan_source(text: str, source: str) -> tuple[list[DomainRule], int]:
+    """Keep category-porn domain rules and explicitly exclude every regex."""
+    rules: list[DomainRule] = []
+    excluded_regex = 0
+    for line in rule_lines(text, source):
+        kind, separator, value = line.partition(",")
+        if not separator or not value:
+            raise ConversionError(f"Invalid category-porn rule in {source}: {line}")
+        if kind == "DOMAIN-REGEX":
+            excluded_regex += 1
+            continue
+        if kind not in {"DOMAIN", "DOMAIN-SUFFIX"}:
+            raise ConversionError(f"Unsupported category-porn rule in {source}: {line}")
+        domain = validate_canonical_domain(value, source, line)
+        rules.append(DomainRule("exact" if kind == "DOMAIN" else "suffix", domain))
+    if not rules:
+        raise ConversionError(f"category-porn has no non-regex domain rules: {source}")
+    return rules, excluded_regex
+
+
+def merge_bypass_japan_rules(
+    local: Sequence[DomainRule], upstream: Sequence[DomainRule]
+) -> list[DomainRule]:
+    """Remove identical rules, keeping local rules first and source order."""
+    return list(dict.fromkeys([*local, *upstream]))
+
+
 def normalize_domain(value: str) -> str:
     """Return a canonical spelling for validation; callers must not rewrite to it."""
 
@@ -543,7 +570,10 @@ def managed_files() -> set[str]:
     return files
 
 
-def build(sources_path: Path, allowlist_path: Path, mcdn_source_path: Path | None = None) -> Mapping[str, str]:
+def build(
+    sources_path: Path, allowlist_path: Path,
+    mcdn_source_path: Path | None = None, bypass_source_path: Path | None = None,
+) -> Mapping[str, str]:
     config = json.loads(sources_path.read_text(encoding="utf-8"))
     outputs: dict[str, str] = {}
     report_sources: dict[str, dict[str, object]] = {}
@@ -588,6 +618,19 @@ def build(sources_path: Path, allowlist_path: Path, mcdn_source_path: Path | Non
         DomainRule("suffix", "hanime1.me"),
     ]:
         raise ConversionError("Bypass Japan source must contain the two reviewed suffixes in order")
+    bypass_local_rules = bypass_japan_rules
+    bypass_url = config["bypass_japan"]["url"]
+    if bypass_source_path is None:
+        bypass_text = download("bett/geosite/category-porn", bypass_url)
+    else:
+        bypass_text = bypass_source_path.read_text(encoding="utf-8-sig")
+        report_sources["bett/geosite/category-porn"] = {
+            "url": bypass_url,
+            "sha256": sha256_text(bypass_text),
+            "bytes": len(bypass_text.encode("utf-8")),
+        }
+    bypass_upstream_rules, bypass_regex_excluded = parse_bypass_japan_source(bypass_text, bypass_url)
+    bypass_japan_rules = merge_bypass_japan_rules(bypass_local_rules, bypass_upstream_rules)
     outputs["dist/mihomo/bypass-japan.list"] = render_rules(bypass_japan_rules, "mihomo")
 
     mcdn_source = MCDN_BLOCK_LIST.read_text(encoding="utf-8")
@@ -654,7 +697,7 @@ def build(sources_path: Path, allowlist_path: Path, mcdn_source_path: Path | Non
     outputs["dist/mihomo/claude.yaml"] = render_classical_yaml(claude_rules)
 
     summary = {
-        "schema_version": 11,
+        "schema_version": 12,
         "conversion_policy": {
             "syntax_only": True,
             "source_order_preserved": True,
@@ -673,9 +716,18 @@ def build(sources_path: Path, allowlist_path: Path, mcdn_source_path: Path | Non
             "validation_source_exact_duplicates": game_duplicates,
         },
         "bypass_japan": {
+            "policy_group": "pron",
             "canonical_source": BYPASS_JAPAN_LIST.relative_to(ROOT).as_posix(),
+            "upstream_source": bypass_url,
+            "upstream_sha256": sha256_text(bypass_text),
+            "local_entries": len(bypass_local_rules),
+            "upstream_domain_entries": len(bypass_upstream_rules),
+            "regex_entries_excluded": bypass_regex_excluded,
+            "duplicates_removed": len(bypass_local_rules) + len(bypass_upstream_rules) - len(bypass_japan_rules),
+            "deduplication": "identical rules; first occurrence retained; local rules first",
             "entries": len(bypass_japan_rules),
             "output": "dist/mihomo/bypass-japan.list",
+            "outputs": ["dist/mihomo/bypass-japan.mrs", "dist/egern/bypass-japan.yaml"],
             "behavior": "domain",
         },
         "mcdn_block": {
@@ -732,7 +784,7 @@ def build(sources_path: Path, allowlist_path: Path, mcdn_source_path: Path | Non
         "# Generated rule report",
         "",
         "- Conversion policy: syntax only; no semantic minimization or sorting.",
-        "- Providers preserve source rule order and count, except explicitly deduplicated MCDN rules.",
+        "- Providers preserve source rule order and count, except explicitly merged providers.",
         "- Upstream exact duplicates are preserved; unsupported syntax and required normalization fail the build.",
         "",
         "## Steam China download",
@@ -741,10 +793,13 @@ def build(sources_path: Path, allowlist_path: Path, mcdn_source_path: Path | Non
         "- Bett coverage validation passed.",
         "- Mihomo output preserves allowlist order and count.",
         "",
-        "## Bypass Japan",
+        "## pron",
         "",
-        f"- Reviewed suffix rules: {len(bypass_japan_rules)}.",
-        "- Mihomo list and MRS, plus Egern native YAML, use the same two suffixes.",
+        f"- Local rules: {len(bypass_local_rules)}; category-porn domain rules: {len(bypass_upstream_rules)}.",
+        f"- Regex rules excluded: {bypass_regex_excluded}.",
+        f"- Identical duplicates removed: {len(bypass_local_rules) + len(bypass_upstream_rules) - len(bypass_japan_rules)}.",
+        f"- Shared domain rules: {len(bypass_japan_rules)}.",
+        "- Mihomo list and MRS, plus Egern native YAML, use the same merged non-regex rules.",
         "",
         "## MCDN block",
         "",
@@ -798,6 +853,7 @@ def main() -> int:
     parser.add_argument("--sources", type=Path, default=DEFAULT_SOURCES)
     parser.add_argument("--steam-allowlist", type=Path, default=DEFAULT_STEAM_ALLOWLIST)
     parser.add_argument("--mcdn-source", type=Path, help="Already fetched AdGuard snapshot")
+    parser.add_argument("--bypass-source", type=Path, help="Already fetched category-porn snapshot")
     parser.add_argument(
         "--check",
         action="store_true",
@@ -805,7 +861,7 @@ def main() -> int:
     )
     args = parser.parse_args()
     try:
-        outputs = build(args.sources.resolve(), args.steam_allowlist.resolve(), args.mcdn_source)
+        outputs = build(args.sources.resolve(), args.steam_allowlist.resolve(), args.mcdn_source, args.bypass_source)
         changed, stale = write_outputs(outputs, args.check)
         if args.check and (changed or stale):
             print("Generated files are out of date:", file=sys.stderr)

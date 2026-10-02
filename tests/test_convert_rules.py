@@ -21,6 +21,8 @@ from convert_rules import (  # noqa: E402
     merge_apple_rules,
     parse_sukka_apple_services,
     merge_mcdn_rules,
+    parse_bypass_japan_source,
+    merge_bypass_japan_rules,
     parse_mcdn_adguard,
     parse_domain_text,
     parse_ipcidr_text,
@@ -89,6 +91,34 @@ class ConverterTests(unittest.TestCase):
             DomainRule("suffix", "hanime1.me"),
         ])
         self.assertEqual(render_rules(rules, "mihomo"), source)
+
+    def test_pron_excludes_regex_and_preserves_domain_scope(self) -> None:
+        rules, excluded = parse_bypass_japan_source(
+            "DOMAIN,cdn.example.com\n"
+            "DOMAIN-REGEX,(^|\\.)javdb[0-9]{1,3}\\.com$\n"
+            "DOMAIN-SUFFIX,video.fc2.com\n", "test",
+        )
+        self.assertEqual(excluded, 1)
+        self.assertEqual(rules, [
+            DomainRule("exact", "cdn.example.com"),
+            DomainRule("suffix", "video.fc2.com"),
+        ])
+
+    def test_pron_merge_keeps_local_order_and_distinct_scopes(self) -> None:
+        local = [DomainRule("suffix", "javdb.com"), DomainRule("suffix", "hanime1.me")]
+        upstream = [
+            DomainRule("suffix", "hanime1.me"), DomainRule("suffix", "javdb.com"),
+            DomainRule("exact", "video.fc2.com"), DomainRule("suffix", "video.fc2.com"),
+            DomainRule("suffix", "video.fc2.com"),
+        ]
+        self.assertEqual(merge_bypass_japan_rules(local, upstream), [
+            *local, DomainRule("exact", "video.fc2.com"), DomainRule("suffix", "video.fc2.com"),
+        ])
+
+    def test_pron_rejects_unsupported_or_empty_domain_source(self) -> None:
+        for source in ["DOMAIN-KEYWORD,example\n", "DOMAIN-REGEX,example.*\n", "DOMAIN-SUFFIX,Example.COM\n"]:
+            with self.subTest(source=source), self.assertRaises(ConversionError):
+                parse_bypass_japan_source(source, "test")
 
     def test_mcdn_adguard_merge_removes_only_identical_rules(self) -> None:
         local = parse_domain_text(

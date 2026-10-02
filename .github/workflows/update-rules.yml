@@ -78,7 +78,10 @@ jobs:
           curl --fail --location --silent --show-error \
             "https://raw.githubusercontent.com/xianhongtao/AdGuard-AntiPCDN-Rules/refs/heads/main/adguard.txt" \
             --output "${RUNNER_TEMP}/mcdn-adguard.txt"
-          python src/convert_rules.py --mcdn-source "${RUNNER_TEMP}/mcdn-adguard.txt"
+          curl --fail --location --silent --show-error \
+            "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/classical/category-porn.list" \
+            --output "${RUNNER_TEMP}/category-porn.list"
+          python src/convert_rules.py --mcdn-source "${RUNNER_TEMP}/mcdn-adguard.txt" --bypass-source "${RUNNER_TEMP}/category-porn.list"
           python src/convert_mrs.py
 
       - name: Extend Bett AI MRS
@@ -171,7 +174,7 @@ jobs:
 
       - name: Verify generated files are deterministic
         run: |
-          python src/convert_rules.py --mcdn-source "${RUNNER_TEMP}/mcdn-adguard.txt" --check
+          python src/convert_rules.py --mcdn-source "${RUNNER_TEMP}/mcdn-adguard.txt" --bypass-source "${RUNNER_TEMP}/category-porn.list" --check
           python src/convert_mrs.py --check
           python src/build_ai_mrs.py --check
           python src/convert_v2fly_geolocation_cn.py \
@@ -185,6 +188,37 @@ jobs:
             --apns-commit "${APNS_COMMIT}" \
             --check
           git diff --check
+
+      - name: Verify merged pron MRS and Egern YAML coverage
+        shell: bash
+        run: |
+          mihomo convert-ruleset domain mrs dist/mihomo/bypass-japan.mrs "${RUNNER_TEMP}/pron-decoded.list"
+          python - "${RUNNER_TEMP}/pron-decoded.list" "${RUNNER_TEMP}/category-porn.list" <<'PY'
+          import json, sys
+          from pathlib import Path
+          import yaml
+          sys.path.insert(0, "src")
+          from convert_rules import parse_domain_text, parse_bypass_japan_source, merge_bypass_japan_rules, render_rules, sha256_text
+          from build_egern_rules import parse_domain_list, merge_ordered_rules
+          local = parse_domain_text(Path("config/bypass-japan.list").read_text(encoding="utf-8"), "local pron")
+          upstream_text = Path(sys.argv[2]).read_text(encoding="utf-8-sig")
+          upstream, excluded = parse_bypass_japan_source(upstream_text, "category-porn")
+          expected = merge_bypass_japan_rules(local, upstream)
+          source = Path("dist/mihomo/bypass-japan.list").read_text(encoding="utf-8")
+          assert source == render_rules(expected, "mihomo"), "pron text differs from merged source"
+          assert len(expected) == len(set(expected)), "pron duplicates remain"
+          decoded = parse_domain_text(Path(sys.argv[1]).read_text(encoding="utf-8"), "decoded pron")
+          assert len(decoded) == len(expected) and set(decoded) == set(expected), "pron MRS differs from merged source"
+          native = yaml.safe_load(Path("dist/egern/bypass-japan.yaml").read_text(encoding="utf-8"))
+          assert native == merge_ordered_rules(parse_domain_list(source)), "pron Egern YAML differs from merged source"
+          assert set(native) <= {"domain_set", "domain_suffix_set"}, "Regex or other rule kinds entered pron"
+          report = json.loads(Path("reports/summary.json").read_text(encoding="utf-8"))["bypass_japan"]
+          assert report["entries"] == len(expected)
+          assert report["regex_entries_excluded"] == excluded
+          assert report["duplicates_removed"] == len(local) + len(upstream) - len(expected)
+          assert report["upstream_sha256"] == sha256_text(upstream_text)
+          print(f"Verified pron: {len(expected)} domains, {excluded} regex rules excluded, {report['duplicates_removed']} duplicates removed.")
+          PY
 
       - name: Verify merged MCDN MRS and Egern YAML coverage
         shell: bash
