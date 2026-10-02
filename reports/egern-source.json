@@ -59,7 +59,7 @@
     "report_sha256": "4bfbe513a8cb7ae0458b5efcf8f5f9c2eeb58b51b56ca90203d81470c8b306e7"
   },
   "mihomo_script": {
-    "commit": "c904c91d02d1cd951d74b1e14b87bc4c1b93b5d3",
+    "commit": "02c32086dc1f1339b93ad71f1d8ca9d129daecdf",
     "repository": "frostmage1250/mihomo-script"
   },
   "native_rule_sets": [
