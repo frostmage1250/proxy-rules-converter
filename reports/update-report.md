@@ -13,9 +13,12 @@
 ## pron
 
 - Local rules: 2; category-porn domain rules: 6520.
+- Selected websites: 26; selected domain rules: 76.
+- Unselected domain rules excluded: 6444.
+- Source scope: category-porn only; no external CDN additions; E-Hentai and ExHentai excluded.
 - Regex rules excluded: 140.
 - Identical duplicates removed: 2.
-- Shared domain rules: 6520.
+- Shared domain rules: 76.
 - Mihomo list and MRS, plus Egern native YAML, use the same merged non-regex rules.
 
 ## MCDN block
