@@ -85,7 +85,7 @@
     },
     "bett/geosite/apple": {
       "bytes": 36860,
-      "sha256": "65dbb82bff14bd7f5f4e320a4529f1c8606d0fc96759f13fe7b3397f984029be",
+      "sha256": "f2c777c650804748a63b5b4f4c18be928509cd60b0a4906f83daa85745555695",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple.list"
     },
     "bett/geosite/steam-cn-download-validation": {
