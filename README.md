@@ -68,20 +68,26 @@ merged source. Existing consumer URLs and REJECT routing remain unchanged.
 
 ## pron
 
-The `pron` policy group (formerly 绕过日本) uses the merged
-`dist/mihomo/bypass-japan.mrs` and `dist/egern/bypass-japan.yaml` providers.
-The existing `javdb.com` and `hanime1.me` suffixes in
-`config/bypass-japan.list` are merged with Bett's
-[`category-porn` classical list](https://github.com/appshubcc/bett-rules/blob/meta/geo/geosite/classical/category-porn.list).
-All `DOMAIN-REGEX` rules are explicitly excluded; `DOMAIN` and
-`DOMAIN-SUFFIX` retain their original matching scope.
+The `pron` policy group uses `dist/mihomo/bypass-japan.mrs` and
+`dist/egern/bypass-japan.yaml`. Both are generated from a reviewed subset of
+Bett's [`category-porn` classical list](https://github.com/appshubcc/bett-rules/blob/meta/geo/geosite/classical/category-porn.list).
 
-This is an explicit exception to duplicate preservation: identical rules are
-removed, keeping local rules first and the first occurrence of each upstream
-rule. No suffix minimization or sorting is applied. The workflow fetches one
-source snapshot for generation and deterministic validation; the report records
-its hash, excluded regex count, removed duplicate count, and final rule count.
-Existing provider URLs remain valid.
+`config/pron-sites.json` defines the selected 26 websites, their reviewed
+alternate domains, and independent image/video CDN domains already present in
+`category-porn`. Selection uses exact domain names and preserves each source
+rule's `DOMAIN` or `DOMAIN-SUFFIX` matching scope. It adds no external domains.
+E-Hentai and ExHentai are excluded, as are all `DOMAIN-REGEX` rules. Missing
+selected source domains fail the build rather than silently expanding or
+replacing the selection.
+
+The existing `javdb.com` and `hanime1.me` rules stay first; FC2's
+`video.fc2.com` and `adult.contents.fc2.com` are included. Only identical
+duplicates are removed. No suffix minimization or sorting is applied.
+
+The workflow uses one category-porn snapshot for generation and final
+deterministic validation. Reports record the source hash, selected websites,
+selected and excluded domain counts, excluded regex count, removed duplicates,
+and final rule count. Existing provider URLs and the `pron` group remain valid.
 
 ## V2Fly geolocation-cn
 

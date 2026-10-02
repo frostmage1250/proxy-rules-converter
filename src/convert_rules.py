@@ -25,6 +25,7 @@ DEFAULT_SOURCES = ROOT / "config" / "sources.json"
 DEFAULT_STEAM_ALLOWLIST = ROOT / "config" / "steam-cn-download-allowlist.txt"
 BYPASS_JAPAN_LIST = ROOT / "config" / "bypass-japan.list"
 MCDN_BLOCK_LIST = ROOT / "config" / "mcdn-block.list"
+PRON_SITES = ROOT / "config" / "pron-sites.json"
 USER_AGENT = (
     "rules-converter-action/2.0 "
     "(+https://github.com/frostmage1250/proxy-rules-converter)"
@@ -313,6 +314,39 @@ def parse_bypass_japan_source(text: str, source: str) -> tuple[list[DomainRule],
     if not rules:
         raise ConversionError(f"category-porn has no non-regex domain rules: {source}")
     return rules, excluded_regex
+
+
+def select_pron_rules(
+    rules: Sequence[DomainRule], selection: Mapping[str, object]
+) -> list[DomainRule]:
+    """Select only reviewed domains already present in category-porn."""
+    sites = selection.get("sites")
+    if selection.get("schema_version") != 1 or not isinstance(sites, list) or not sites:
+        raise ConversionError("Invalid pron site selection")
+    allowed: set[str] = set()
+    for site in sites:
+        if not isinstance(site, dict) or not isinstance(site.get("name"), str):
+            raise ConversionError("Invalid pron site record")
+        for field in ("domains", "cdn_domains"):
+            domains = site.get(field)
+            if not isinstance(domains, list) or any(not isinstance(domain, str) for domain in domains):
+                raise ConversionError(f"Invalid pron {field} for {site['name']}")
+            for domain in domains:
+                validate_canonical_domain(domain, str(PRON_SITES), domain)
+                allowed.add(domain)
+    excluded = selection.get("excluded_domains", [])
+    if not isinstance(excluded, list) or any(not isinstance(domain, str) for domain in excluded):
+        raise ConversionError("Invalid pron exclusions")
+    for domain in allowed:
+        if any(domain == root or domain.endswith("." + root) for root in excluded):
+            raise ConversionError(f"Excluded E-Hentai domain entered pron selection: {domain}")
+    missing = sorted(allowed - {rule.value for rule in rules})
+    if missing:
+        raise ConversionError("Selected pron domains disappeared from category-porn: " + ", ".join(missing))
+    selected = [rule for rule in rules if rule.value in allowed]
+    if not selected:
+        raise ConversionError("pron selection contains no category-porn rules")
+    return selected
 
 
 def merge_bypass_japan_rules(
@@ -630,7 +664,11 @@ def build(
             "bytes": len(bypass_text.encode("utf-8")),
         }
     bypass_upstream_rules, bypass_regex_excluded = parse_bypass_japan_source(bypass_text, bypass_url)
-    bypass_japan_rules = merge_bypass_japan_rules(bypass_local_rules, bypass_upstream_rules)
+    bypass_selection = json.loads(PRON_SITES.read_text(encoding="utf-8"))
+    bypass_selected_rules = select_pron_rules(bypass_upstream_rules, bypass_selection)
+    if any(rule not in bypass_selected_rules for rule in bypass_local_rules):
+        raise ConversionError("Local pron rules must remain selected from category-porn")
+    bypass_japan_rules = merge_bypass_japan_rules(bypass_local_rules, bypass_selected_rules)
     outputs["dist/mihomo/bypass-japan.list"] = render_rules(bypass_japan_rules, "mihomo")
 
     mcdn_source = MCDN_BLOCK_LIST.read_text(encoding="utf-8")
@@ -697,7 +735,7 @@ def build(
     outputs["dist/mihomo/claude.yaml"] = render_classical_yaml(claude_rules)
 
     summary = {
-        "schema_version": 12,
+        "schema_version": 13,
         "conversion_policy": {
             "syntax_only": True,
             "source_order_preserved": True,
@@ -722,8 +760,13 @@ def build(
             "upstream_sha256": sha256_text(bypass_text),
             "local_entries": len(bypass_local_rules),
             "upstream_domain_entries": len(bypass_upstream_rules),
+            "selection_source": PRON_SITES.relative_to(ROOT).as_posix(),
+            "source_scope": "category-porn only; no external domains",
+            "selected_sites": [site["name"] for site in bypass_selection["sites"]],
+            "selected_domain_entries": len(bypass_selected_rules),
+            "domain_entries_excluded": len(bypass_upstream_rules) - len(bypass_selected_rules),
             "regex_entries_excluded": bypass_regex_excluded,
-            "duplicates_removed": len(bypass_local_rules) + len(bypass_upstream_rules) - len(bypass_japan_rules),
+            "duplicates_removed": len(bypass_local_rules) + len(bypass_selected_rules) - len(bypass_japan_rules),
             "deduplication": "identical rules; first occurrence retained; local rules first",
             "entries": len(bypass_japan_rules),
             "output": "dist/mihomo/bypass-japan.list",
@@ -796,8 +839,11 @@ def build(
         "## pron",
         "",
         f"- Local rules: {len(bypass_local_rules)}; category-porn domain rules: {len(bypass_upstream_rules)}.",
+        f"- Selected websites: {len(bypass_selection['sites'])}; selected domain rules: {len(bypass_selected_rules)}.",
+        f"- Unselected domain rules excluded: {len(bypass_upstream_rules) - len(bypass_selected_rules)}.",
+        "- Source scope: category-porn only; no external CDN additions; E-Hentai and ExHentai excluded.",
         f"- Regex rules excluded: {bypass_regex_excluded}.",
-        f"- Identical duplicates removed: {len(bypass_local_rules) + len(bypass_upstream_rules) - len(bypass_japan_rules)}.",
+        f"- Identical duplicates removed: {len(bypass_local_rules) + len(bypass_selected_rules) - len(bypass_japan_rules)}.",
         f"- Shared domain rules: {len(bypass_japan_rules)}.",
         "- Mihomo list and MRS, plus Egern native YAML, use the same merged non-regex rules.",
         "",

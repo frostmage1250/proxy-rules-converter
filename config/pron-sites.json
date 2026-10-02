@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "source_scope": "category-porn only; no external domains",
+  "sites": [
+    {
+      "name": "Pornhub",
+      "domains": [
+        "pornhub.com",
+        "pornhub.org",
+        "pornhubpremium.com"
+      ],
+      "cdn_domains": [
+        "phncdn.com",
+        "phprcdn.com"
+      ]
+    },
+    {
+      "name": "Xvideos",
+      "domains": [
+        "xvideos.com",
+        "xvideos-ar.com",
+        "xvideos-india.com",
+        "xv-ru.com"
+      ],
+      "cdn_domains": [
+        "xvideos-cdn.com"
+      ]
+    },
+    {
+      "name": "XNXX",
+      "domains": [
+        "xnxx.com",
+        "xnxx.net",
+        "xnxx.tv",
+        "xnxx3.com"
+      ],
+      "cdn_domains": [
+        "xnxx-cdn.com"
+      ]
+    },
+    {
+      "name": "xHamster",
+      "domains": [
+        "xhamster.com",
+        "xhamster.desi",
+        "xhamster.xxx",
+        "xhamster18.com",
+        "xhamster18.desi",
+        "xhamster19.com",
+        "xhamster2.com",
+        "xhamster3.com",
+        "xhamsterlive.com"
+      ],
+      "cdn_domains": [
+        "xhcdn.com",
+        "xhpingcdn.com",
+        "widgets.stripst.com"
+      ]
+    },
+    {
+      "name": "Eporner",
+      "domains": [
+        "eporner.com"
+      ],
+      "cdn_domains": []
+    },
+    {
+      "name": "SpankBang",
+      "domains": [
+        "spankbang.com",
+        "spankbang.party"
+      ],
+      "cdn_domains": [
+        "sb-cd.com"
+      ]
+    },
+    {
+      "name": "YouPorn",
+      "domains": [
+        "youporn.com",
+        "youporngay.com",
+        "youpornpremium.com",
+        "youpornru.com"
+      ],
+      "cdn_domains": [
+        "ypncdn.com"
+      ]
+    },
+    {
+      "name": "RedTube",
+      "domains": [
+        "redtube.com",
+        "redtube.com.br",
+        "redtubepremium.com"
+      ],
+      "cdn_domains": [
+        "rdtcdn.com"
+      ]
+    },
+    {
+      "name": "ManyVids",
+      "domains": [
+        "manyvids.com"
+      ],
+      "cdn_domains": []
+    },
+    {
+      "name": "Chaturbate",
+      "domains": [
+        "chaturbate.com"
+      ],
+      "cdn_domains": []
+    },
+    {
+      "name": "Stripchat",
+      "domains": [
+        "stripchat.com"
+      ],
+      "cdn_domains": []
+    },
+    {
+      "name": "Brazzers",
+      "domains": [
+        "brazzer.com",
+        "brazzers.com",
+        "brazzers.xxx",
+        "brazzersnetwork.com"
+      ],
+      "cdn_domains": []
+    },
+    {
+      "name": "Reality Kings",
+      "domains": [
+        "realitykings.com",
+        "rk.com"
+      ],
+      "cdn_domains": []
+    },
+    {
+      "name": "BangBros",
+      "domains": [
+        "bangbros.com",
+        "bangbrosnetwork.com"
+      ],
+      "cdn_domains": []
+    },
+    {
+      "name": "Naughty America",
+      "domains": [
+        "naughtyamerica.com"
+      ],
+      "cdn_domains": []
+    },
+    {
+      "name": "MissAV",
+      "domains": [
+        "missav.ai",
+        "missav.com",
+        "missav.live",
+        "missav.uno",
+        "missav.vip",
+        "missav.ws",
+        "missav123.com"
+      ],
+      "cdn_domains": []
+    },
+    {
+      "name": "Jable",
+      "domains": [
+        "jable.tv"
+      ],
+      "cdn_domains": [
+        "cdnlab.live"
+      ]
+    },
+    {
+      "name": "SupJav",
+      "domains": [
+        "supjav.com"
+      ],
+      "cdn_domains": []
+    },
+    {
+      "name": "JavBus",
+      "domains": [
+        "javbus.com",
+        "javbus22.com"
+      ],
+      "cdn_domains": [
+        "javcdn.cc"
+      ]
+    },
+    {
+      "name": "JavDB",
+      "domains": [
+        "javdb.com",
+        "jav.app"
+      ],
+      "cdn_domains": [
+        "jdbimgs.com",
+        "jdbstatic.com"
+      ]
+    },
+    {
+      "name": "Hanime1",
+      "domains": [
+        "hanime1.me"
+      ],
+      "cdn_domains": []
+    },
+    {
+      "name": "nhentai",
+      "domains": [
+        "nhentai.net"
+      ],
+      "cdn_domains": []
+    },
+    {
+      "name": "Hitomi",
+      "domains": [
+        "hitomi.la"
+      ],
+      "cdn_domains": []
+    },
+    {
+      "name": "SexLikeReal",
+      "domains": [
+        "sexlikereal.com"
+      ],
+      "cdn_domains": []
+    },
+    {
+      "name": "VRPorn",
+      "domains": [
+        "vrporn.com"
+      ],
+      "cdn_domains": []
+    },
+    {
+      "name": "FC2",
+      "domains": [
+        "video.fc2.com",
+        "adult.contents.fc2.com"
+      ],
+      "cdn_domains": []
+    }
+  ],
+  "excluded_sites": [
+    "E-Hentai",
+    "ExHentai"
+  ],
+  "excluded_domains": [
+    "e-hentai.org",
+    "exhentai.org"
+  ]
+}

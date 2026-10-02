@@ -23,6 +23,7 @@ from convert_rules import (  # noqa: E402
     merge_mcdn_rules,
     parse_bypass_japan_source,
     merge_bypass_japan_rules,
+    select_pron_rules,
     parse_mcdn_adguard,
     parse_domain_text,
     parse_ipcidr_text,
@@ -103,6 +104,27 @@ class ConverterTests(unittest.TestCase):
             DomainRule("exact", "cdn.example.com"),
             DomainRule("suffix", "video.fc2.com"),
         ])
+
+    def test_pron_selection_keeps_only_reviewed_source_domains(self) -> None:
+        rules = [
+            DomainRule("suffix", "javdb.com"),
+            DomainRule("exact", "widgets.stripst.com"),
+            DomainRule("suffix", "javdb-clone.com"),
+            DomainRule("suffix", "e-hentai.org"),
+            DomainRule("suffix", "collector.javdb.com"),
+        ]
+        selection = {"schema_version": 1, "sites": [
+            {"name": "JavDB", "domains": ["javdb.com"], "cdn_domains": ["widgets.stripst.com"]},
+        ], "excluded_domains": ["e-hentai.org", "exhentai.org"]}
+        self.assertEqual(select_pron_rules(rules, selection), rules[:2])
+
+    def test_pron_selection_rejects_external_or_excluded_domains(self) -> None:
+        for domain in ["outside-source.example", "e-hentai.org", "img.exhentai.org"]:
+            selection = {"schema_version": 1, "sites": [
+                {"name": "test", "domains": [domain], "cdn_domains": []},
+            ], "excluded_domains": ["e-hentai.org", "exhentai.org"]}
+            with self.subTest(domain=domain), self.assertRaises(ConversionError):
+                select_pron_rules([DomainRule("suffix", "javdb.com")], selection)
 
     def test_pron_merge_keeps_local_order_and_distinct_scopes(self) -> None:
         local = [DomainRule("suffix", "javdb.com"), DomainRule("suffix", "hanime1.me")]

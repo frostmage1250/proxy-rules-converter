@@ -198,12 +198,17 @@ jobs:
           from pathlib import Path
           import yaml
           sys.path.insert(0, "src")
-          from convert_rules import parse_domain_text, parse_bypass_japan_source, merge_bypass_japan_rules, render_rules, sha256_text
+          from convert_rules import parse_domain_text, parse_bypass_japan_source, select_pron_rules, merge_bypass_japan_rules, render_rules, sha256_text
           from build_egern_rules import parse_domain_list, merge_ordered_rules
           local = parse_domain_text(Path("config/bypass-japan.list").read_text(encoding="utf-8"), "local pron")
           upstream_text = Path(sys.argv[2]).read_text(encoding="utf-8-sig")
           upstream, excluded = parse_bypass_japan_source(upstream_text, "category-porn")
-          expected = merge_bypass_japan_rules(local, upstream)
+          selection = json.loads(Path("config/pron-sites.json").read_text(encoding="utf-8"))
+          selected = select_pron_rules(upstream, selection)
+          assert all(rule in selected for rule in local), "Local rules must come from selected category-porn entries"
+          expected = merge_bypass_japan_rules(local, selected)
+          assert set(expected) <= set(upstream), "External domains entered pron"
+          assert not any(rule.value == root or rule.value.endswith("." + root) for rule in expected for root in selection["excluded_domains"]), "Excluded E-Hentai rules entered pron"
           source = Path("dist/mihomo/bypass-japan.list").read_text(encoding="utf-8")
           assert source == render_rules(expected, "mihomo"), "pron text differs from merged source"
           assert len(expected) == len(set(expected)), "pron duplicates remain"
@@ -215,7 +220,11 @@ jobs:
           report = json.loads(Path("reports/summary.json").read_text(encoding="utf-8"))["bypass_japan"]
           assert report["entries"] == len(expected)
           assert report["regex_entries_excluded"] == excluded
-          assert report["duplicates_removed"] == len(local) + len(upstream) - len(expected)
+          assert report["duplicates_removed"] == len(local) + len(selected) - len(expected)
+          assert report["selected_domain_entries"] == len(selected)
+          assert report["domain_entries_excluded"] == len(upstream) - len(selected)
+          assert report["selected_sites"] == [site["name"] for site in selection["sites"]]
+          assert report["source_scope"] == "category-porn only; no external domains"
           assert report["upstream_sha256"] == sha256_text(upstream_text)
           print(f"Verified pron: {len(expected)} domains, {excluded} regex rules excluded, {report['duplicates_removed']} duplicates removed.")
           PY
