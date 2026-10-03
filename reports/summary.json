@@ -75,11 +75,11 @@
     "selection_source": "config/pron-sites.json",
     "source_scope": "category-porn only; no external domains",
     "upstream_domain_entries": 6520,
-    "upstream_sha256": "f52f9ac23908f9b099c21decbf2cd81a6e204582e1d606b2c1d50ed27270a426",
+    "upstream_sha256": "491c0f2a1b5de080f88d918a62417e692415e8f582d0ed9fd67067a827ab86aa",
     "upstream_source": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/classical/category-porn.list"
   },
   "claude": {
-    "bett_entries": 8,
+    "bett_entries": 9,
     "bett_precedence": true,
     "bett_source": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/anthropic.list",
     "format": "mihomo-classical-yaml",
@@ -87,7 +87,7 @@
     "includes_ip_cidr": true,
     "includes_ip_cidr6": true,
     "ntp_excluded": true,
-    "output_entries": 23,
+    "output_entries": 24,
     "site_entries": 23,
     "site_source": "https://ip.net.coffee/claude/site.html"
   },
@@ -123,18 +123,18 @@
   "schema_version": 13,
   "sources": {
     "bett/geosite/anthropic": {
-      "bytes": 153,
-      "sha256": "0155b69f43c57d61fa8152ae3372233b0660affd6d2b2c01315290f53a311b7f",
+      "bytes": 166,
+      "sha256": "40158d6d6f218c6055cd4ec8bde727859435cc52d6c47e0473c3d0a841c5bc5c",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/anthropic.list"
     },
     "bett/geosite/apple": {
       "bytes": 36860,
-      "sha256": "f2c777c650804748a63b5b4f4c18be928509cd60b0a4906f83daa85745555695",
+      "sha256": "70c20882128f0283eed2368faef654f4c7f028c34d4d70ff4c3d723a8f78462f",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple.list"
     },
     "bett/geosite/category-porn": {
       "bytes": 191185,
-      "sha256": "f52f9ac23908f9b099c21decbf2cd81a6e204582e1d606b2c1d50ed27270a426",
+      "sha256": "491c0f2a1b5de080f88d918a62417e692415e8f582d0ed9fd67067a827ab86aa",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/classical/category-porn.list"
     },
     "bett/geosite/steam-cn-download-validation": {
