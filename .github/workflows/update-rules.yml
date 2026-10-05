@@ -156,7 +156,11 @@ jobs:
           from pathlib import Path
           model = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
           provider = model["providers"]["mcdn屏蔽"]
-          assert model["rules"][0] == "RULE-SET,mcdn屏蔽,REJECT", "MCDN consumer priority changed"
+          assert model["rules"][:3] == [
+              "RULE-SET,private,Direct",
+              "RULE-SET,private_ip,Direct,no-resolve",
+              "RULE-SET,mcdn屏蔽,REJECT",
+          ], "Private/MCDN consumer priority changed"
           assert model["rules"].count("RULE-SET,mcdn屏蔽,REJECT") == 1, "Duplicate MCDN consumer rule"
           assert provider["format"] == "mrs" and provider["behavior"] == "domain"
           assert provider["url"] == "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/mcdn-block.mrs"
@@ -164,13 +168,41 @@ jobs:
           assert apple["format"] == "mrs" and apple["behavior"] == "domain"
           assert apple["url"] == "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/apple-merged.mrs"
           assert "path-in-bundle" not in apple
-          print("Verified pinned Mihomo consumers of the shared MCDN and Apple merge sets.")
+          appletv = model["providers"]["appletv"]
+          assert appletv["format"] == "mrs" and appletv["behavior"] == "domain"
+          assert appletv["url"] == "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple-tvplus.mrs"
+          assert model["rules"].count("RULE-SET,appletv,媒体") == 1
+          print("Verified pinned Mihomo consumers of MCDN, Apple merge, and full Bett AppleTV.")
           PY
           python src/build_egern_rules.py \
             --model "${RUNNER_TEMP}/mihomo-model.json" \
             --mihomo-commit "${mihomo_commit}" \
             --bett-commit "${bett_commit}" \
             --apns-commit "${apns_commit}"
+
+      - name: Verify AppleTV native publication
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import yaml
+          from urllib.request import urlopen
+          import sys
+          sys.path.insert(0, "src")
+          from build_egern_rules import parse_domain_list, merge_ordered_rules
+          manifest = json.loads(Path("reports/egern-source.json").read_text(encoding="utf-8"))
+          record = next(item for item in manifest["native_rule_sets"] if item["provider"] == "appletv")
+          assert record["source_repository"] == "appshubcc/bett-rules"
+          assert record["source_path"] == "geo/geosite/apple-tvplus.list"
+          assert record["output"] == "dist/egern/appletv.yaml"
+          with urlopen(record["source_url"], timeout=60) as response:
+              source = response.read().decode("utf-8-sig")
+          native = yaml.safe_load(Path(record["output"]).read_text(encoding="utf-8"))
+          assert native == merge_ordered_rules(parse_domain_list(source))
+          assert set(native) <= {"domain_set", "domain_suffix_set"}
+          print(f"Verified AppleTV: {record['entries']} full Bett entries in native Egern YAML.")
+          PY
 
       - name: Verify generated files are deterministic
         run: |
