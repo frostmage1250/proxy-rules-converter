@@ -2,6 +2,7 @@ domain_set:
 - apple.com.akadns.net
 - configuration-lb.ls-apple.com.akadns.net
 - push-apple.com.akadns.net
+- beatselectronicsllc.tt.omtrdc.net
 - apple-tv-plus-press.apple.com
 - hls-amt.itunes.apple.com
 - hls.itunes.apple.com
@@ -9,7 +10,6 @@ domain_set:
 - play-edge.itunes.apple.com
 - tv.applemusic.com
 - uts-api.itunes.apple.com
-- beatselectronicsllc.tt.omtrdc.net
 - www-cdn.icloud.com.akadns.net
 - notary-submissions-prod.s3-accelerate.amazonaws.com
 - notary-submissions-prod.s3.us-west-2.amazonaws.com
@@ -185,6 +185,8 @@ domain_set:
 - musicstatus.music.apple.com
 - play.music.apple.com
 - speedysub.music.apple.com
+- amp-api.podcasts.apple.com
+- podcasts.apple.com
 - certs-lb.apple.com.akadns.net
 - certs.apple.com
 - crl-lb.apple.com.akadns.net
@@ -193,8 +195,6 @@ domain_set:
 - ocsp2.apple.com
 - valid.apple.com
 - valid.origin-apple.com.akadns.net
-- amp-api.podcasts.apple.com
-- podcasts.apple.com
 - amp-api-edge-lb-cn.itunes-apple.com.akadns.net
 - amp-api-edge-lb.itunes-apple.com.akadns.net
 - aod-ssl.itunes.apple.com
@@ -252,8 +252,8 @@ domain_set:
 - cdn-cn4.apple-mapkit.com
 domain_suffix_set:
 - apple
+- drebeatscanada.com
 - drebeatsbydreoutlet.com
-- drebeatsbuy.com
 - apple.be
 - apple.bg
 - apple.bs
@@ -927,7 +927,6 @@ domain_suffix_set:
 - superearsenjoy.com
 - sunglassessale2014.com
 - sulwerphoto.com
-- studiobeatsbydrdre.com
 - 100beatscheap.com
 - 1monsterbeatsbydreus.com
 - 2013beatsbydrdreonline.com
@@ -1003,10 +1002,10 @@ domain_suffix_set:
 - beatsaudiobydre.com
 - beatsaudiobydre.net
 - beatsaudios.net
-- promonsterbeatsbydre.com
-- offerairjordanlebron.com
-- getdrebeatssale.com
-- beatsblackfridayretails.com
+- beatsbeatsmonster.com
+- prostudiobeatscybersale.com
+- officialbeatsbydreshop.com
+- gmnetworks.net
 - beatsboxingdayuksale.com
 - beatsbydrdre-headphones.com
 - beatsbydrdre-officials5.com
@@ -1380,9 +1379,9 @@ domain_suffix_set:
 - drebeats-studio.com
 - drebeatsaustralia-cheap.com
 - drebeatsaustralia-cheap.net
+- drebeatsbuy.com
 - apple.at
 - apple.ae
-- drebeatscanada.com
 - drebeatsdeutschland.net
 - drebeatsforsaleus.com
 - drebeatsheadphones-nz.com
@@ -1412,8 +1411,8 @@ domain_suffix_set:
 - free-sns.com
 - frishoes.com
 - gamebeforethegame.com
-- beatsblackfridaydeals.net
-- gmnetworks.net
+- getdrebeatssale.com
+- beatsblackfridayretails.com
 - gobeatsye.com
 - gobuyonlinestore.net
 - goodsdunk.net
@@ -1550,8 +1549,8 @@ domain_suffix_set:
 - newschristmasshopping.com
 - nflhotsalejerseys.com
 - nicesshop.net
-- beatsbestdeals.com
-- officialbeatsbydreshop.com
+- offerairjordanlebron.com
+- beatsblackfridaydeals.net
 - officialbeatsbydrestore.com
 - officialdrdre.com
 - officialheadphone.com
@@ -1572,8 +1571,8 @@ domain_suffix_set:
 - powerbeats2wireless.com
 - powerbeatsbydrdre.com
 - powerbeatsbydre.com
-- beatsbeatsmonster.com
-- prostudiobeatscybersale.com
+- promonsterbeatsbydre.com
+- beatsbestdeals.com
 - rbsgr.com
 - repsneakermall.com
 - repswing.com
@@ -1601,6 +1600,7 @@ domain_suffix_set:
 - specialtyheadphones.com
 - spiritclubs.com
 - straightouttasomewhere.com
+- studiobeatsbydrdre.com
 - macbookair.co.uk
 - ibook.co.nz
 - applemusic.com.au
@@ -1609,8 +1609,8 @@ domain_suffix_set:
 - mr-apple.com.tw
 - mac.com.au
 - lojaiphone.com.br
+- ilecture.co.nz
 - imac.co.nz
-- ichat.co.in
 - emac.co.in
 - appleshop.co.uk
 - applepremiumresellers.com.au
@@ -1654,7 +1654,7 @@ domain_suffix_set:
 - ipadair.com.es
 - ipadair.com.br
 - ipad.co.kr
-- ilecture.co.nz
+- ichat.co.in
 - ipodrocks.com.au
 - applestore.com.hr
 - apple-watch.com.ru
