@@ -194,6 +194,31 @@ class EgernRuleConverterTests(unittest.TestCase):
         self.assertEqual(result["commit"], "bett-commit")
         self.assertEqual(result["path"], "geo/geosite/google.list")
 
+    def test_cdn_host_changes_keep_pinned_original_rule_source(self):
+        for host in ("fastly.jsdelivr.net", "cdn.jsdelivr.net", "cdn.jsdmirror.com", "future-cdn.example"):
+            with self.subTest(host=host):
+                provider_url = f"https://{host}/gh/appshubcc/bett-rules@meta/geo/geosite/douyin.mrs"
+                result = resolve_provider_source(
+                    {"url": provider_url, "path-in-bundle": "ignored.mrs"},
+                    bett_commit="bett-commit", converter_commit="converter-commit",
+                )
+                self.assertEqual(result["provider_url"], provider_url)
+                self.assertEqual(result["path"], "geo/geosite/douyin.list")
+                self.assertEqual(result["url"], "https://raw.githubusercontent.com/appshubcc/bett-rules/bett-commit/geo/geosite/douyin.list")
+
+    def test_cdn_url_still_requires_supported_original_source(self):
+        for provider_url in (
+            "http://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/douyin.mrs",
+            "https://cdn.jsdmirror.com/gh/unrelated/rules@meta/geo/geosite/douyin.mrs",
+            "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@other/geo/geosite/douyin.mrs",
+            "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/",
+        ):
+            with self.subTest(url=provider_url), self.assertRaises(BuildError):
+                resolve_provider_source(
+                    {"url": provider_url},
+                    bett_commit="bett-commit", converter_commit="converter-commit",
+                )
+
     def test_bypass_japan_native_yaml_follows_canonical_source(self):
         source = (ROOT / "config" / "bypass-japan.list").read_text(encoding="utf-8")
         native = merge_ordered_rules(parse_domain_list(source))

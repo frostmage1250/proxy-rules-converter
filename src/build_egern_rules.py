@@ -74,13 +74,17 @@ def resolve_provider_source(
     repository: str
     ref: str
     published_path: str
-    if parsed.netloc == "fastly.jsdelivr.net":
+    if parsed.scheme != "https" or not parsed.netloc:
+        raise BuildError(f"Provider URL must be HTTPS: {provider_url}")
+    # CDN hosts may follow upstream changes. Resolve the GitHub repository/ref
+    # from the /gh/ path, then read the pinned original source below.
+    if parsed.path.startswith("/gh/"):
         match = re.fullmatch(
             r"/gh/([^/]+/[^/@]+)@([^/]+)/(.+\.mrs)",
             parsed.path,
         )
         if not match:
-            raise BuildError(f"Unsupported jsDelivr provider URL: {provider_url}")
+            raise BuildError(f"Unsupported GitHub CDN provider URL: {provider_url}")
         repository, ref, published_path = match.groups()
     elif parsed.netloc == "raw.githubusercontent.com":
         match = re.fullmatch(
