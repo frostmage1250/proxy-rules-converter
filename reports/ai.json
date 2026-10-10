@@ -4,12 +4,12 @@
     "client-api.arkoselabs.com",
     "openai-api.arkoselabs.com"
   ],
-  "decoded_upstream_rules": 188,
-  "output_rules": 191,
-  "output_sha256": "486a4687f9350948723aa1cbc2bc98a30c29c1ad612827e43665df78f6d26449",
-  "output_text_sha256": "0bb5f933885a84ed68e5e5107ab7987049ba2b7dd2eeba64e6e79cde08127840",
+  "decoded_upstream_rules": 189,
+  "output_rules": 192,
+  "output_sha256": "f616098e998bae95021f93fbdc109780d76528d2057b363179542b5f5a514e2c",
+  "output_text_sha256": "81896b5eb4ebd519e680f2484fe9e9f386a5a9df1d173d1756ba89deafa382b9",
   "schema_version": 1,
   "source": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/category-ai-!cn.mrs",
-  "source_bytes": 2031,
-  "source_sha256": "b02e139ddc7135d63e83bf7eff15cc27a66bd374193f340402a557631390e422"
+  "source_bytes": 2059,
+  "source_sha256": "0061a27e834fae935790595713e7710c85a3072d28f87c0ad1acc59b244b2440"
 }
