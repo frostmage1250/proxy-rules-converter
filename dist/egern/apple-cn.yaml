@@ -37,6 +37,14 @@ domain_suffix_set:
 - xn--czrs0t4phtr3a.cn
 - xn--fiqs8sxootzz.cn
 - xn--ohq11k7pl25iyo8a.cn
+- apple-icloud.cn
+- appleicloud.cn
+- icloud-apple.cn
+- icloud-content.com.cn
+- icloud.cn
+- icloud.com.cn
+- icloud.net.cn
+- icloudapple.cn
 - apple-itunes.cn
 - itunes-apple.cn
 - itunesapple.cn
@@ -53,14 +61,6 @@ domain_suffix_set:
 - beatsbydre.com
 - beatsbydre.com.cn
 - beatsep.cn
-- apple-icloud.cn
-- appleicloud.cn
-- icloud-apple.cn
-- icloud-content.com.cn
-- icloud.cn
-- icloud.com.cn
-- icloud.net.cn
-- icloudapple.cn
 domain_set:
 - amp-api-edge.apps.apple.com
 - amp-api-search-edge.apps.apple.com
@@ -279,8 +279,6 @@ domain_set:
 - cdn-cn2.apple-mapkit.com
 - cdn-cn3.apple-mapkit.com
 - cdn-cn4.apple-mapkit.com
-- amp-api.podcasts.apple.com
-- podcasts.apple.com
 - amp-api-edge.music.apple.com
 - amp-api.music.apple.com
 - js-cdn.music.apple.com
@@ -296,3 +294,5 @@ domain_set:
 - ocsp2.apple.com
 - valid.apple.com
 - valid.origin-apple.com.akadns.net
+- amp-api.podcasts.apple.com
+- podcasts.apple.com
