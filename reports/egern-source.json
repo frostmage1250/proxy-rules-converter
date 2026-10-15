@@ -56,10 +56,10 @@
     "expected_entries": 7814,
     "list_path": "dist/mihomo/geolocation-cn.list",
     "report_path": "reports/geolocation-cn.json",
-    "report_sha256": "9874d6067184b826008b6563272a50ff0f70cd8a323cb97e651479ec307c8ff3"
+    "report_sha256": "c64a2caa7c4e1d8e1955206e39b73717131beab78a064a05fefffa009bab0d58"
   },
   "mihomo_script": {
-    "commit": "1c343f534a5130cd2c4271aa55018c06f48cb763",
+    "commit": "4d3a1029995d54270b4abd499986fb95ca2a6312",
     "repository": "frostmage1250/mihomo-script"
   },
   "native_rule_sets": [
@@ -248,7 +248,7 @@
       "output": "dist/egern/twitch.yaml",
       "output_sha256": "731eb65f6ea60be18d6b96707d90e80dfe73d531f586313d100909702cec1966",
       "provider": "twitch",
-      "provider_url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/twitch.mrs",
+      "provider_url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/twitch.mrs",
       "source_commit": "8705c2e31dd17c99f13f18a731dfca598d20abcd",
       "source_entries": 34,
       "source_generated_in_same_run": false,
