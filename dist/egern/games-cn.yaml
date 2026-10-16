@@ -1,5 +1,12 @@
+domain_set:
+- gog.qtlglb.com
+- alibaba.cdn.steampipe.steamcontent.com
+- lv.queniujq.cn
+- xz.pphimalayanrt.com
 domain_suffix_set:
 - bluearchive-cn.com
+- leagueoflegends.cn
+- lpl.com.cn
 - legendofzelda.cn
 - legendofzelda.com.cn
 - miitomo.com.cn
@@ -12,10 +19,6 @@ domain_suffix_set:
 - mariokart.cn
 - mariokart.com.cn
 - supermariobros.com.cn
-- yostar.cn
-- leagueoflegends.cn
-- lpl.com.cn
-- xboxlive.cn
 - steamserver.net
 - steamusercontent.com
 - csgo.com.cn
@@ -32,8 +35,5 @@ domain_suffix_set:
 - steamstatic.com.8686c.com
 - steamchina.com
 - gstore.val.manlaxy.com
-domain_set:
-- gog.qtlglb.com
-- alibaba.cdn.steampipe.steamcontent.com
-- lv.queniujq.cn
-- xz.pphimalayanrt.com
+- xboxlive.cn
+- yostar.cn
