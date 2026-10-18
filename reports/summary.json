@@ -75,7 +75,7 @@
     "selection_source": "config/pron-sites.json",
     "source_scope": "category-porn only; no external domains",
     "upstream_domain_entries": 6520,
-    "upstream_sha256": "4f81271dbea7b4e02f0fe81326643b2183ef9dc6a0cc580a028b1f1c470f45f3",
+    "upstream_sha256": "438d74420c05a81411a58235a196a7c99d7f0da5311982572b4d2ff3d4f2e152",
     "upstream_source": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/classical/category-porn.list"
   },
   "claude": {
@@ -129,12 +129,12 @@
     },
     "bett/geosite/apple": {
       "bytes": 36860,
-      "sha256": "4281e3f2afc2f46b07e70d6d60b74ac020d89d0d5e94f0423535f7805438657a",
+      "sha256": "cafacce80ddbd1fe36f8e678642eb5b397485a978499f7626565b8304c3af6a2",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple.list"
     },
     "bett/geosite/category-porn": {
       "bytes": 191185,
-      "sha256": "4f81271dbea7b4e02f0fe81326643b2183ef9dc6a0cc580a028b1f1c470f45f3",
+      "sha256": "438d74420c05a81411a58235a196a7c99d7f0da5311982572b4d2ff3d4f2e152",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/classical/category-porn.list"
     },
     "bett/geosite/steam-cn-download-validation": {

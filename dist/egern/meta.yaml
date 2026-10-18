@@ -8,6 +8,8 @@ domain_suffix_set:
 - meta.com
 - metaaivm.com
 - muse.ai
+- threads.com
+- threads.net
 - wa.me
 - whatsapp-plus.info
 - whatsapp-plus.me
@@ -548,8 +550,6 @@ domain_suffix_set:
 - oculusrift.com
 - oculusvr.com
 - powersunitedvr.com
-- threads.com
-- threads.net
 - analytics.facebook.com
 - facebookads.com
 - pixel.facebook.com
