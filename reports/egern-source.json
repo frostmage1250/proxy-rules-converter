@@ -56,10 +56,10 @@
     "expected_entries": 7814,
     "list_path": "dist/mihomo/geolocation-cn.list",
     "report_path": "reports/geolocation-cn.json",
-    "report_sha256": "6e8be2c6c3cc197f28ab1916b9b897d62390b7b76010b1f9db9c7b2320f0ab52"
+    "report_sha256": "83f1d08ae0dd782d856e046446f9a456c88f6120845b7950612c317c562f1648"
   },
   "mihomo_script": {
-    "commit": "ba85549458b3a53b200f30099a707155bcdff8e0",
+    "commit": "174cf25fb6dde4a982cc062681ee040466b7adbe",
     "repository": "frostmage1250/mihomo-script"
   },
   "native_rule_sets": [
