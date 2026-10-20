@@ -53,10 +53,10 @@
     }
   ],
   "geolocation_cn": {
-    "expected_entries": 7814,
+    "expected_entries": 7816,
     "list_path": "dist/mihomo/geolocation-cn.list",
     "report_path": "reports/geolocation-cn.json",
-    "report_sha256": "8ac3bf653e894e7608a353ff702328f90eb4ac50acc41cd8651e4ab5a41bb88b"
+    "report_sha256": "b38dc84aa37d40474e52f47e1ad235c94bd88b3f6289b0a1d8488c841d167937"
   },
   "mihomo_script": {
     "commit": "174cf25fb6dde4a982cc062681ee040466b7adbe",
@@ -657,21 +657,21 @@
     },
     {
       "behavior": "domain",
-      "entries": 7814,
-      "expected_entries": 7814,
-      "native_entries_sha256": "6eba136c33a889c18a95def57558dd7667f56f41dda9fd21cf65c690ad8435c8",
+      "entries": 7816,
+      "expected_entries": 7816,
+      "native_entries_sha256": "6e1e2bf89f2530ca0d8720cfef1a06868fe8c05dc36d1e85debdcb6913887975",
       "output": "dist/egern/geolocation-cn.yaml",
-      "output_sha256": "6e335868652cb2ea86eff0782937e84069a14580a6d6b3f01f6597c0e5d4b008",
+      "output_sha256": "bfc3c205b8645f1608cd8aa3c46347d9a4d3d15d235c3b3a959878508de69fa1",
       "provider": "geolocation-cn",
       "provider_url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/geolocation-cn.mrs",
       "source_commit": null,
-      "source_entries": 7814,
+      "source_entries": 7816,
       "source_generated_in_same_run": true,
-      "source_order_sha256": "6eba136c33a889c18a95def57558dd7667f56f41dda9fd21cf65c690ad8435c8",
+      "source_order_sha256": "6e1e2bf89f2530ca0d8720cfef1a06868fe8c05dc36d1e85debdcb6913887975",
       "source_path": "dist/mihomo/geolocation-cn.list",
       "source_ref": "main",
       "source_repository": "frostmage1250/proxy-rules-converter",
-      "source_sha256": "8bb4d84bc1506d01622a1624656b94c1fd96e4ad2438d966a8f51236ef4f9635",
+      "source_sha256": "978f38b9e92a59ada3add381876cb82b019b82dc115115ae1606fbc826a36ce6",
       "source_url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/geolocation-cn.list"
     },
     {
