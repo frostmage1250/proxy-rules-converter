@@ -22,8 +22,7 @@ from typing import Iterable, Mapping, Sequence
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCES = ROOT / "config" / "sources.json"
-DEFAULT_STEAM_ALLOWLIST = ROOT / "config" / "steam-cn-download-allowlist.txt"
-BYPASS_JAPAN_LIST = ROOT / "config" / "bypass-japan.list"
+PORN_LIST = ROOT / "config" / "porn.list"
 MCDN_BLOCK_LIST = ROOT / "config" / "mcdn-block.list"
 PRON_SITES = ROOT / "config" / "pron-sites.json"
 USER_AGENT = (
@@ -296,7 +295,7 @@ def merge_mcdn_rules(
     return list(dict.fromkeys([*local_rules, *upstream_rules]))
 
 
-def parse_bypass_japan_source(text: str, source: str) -> tuple[list[DomainRule], int]:
+def parse_porn_source(text: str, source: str) -> tuple[list[DomainRule], int]:
     """Keep category-porn domain rules and explicitly exclude every regex."""
     rules: list[DomainRule] = []
     excluded_regex = 0
@@ -349,7 +348,7 @@ def select_pron_rules(
     return selected
 
 
-def merge_bypass_japan_rules(
+def merge_porn_rules(
     local: Sequence[DomainRule], upstream: Sequence[DomainRule]
 ) -> list[DomainRule]:
     """Remove identical rules, keeping local rules first and source order."""
@@ -528,15 +527,6 @@ def merge_apple_rules(
     return merged
 
 
-def load_allowlist(path: Path) -> list[str]:
-    entries = rule_lines(path.read_text(encoding="utf-8"), str(path))
-    for entry in entries:
-        validate_canonical_domain(entry, str(path), entry)
-    if duplicate_counts(entries):
-        raise ConversionError(f"Local reviewed allowlist contains duplicates: {path}")
-    return entries
-
-
 def fetch_text(url: str) -> str:
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     try:
@@ -605,8 +595,8 @@ def managed_files() -> set[str]:
 
 
 def build(
-    sources_path: Path, allowlist_path: Path,
-    mcdn_source_path: Path | None = None, bypass_source_path: Path | None = None,
+    sources_path: Path,
+    mcdn_source_path: Path | None = None, porn_source_path: Path | None = None,
 ) -> Mapping[str, str]:
     config = json.loads(sources_path.read_text(encoding="utf-8"))
     outputs: dict[str, str] = {}
@@ -622,54 +612,32 @@ def build(
         return text
 
     bett = config["bett"]
-    game_url = join_url(
-        bett["geosite_base"], bett["steam_cn_download_validation"]
+    porn_rules = parse_domain_text(
+        PORN_LIST.read_text(encoding="utf-8"), str(PORN_LIST)
     )
-    game_text = download("bett/geosite/steam-cn-download-validation", game_url)
-    game_rules = parse_domain_text(game_text, game_url)
-    game_duplicates = duplicate_counts([rule.mihomo() for rule in game_rules])
-    reviewed = load_allowlist(allowlist_path)
-    missing = [
-        domain
-        for domain in reviewed
-        if not any(rule_covers_domain(rule, domain) for rule in game_rules)
-    ]
-    if missing:
-        raise ConversionError(
-            "Reviewed Steam-China rules disappeared from Bett: "
-            + ", ".join(missing)
-        )
-    steam_rules = [DomainRule("exact", domain) for domain in reviewed]
-    outputs["dist/mihomo/steam-cn-download.list"] = render_rules(
-        steam_rules, "mihomo"
-    )
-
-    bypass_japan_rules = parse_domain_text(
-        BYPASS_JAPAN_LIST.read_text(encoding="utf-8"), str(BYPASS_JAPAN_LIST)
-    )
-    if bypass_japan_rules != [
+    if porn_rules != [
         DomainRule("suffix", "javdb.com"),
         DomainRule("suffix", "hanime1.me"),
     ]:
-        raise ConversionError("Bypass Japan source must contain the two reviewed suffixes in order")
-    bypass_local_rules = bypass_japan_rules
-    bypass_url = config["bypass_japan"]["url"]
-    if bypass_source_path is None:
-        bypass_text = download("bett/geosite/category-porn", bypass_url)
+        raise ConversionError("Porn source must contain the two reviewed suffixes in order")
+    porn_local_rules = porn_rules
+    porn_url = config["porn"]["url"]
+    if porn_source_path is None:
+        porn_text = download("bett/geosite/category-porn", porn_url)
     else:
-        bypass_text = bypass_source_path.read_text(encoding="utf-8-sig")
+        porn_text = porn_source_path.read_text(encoding="utf-8-sig")
         report_sources["bett/geosite/category-porn"] = {
-            "url": bypass_url,
-            "sha256": sha256_text(bypass_text),
-            "bytes": len(bypass_text.encode("utf-8")),
+            "url": porn_url,
+            "sha256": sha256_text(porn_text),
+            "bytes": len(porn_text.encode("utf-8")),
         }
-    bypass_upstream_rules, bypass_regex_excluded = parse_bypass_japan_source(bypass_text, bypass_url)
-    bypass_selection = json.loads(PRON_SITES.read_text(encoding="utf-8"))
-    bypass_selected_rules = select_pron_rules(bypass_upstream_rules, bypass_selection)
-    if any(rule not in bypass_selected_rules for rule in bypass_local_rules):
+    porn_upstream_rules, porn_regex_excluded = parse_porn_source(porn_text, porn_url)
+    porn_selection = json.loads(PRON_SITES.read_text(encoding="utf-8"))
+    porn_selected_rules = select_pron_rules(porn_upstream_rules, porn_selection)
+    if any(rule not in porn_selected_rules for rule in porn_local_rules):
         raise ConversionError("Local pron rules must remain selected from category-porn")
-    bypass_japan_rules = merge_bypass_japan_rules(bypass_local_rules, bypass_selected_rules)
-    outputs["dist/mihomo/bypass-japan.list"] = render_rules(bypass_japan_rules, "mihomo")
+    porn_rules = merge_porn_rules(porn_local_rules, porn_selected_rules)
+    outputs["dist/mihomo/porn.list"] = render_rules(porn_rules, "mihomo")
 
     mcdn_source = MCDN_BLOCK_LIST.read_text(encoding="utf-8")
     mcdn_rules = parse_domain_text(mcdn_source, str(MCDN_BLOCK_LIST))
@@ -710,18 +678,6 @@ def build(
     apple_added = apple_merged[len(apple_primary):]
     outputs["dist/mihomo/apple-merged.list"] = render_rules(apple_merged, "mihomo")
 
-    reviewed_set = set(reviewed)
-    steam_named_not_reviewed = [
-        rule.mihomo()
-        for rule in game_rules
-        if "steam" in rule.value and rule.value not in reviewed_set
-    ]
-    outputs["reports/steam-named-not-reviewed.txt"] = (
-        "\n".join(steam_named_not_reviewed) + "\n"
-        if steam_named_not_reviewed
-        else ""
-    )
-
     anthropic_url = join_url(bett["geosite_base"], bett["anthropic"])
     anthropic_text = download("bett/geosite/anthropic", anthropic_url)
     anthropic_rules = parse_domain_text(anthropic_text, anthropic_url)
@@ -745,32 +701,24 @@ def build(
             "unsupported_or_noncanonical_rules": "fail",
         },
         "sources": report_sources,
-        "steam_cn_download": {
-            "canonical_source": allowlist_path.relative_to(ROOT).as_posix(),
-            "validation_source": game_url,
-            "source_entries": len(reviewed),
-            "output_entries": len(steam_rules),
-            "order_preserved": True,
-            "validation_source_exact_duplicates": game_duplicates,
-        },
-        "bypass_japan": {
+        "porn": {
             "policy_group": "pron",
-            "canonical_source": BYPASS_JAPAN_LIST.relative_to(ROOT).as_posix(),
-            "upstream_source": bypass_url,
-            "upstream_sha256": sha256_text(bypass_text),
-            "local_entries": len(bypass_local_rules),
-            "upstream_domain_entries": len(bypass_upstream_rules),
+            "canonical_source": PORN_LIST.relative_to(ROOT).as_posix(),
+            "upstream_source": porn_url,
+            "upstream_sha256": sha256_text(porn_text),
+            "local_entries": len(porn_local_rules),
+            "upstream_domain_entries": len(porn_upstream_rules),
             "selection_source": PRON_SITES.relative_to(ROOT).as_posix(),
             "source_scope": "category-porn only; no external domains",
-            "selected_sites": [site["name"] for site in bypass_selection["sites"]],
-            "selected_domain_entries": len(bypass_selected_rules),
-            "domain_entries_excluded": len(bypass_upstream_rules) - len(bypass_selected_rules),
-            "regex_entries_excluded": bypass_regex_excluded,
-            "duplicates_removed": len(bypass_local_rules) + len(bypass_selected_rules) - len(bypass_japan_rules),
+            "selected_sites": [site["name"] for site in porn_selection["sites"]],
+            "selected_domain_entries": len(porn_selected_rules),
+            "domain_entries_excluded": len(porn_upstream_rules) - len(porn_selected_rules),
+            "regex_entries_excluded": porn_regex_excluded,
+            "duplicates_removed": len(porn_local_rules) + len(porn_selected_rules) - len(porn_rules),
             "deduplication": "identical rules; first occurrence retained; local rules first",
-            "entries": len(bypass_japan_rules),
-            "output": "dist/mihomo/bypass-japan.list",
-            "outputs": ["dist/mihomo/bypass-japan.mrs", "dist/egern/bypass-japan.yaml"],
+            "entries": len(porn_rules),
+            "output": "dist/mihomo/porn.list",
+            "outputs": ["dist/mihomo/porn.mrs", "dist/egern/porn.yaml"],
             "behavior": "domain",
         },
         "mcdn_block": {
@@ -830,21 +778,15 @@ def build(
         "- Providers preserve source rule order and count, except explicitly merged providers.",
         "- Upstream exact duplicates are preserved; unsupported syntax and required normalization fail the build.",
         "",
-        "## Steam China download",
-        "",
-        f"- Canonical allowlist rules: {len(reviewed)}.",
-        "- Bett coverage validation passed.",
-        "- Mihomo output preserves allowlist order and count.",
-        "",
         "## pron",
         "",
-        f"- Local rules: {len(bypass_local_rules)}; category-porn domain rules: {len(bypass_upstream_rules)}.",
-        f"- Selected websites: {len(bypass_selection['sites'])}; selected domain rules: {len(bypass_selected_rules)}.",
-        f"- Unselected domain rules excluded: {len(bypass_upstream_rules) - len(bypass_selected_rules)}.",
+        f"- Local rules: {len(porn_local_rules)}; category-porn domain rules: {len(porn_upstream_rules)}.",
+        f"- Selected websites: {len(porn_selection['sites'])}; selected domain rules: {len(porn_selected_rules)}.",
+        f"- Unselected domain rules excluded: {len(porn_upstream_rules) - len(porn_selected_rules)}.",
         "- Source scope: category-porn only; no external CDN additions; E-Hentai and ExHentai excluded.",
-        f"- Regex rules excluded: {bypass_regex_excluded}.",
-        f"- Identical duplicates removed: {len(bypass_local_rules) + len(bypass_selected_rules) - len(bypass_japan_rules)}.",
-        f"- Shared domain rules: {len(bypass_japan_rules)}.",
+        f"- Regex rules excluded: {porn_regex_excluded}.",
+        f"- Identical duplicates removed: {len(porn_local_rules) + len(porn_selected_rules) - len(porn_rules)}.",
+        f"- Shared domain rules: {len(porn_rules)}.",
         "- Mihomo list and MRS, plus Egern native YAML, use the same merged non-regex rules.",
         "",
         "## MCDN block",
@@ -897,9 +839,8 @@ def write_outputs(outputs: Mapping[str, str], check: bool) -> tuple[list[str], l
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sources", type=Path, default=DEFAULT_SOURCES)
-    parser.add_argument("--steam-allowlist", type=Path, default=DEFAULT_STEAM_ALLOWLIST)
     parser.add_argument("--mcdn-source", type=Path, help="Already fetched AdGuard snapshot")
-    parser.add_argument("--bypass-source", type=Path, help="Already fetched category-porn snapshot")
+    parser.add_argument("--porn-source", type=Path, help="Already fetched category-porn snapshot")
     parser.add_argument(
         "--check",
         action="store_true",
@@ -907,7 +848,7 @@ def main() -> int:
     )
     args = parser.parse_args()
     try:
-        outputs = build(args.sources.resolve(), args.steam_allowlist.resolve(), args.mcdn_source, args.bypass_source)
+        outputs = build(args.sources.resolve(), args.mcdn_source, args.porn_source)
         changed, stale = write_outputs(outputs, args.check)
         if args.check and (changed or stale):
             print("Generated files are out of date:", file=sys.stderr)

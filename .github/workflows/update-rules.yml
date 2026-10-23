@@ -81,7 +81,7 @@ jobs:
           curl --fail --location --silent --show-error \
             "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/classical/category-porn.list" \
             --output "${RUNNER_TEMP}/category-porn.list"
-          python src/convert_rules.py --mcdn-source "${RUNNER_TEMP}/mcdn-adguard.txt" --bypass-source "${RUNNER_TEMP}/category-porn.list"
+          python src/convert_rules.py --mcdn-source "${RUNNER_TEMP}/mcdn-adguard.txt" --porn-source "${RUNNER_TEMP}/category-porn.list"
           python src/convert_mrs.py
 
       - name: Extend Bett AI MRS
@@ -208,32 +208,32 @@ jobs:
       - name: Verify merged pron MRS and Egern YAML coverage
         shell: bash
         run: |
-          mihomo convert-ruleset domain mrs dist/mihomo/bypass-japan.mrs "${RUNNER_TEMP}/pron-decoded.list"
+          mihomo convert-ruleset domain mrs dist/mihomo/porn.mrs "${RUNNER_TEMP}/pron-decoded.list"
           python - "${RUNNER_TEMP}/pron-decoded.list" "${RUNNER_TEMP}/category-porn.list" <<'PY'
           import json, sys
           from pathlib import Path
           import yaml
           sys.path.insert(0, "src")
-          from convert_rules import parse_domain_text, parse_bypass_japan_source, select_pron_rules, merge_bypass_japan_rules, render_rules, sha256_text
+          from convert_rules import parse_domain_text, parse_porn_source, select_pron_rules, merge_porn_rules, render_rules, sha256_text
           from build_egern_rules import parse_domain_list, merge_ordered_rules
-          local = parse_domain_text(Path("config/bypass-japan.list").read_text(encoding="utf-8"), "local pron")
+          local = parse_domain_text(Path("config/porn.list").read_text(encoding="utf-8"), "local pron")
           upstream_text = Path(sys.argv[2]).read_text(encoding="utf-8-sig")
-          upstream, excluded = parse_bypass_japan_source(upstream_text, "category-porn")
+          upstream, excluded = parse_porn_source(upstream_text, "category-porn")
           selection = json.loads(Path("config/pron-sites.json").read_text(encoding="utf-8"))
           selected = select_pron_rules(upstream, selection)
           assert all(rule in selected for rule in local), "Local rules must come from selected category-porn entries"
-          expected = merge_bypass_japan_rules(local, selected)
+          expected = merge_porn_rules(local, selected)
           assert set(expected) <= set(upstream), "External domains entered pron"
           assert not any(rule.value == root or rule.value.endswith("." + root) for rule in expected for root in selection["excluded_domains"]), "Excluded E-Hentai rules entered pron"
-          source = Path("dist/mihomo/bypass-japan.list").read_text(encoding="utf-8")
+          source = Path("dist/mihomo/porn.list").read_text(encoding="utf-8")
           assert source == render_rules(expected, "mihomo"), "pron text differs from merged source"
           assert len(expected) == len(set(expected)), "pron duplicates remain"
           decoded = parse_domain_text(Path(sys.argv[1]).read_text(encoding="utf-8"), "decoded pron")
           assert len(decoded) == len(expected) and set(decoded) == set(expected), "pron MRS differs from merged source"
-          native = yaml.safe_load(Path("dist/egern/bypass-japan.yaml").read_text(encoding="utf-8"))
+          native = yaml.safe_load(Path("dist/egern/porn.yaml").read_text(encoding="utf-8"))
           assert native == merge_ordered_rules(parse_domain_list(source)), "pron Egern YAML differs from merged source"
           assert set(native) <= {"domain_set", "domain_suffix_set"}, "Regex or other rule kinds entered pron"
-          report = json.loads(Path("reports/summary.json").read_text(encoding="utf-8"))["bypass_japan"]
+          report = json.loads(Path("reports/summary.json").read_text(encoding="utf-8"))["porn"]
           assert report["entries"] == len(expected)
           assert report["regex_entries_excluded"] == excluded
           assert report["duplicates_removed"] == len(local) + len(selected) - len(expected)
@@ -338,6 +338,15 @@ jobs:
           git commit -m "chore: update generated rules"
           git push
 
+      - name: Verify renamed and retired provider artifacts
+        run: |
+          test -s dist/mihomo/porn.list
+          test -s dist/mihomo/porn.mrs
+          test -s dist/egern/porn.yaml
+          for retired in config/steam-cn-download-allowlist.txt dist/mihomo/steam-cn-download.list dist/mihomo/steam-cn-download.mrs reports/steam-named-not-reviewed.txt config/bypass-japan.list dist/mihomo/bypass-japan.list dist/mihomo/bypass-japan.mrs dist/egern/bypass-japan.yaml; do
+            test ! -e "${retired}"
+          done
+
       - name: Verify published Egern rule files
         shell: bash
         run: |
@@ -361,7 +370,7 @@ jobs:
           published_commit="$(git rev-parse HEAD)"
           remote_commit="$(git ls-remote origin refs/heads/main | cut -f1)"
           test "${published_commit}" = "${remote_commit}"
-          for file in dist/mihomo/apple-merged.list dist/mihomo/apple-merged.mrs dist/mihomo/bypass-japan.list dist/mihomo/bypass-japan.mrs dist/mihomo/mcdn-block.list dist/mihomo/mcdn-block.mrs; do
+          for file in dist/mihomo/apple-merged.list dist/mihomo/apple-merged.mrs dist/mihomo/porn.list dist/mihomo/porn.mrs dist/mihomo/mcdn-block.list dist/mihomo/mcdn-block.mrs; do
             test -s "${file}"
             remote_file="${RUNNER_TEMP}/published-${file//\//-}"
             curl --fail --location --silent --show-error \

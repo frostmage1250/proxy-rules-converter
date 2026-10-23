@@ -11,7 +11,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from convert_rules import (  # noqa: E402
     CLAUDE_SITE_REQUIRED_TYPED_RULES,
-    BYPASS_JAPAN_LIST,
+    PORN_LIST,
     ConversionError,
     DomainRule,
     duplicate_counts,
@@ -21,8 +21,8 @@ from convert_rules import (  # noqa: E402
     merge_apple_rules,
     parse_sukka_apple_services,
     merge_mcdn_rules,
-    parse_bypass_japan_source,
-    merge_bypass_japan_rules,
+    parse_porn_source,
+    merge_porn_rules,
     select_pron_rules,
     parse_mcdn_adguard,
     parse_domain_text,
@@ -84,9 +84,9 @@ class ConverterTests(unittest.TestCase):
             "z.example\n+.example.com\na.example\n+.example.com\n",
         )
 
-    def test_bypass_japan_source_has_exact_suffixes_in_order(self) -> None:
-        source = BYPASS_JAPAN_LIST.read_text(encoding="utf-8")
-        rules = parse_domain_text(source, str(BYPASS_JAPAN_LIST))
+    def test_porn_source_has_exact_suffixes_in_order(self) -> None:
+        source = PORN_LIST.read_text(encoding="utf-8")
+        rules = parse_domain_text(source, str(PORN_LIST))
         self.assertEqual(rules, [
             DomainRule("suffix", "javdb.com"),
             DomainRule("suffix", "hanime1.me"),
@@ -94,7 +94,7 @@ class ConverterTests(unittest.TestCase):
         self.assertEqual(render_rules(rules, "mihomo"), source)
 
     def test_pron_excludes_regex_and_preserves_domain_scope(self) -> None:
-        rules, excluded = parse_bypass_japan_source(
+        rules, excluded = parse_porn_source(
             "DOMAIN,cdn.example.com\n"
             "DOMAIN-REGEX,(^|\\.)javdb[0-9]{1,3}\\.com$\n"
             "DOMAIN-SUFFIX,video.fc2.com\n", "test",
@@ -133,14 +133,14 @@ class ConverterTests(unittest.TestCase):
             DomainRule("exact", "video.fc2.com"), DomainRule("suffix", "video.fc2.com"),
             DomainRule("suffix", "video.fc2.com"),
         ]
-        self.assertEqual(merge_bypass_japan_rules(local, upstream), [
+        self.assertEqual(merge_porn_rules(local, upstream), [
             *local, DomainRule("exact", "video.fc2.com"), DomainRule("suffix", "video.fc2.com"),
         ])
 
     def test_pron_rejects_unsupported_or_empty_domain_source(self) -> None:
         for source in ["DOMAIN-KEYWORD,example\n", "DOMAIN-REGEX,example.*\n", "DOMAIN-SUFFIX,Example.COM\n"]:
             with self.subTest(source=source), self.assertRaises(ConversionError):
-                parse_bypass_japan_source(source, "test")
+                parse_porn_source(source, "test")
 
     def test_mcdn_adguard_merge_removes_only_identical_rules(self) -> None:
         local = parse_domain_text(
@@ -205,7 +205,7 @@ class ConverterTests(unittest.TestCase):
         )
         self.assertEqual(
             set(config["bett"]),
-            {"geosite_base", "steam_cn_download_validation", "anthropic", "ai_mrs", "apple"},
+            {"geosite_base", "anthropic", "ai_mrs", "apple"},
         )
 
 
@@ -264,7 +264,7 @@ class ConverterTests(unittest.TestCase):
         ):
             self.assertTrue(is_externally_managed_output(path))
         self.assertFalse(
-            is_externally_managed_output(ROOT / "dist" / "mihomo" / "steam-cn-download.list")
+            is_externally_managed_output(ROOT / "dist" / "mihomo" / "porn.list")
         )
 
     def test_suffix_coverage(self) -> None:

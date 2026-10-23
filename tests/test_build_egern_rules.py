@@ -219,24 +219,24 @@ class EgernRuleConverterTests(unittest.TestCase):
                     bett_commit="bett-commit", converter_commit="converter-commit",
                 )
 
-    def test_bypass_japan_native_yaml_follows_canonical_source(self):
-        source = (ROOT / "config" / "bypass-japan.list").read_text(encoding="utf-8")
+    def test_porn_native_yaml_follows_canonical_source(self):
+        source = (ROOT / "config" / "porn.list").read_text(encoding="utf-8")
         native = merge_ordered_rules(parse_domain_list(source))
         self.assertEqual(native, {"domain_suffix_set": ["javdb.com", "hanime1.me"]})
         self.assertEqual(source_rule_count(source), output_rule_count([native]))
 
-    def test_converter_bypass_japan_mrs_uses_same_run_text_projection(self):
+    def test_converter_porn_mrs_uses_same_run_text_projection(self):
         provider = {
             "url": (
                 "https://raw.githubusercontent.com/frostmage1250/"
-                "proxy-rules-converter/main/dist/mihomo/bypass-japan.mrs"
+                "proxy-rules-converter/main/dist/mihomo/porn.mrs"
             )
         }
         result = resolve_provider_source(
             provider, bett_commit="bett-commit", converter_commit="main"
         )
         self.assertEqual(result["repository"], "frostmage1250/proxy-rules-converter")
-        self.assertEqual(result["path"], "dist/mihomo/bypass-japan.list")
+        self.assertEqual(result["path"], "dist/mihomo/porn.list")
 
     def test_mcdn_provider_keeps_reviewed_suffix_scope_across_formats(self):
         provider = {

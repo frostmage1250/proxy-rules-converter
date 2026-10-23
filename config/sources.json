@@ -1,13 +1,9 @@
 {
   "bett": {
     "geosite_base": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite",
-    "steam_cn_download_validation": "category-game-platforms-download@cn.list",
     "anthropic": "anthropic.list",
     "ai_mrs": "category-ai-!cn.mrs",
     "apple": "apple.list"
-  },
-  "bypass_japan": {
-    "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/classical/category-porn.list"
   },
   "claude_site": {
     "url": "https://ip.net.coffee/claude/site.html"
@@ -31,5 +27,8 @@
     "excluded_domains": [
       "7h15.ru1353t.1s.m4d3.by.5ukk4w.skk.moe"
     ]
+  },
+  "porn": {
+    "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/classical/category-porn.list"
   }
 }

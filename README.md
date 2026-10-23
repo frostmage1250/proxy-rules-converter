@@ -1,8 +1,7 @@
 # Mihomo rule converter
 
-This repository publishes reviewed Steam China download rules, an extended
-Bett AI MRS provider, a merged `Claude` classical provider, and a
-`geolocation-cn` set built from V2Fly domain data for Mihomo.
+This repository publishes the customized rule providers consumed by Mihomo and Egern,
+including AI, Claude, Apple merge, porn, MCDN, and V2Fly geolocation-cn.
 
 ## Conversion policy
 
@@ -11,15 +10,6 @@ Bett AI MRS provider, a merged `Claude` classical provider, and a
 - Preserve upstream exact duplicates in their original positions.
 - Stop the build when an unsupported rule, required normalization, or source
   disappearance is detected.
-
-## Steam China download
-
-`config/steam-cn-download-allowlist.txt` is the canonical reviewed 11-rule source.
-Every build verifies that Bett's
-`category-game-platforms-download@cn.list` still covers all 11 entries, then emits
-the allowlist unchanged and in its original order as a Mihomo text provider.
-The official Mihomo converter compiles its MRS file.
-
 
 ## AI
 
@@ -68,8 +58,8 @@ merged source. Existing consumer URLs and REJECT routing remain unchanged.
 
 ## pron
 
-The `pron` policy group uses `dist/mihomo/bypass-japan.mrs` and
-`dist/egern/bypass-japan.yaml`. Both are generated from a reviewed subset of
+The `pron` policy group uses `dist/mihomo/porn.mrs` and
+`dist/egern/porn.yaml`. Both are generated from a reviewed subset of
 Bett's [`category-porn` classical list](https://github.com/appshubcc/bett-rules/blob/meta/geo/geosite/classical/category-porn.list).
 
 `config/pron-sites.json` defines the selected 26 websites, their reviewed
@@ -110,18 +100,23 @@ V2Fly export for identical order and count.
 dist/mihomo/
 ├─ ai.list
 ├─ ai.mrs
+├─ apple-merged.list
+├─ apple-merged.mrs
 ├─ claude.yaml
-├─ mcdn-block.list
-├─ mcdn-block.mrs
 ├─ geolocation-cn.list
 ├─ geolocation-cn.mrs
-├─ steam-cn-download.list
-└─ steam-cn-download.mrs
+├─ mcdn-block.list
+├─ mcdn-block.mrs
+├─ porn.list
+└─ porn.mrs
 ```
 
 `reports/geolocation-cn.json` records the V2Fly source, converter commit,
 entry counts, sentinels, and output hashes. `reports/summary.json` and
-`reports/update-report.md` cover the Steam allowlist validation.
+`reports/update-report.md` describe the current customized provider sources.
+
+The unused 11-rule Steam download provider and its allowlist/reporting pipeline
+have been retired. Consumers continue using Bett `steam@cn` through `steam_cn`.
 
 ## Automation
 

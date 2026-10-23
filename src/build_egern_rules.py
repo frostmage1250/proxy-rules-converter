@@ -113,7 +113,7 @@ def resolve_provider_source(
             "dist/mihomo/geolocation-cn.mrs": CONVERTER_GEOLOCATION_LIST_PATH,
             "dist/mihomo/ai.mrs": "dist/mihomo/ai.list",
             "dist/mihomo/apple-merged.mrs": "dist/mihomo/apple-merged.list",
-            "dist/mihomo/bypass-japan.mrs": "dist/mihomo/bypass-japan.list",
+            "dist/mihomo/porn.mrs": "dist/mihomo/porn.list",
             "dist/mihomo/mcdn-block.mrs": "dist/mihomo/mcdn-block.list",
             CONVERTER_CLAUDE_RULE_PATH: CONVERTER_CLAUDE_RULE_PATH,
         }
