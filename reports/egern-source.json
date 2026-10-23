@@ -59,7 +59,7 @@
     "report_sha256": "27eb564bd1b542099076e3c8c91fc879043cc328a074df65c9c3e2088ad12866"
   },
   "mihomo_script": {
-    "commit": "e2df3bbb433b9277d51f114f553a24bd31cd5dff",
+    "commit": "6c7b8602a94e13dc4d491d442b3789496fbcbaf4",
     "repository": "frostmage1250/mihomo-script"
   },
   "native_rule_sets": [
@@ -533,19 +533,19 @@
       "behavior": "domain",
       "entries": 76,
       "native_entries_sha256": "98b307de468ff0d75d00b0280b691f110469e94f54f67926263bd902a52b22ad",
-      "output": "dist/egern/bypass-japan.yaml",
+      "output": "dist/egern/porn.yaml",
       "output_sha256": "69d06513dba665fb44d84b2c1d08bf1d692cb7808a030209f9b19ce7400bcb84",
-      "provider": "bypass_japan",
-      "provider_url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/bypass-japan.mrs",
+      "provider": "porn",
+      "provider_url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/porn.mrs",
       "source_commit": null,
       "source_entries": 76,
       "source_generated_in_same_run": true,
       "source_order_sha256": "116f54460303e087a1092862cf7b321b62c1af4c6a066840e27fb26313b9dafc",
-      "source_path": "dist/mihomo/bypass-japan.list",
+      "source_path": "dist/mihomo/porn.list",
       "source_ref": "main",
       "source_repository": "frostmage1250/proxy-rules-converter",
       "source_sha256": "1359da5c1c86ec09a040035f4ef2e87e2669358edadcda3635ea735ecc29bed9",
-      "source_url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/bypass-japan.list"
+      "source_url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/porn.list"
     },
     {
       "behavior": "domain",
