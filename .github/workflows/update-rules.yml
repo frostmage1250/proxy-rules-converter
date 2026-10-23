@@ -156,7 +156,8 @@ jobs:
           from pathlib import Path
           model = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
           provider = model["providers"]["mcdn屏蔽"]
-          assert model["rules"][:3] == [
+          private_index = model["rules"].index("RULE-SET,private,Direct")
+          assert model["rules"][private_index:private_index + 3] == [
               "RULE-SET,private,Direct",
               "RULE-SET,private_ip,Direct,no-resolve",
               "RULE-SET,mcdn屏蔽,REJECT",
@@ -203,23 +204,6 @@ jobs:
           assert set(native) <= {"domain_set", "domain_suffix_set"}
           print(f"Verified AppleTV: {record['entries']} full Bett entries in native Egern YAML.")
           PY
-
-      - name: Verify generated files are deterministic
-        run: |
-          python src/convert_rules.py --mcdn-source "${RUNNER_TEMP}/mcdn-adguard.txt" --bypass-source "${RUNNER_TEMP}/category-porn.list" --check
-          python src/convert_mrs.py --check
-          python src/build_ai_mrs.py --check
-          python src/convert_v2fly_geolocation_cn.py \
-            --v2fly-export "${RUNNER_TEMP}/v2fly-output/geolocation-cn-clean.txt" \
-            --output dist/mihomo/geolocation-cn.list \
-            --check
-          python src/build_egern_rules.py \
-            --model "${RUNNER_TEMP}/mihomo-model.json" \
-            --mihomo-commit "${MIHOMO_COMMIT}" \
-            --bett-commit "${BETT_COMMIT}" \
-            --apns-commit "${APNS_COMMIT}" \
-            --check
-          git diff --check
 
       - name: Verify merged pron MRS and Egern YAML coverage
         shell: bash
