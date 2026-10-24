@@ -117,7 +117,7 @@
     "selection_source": "config/pron-sites.json",
     "source_scope": "category-porn only; no external domains",
     "upstream_domain_entries": 6520,
-    "upstream_sha256": "f0c070259834aa9a7f8eece3e1d90bfa9c44afb4738ce397c0c2b294ce04d130",
+    "upstream_sha256": "3eec3ca29be1ef4156cea5859a25706f4a73c64ee91694e13856d16e2af67756",
     "upstream_source": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/classical/category-porn.list"
   },
   "schema_version": 13,
@@ -129,12 +129,12 @@
     },
     "bett/geosite/apple": {
       "bytes": 36860,
-      "sha256": "406ed17ce548a248559d41dd9858e9090c0015d47f7fd62c307c9905e0b68c74",
+      "sha256": "80e3c36f5a81f8ab49770ad7fbcdba7d887af7a42d5782d5c1e6a1619f0c6d78",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple.list"
     },
     "bett/geosite/category-porn": {
       "bytes": 191185,
-      "sha256": "f0c070259834aa9a7f8eece3e1d90bfa9c44afb4738ce397c0c2b294ce04d130",
+      "sha256": "3eec3ca29be1ef4156cea5859a25706f4a73c64ee91694e13856d16e2af67756",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/classical/category-porn.list"
     },
     "ip.net.coffee/claude/site": {
