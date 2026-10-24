@@ -1,9 +1,9 @@
 {
-  "domain_entries": 7788,
+  "domain_entries": 7804,
   "forbidden_attribute_entries": 0,
-  "full_entries": 28,
+  "full_entries": 30,
   "keyword_entries": 0,
-  "mrs_compatible_entries": 7816,
+  "mrs_compatible_entries": 7834,
   "negative_sentinels": [
     "wetv.vip",
     "jd.hk"
@@ -31,17 +31,17 @@
     "regexp:^.+-mihayo\\.akamaized\\.net$"
   ],
   "sha256": {
-    "domain_list": "978f38b9e92a59ada3add381876cb82b019b82dc115115ae1606fbc826a36ce6",
-    "domain_mrs": "77afc06fa82cbaf4a84bf88a56975796488363ee2fb300a4419368a056091d98",
-    "v2fly_export": "3069a786ac56dd91cd02ec0b70fb098f6fa49c4b2de4131d54aa8685fd1038c1"
+    "domain_list": "53153b9177b8a6d3e4854d4d51eb9173cdc7b231c87e0644b13559079b1c62cd",
+    "domain_mrs": "f8451009c01b17bd2c551408aa0e41be69a1e673cb0890264bb66dd3dd24969c",
+    "v2fly_export": "8679f5fc60806876cca62d69d7165a87689ecef77711c447bcc9715644c227b1"
   },
-  "source_entries": 7819,
+  "source_entries": 7837,
   "upstreams": {
     "mrs_converter": {
       "commit": "7dea27841a3579a633189830c98c08a0434e8b79",
       "name": "MetaCubeX/meta-rules-converter",
       "role": "MRS format generation only"
     },
-    "v2fly/domain-list-community": "9cad4889b6f1c51bd84cb8a0d95dbc1a992251a4"
+    "v2fly/domain-list-community": "44e37212c1154407744543bd1ea5e5750fd44902"
   }
 }

@@ -471,6 +471,7 @@ domain_suffix_set:
 - a9vg.com
 - aadcloud.cn
 - aadcloud.com
+- aaej.cn
 - aaic.com.cn
 - aamgame.com
 - aamgame.mobi
@@ -1014,6 +1015,7 @@ domain_suffix_set:
 - bibaodao.com
 - bidchance.com
 - biddingx.com
+- bigdatacq.com
 - bigfun.cn
 - bigfunapp.cn
 - bigmodel.cn
@@ -1091,6 +1093,7 @@ domain_suffix_set:
 - bocaviation.com
 - boccfc.cc
 - boccfc.cn
+- bocd.com.cn
 - boce.com
 - bocfullertonbank.com
 - bocgi.com
@@ -1502,6 +1505,8 @@ domain_suffix_set:
 - cdnv1.cn
 - cdnv2.cn
 - cdnv3.cn
+- cdrcb.com
+- cdrcbank.com
 - cdut.top
 - ce.cn
 - ceair.com
@@ -1734,6 +1739,7 @@ domain_suffix_set:
 - clawhub-mirror.com
 - clawhubmirror.com
 - clawsentry.cn
+- cldisk.com
 - cleargrass.com
 - clewm.net
 - cli.im
@@ -1981,13 +1987,17 @@ domain_suffix_set:
 - cqcb.com
 - cqccn.com
 - cqctyiptv.cn
+- cqdcg.com
+- cqge.com.cn
 - cqhlw.cn
 - cqliving.com
 - cqn.com.cn
 - cqnews.net
+- cqsdlys.cn
 - cqsjb.com
 - cqtk.com.cn
 - cqvip.com
+- cqyyxc.com
 - cr-cts.com
 - cr173.com
 - cravatar.cn
@@ -2259,6 +2269,7 @@ domain_suffix_set:
 - didichuxing.com
 - didistatic.com
 - diditaxi.com.cn
+- digitalcnzz.com
 - digitaling.com
 - diiing.cn
 - dili360.com
@@ -2477,6 +2488,7 @@ domain_suffix_set:
 - e0n.cn
 - eagsen.com
 - easec.com.cn
+- easemob.com
 - easesale.com
 - easiu.com
 - eastday.com
@@ -2914,7 +2926,6 @@ domain_suffix_set:
 - gdjdxy.com
 - gdliontech.com
 - gdrc.com
-- gdtimg.com
 - geekbang.org
 - geekpark.net
 - geektool.top
@@ -3032,6 +3043,7 @@ domain_suffix_set:
 - gowinamc.com
 - gpall.cn
 - gpall.net
+- gpzshq.cn
 - gracg.com
 - greatwallwine.com.cn
 - gree.cn
@@ -3484,6 +3496,7 @@ domain_suffix_set:
 - iachina.cn
 - ialicdn.com
 - iask.com
+- ibangbank.com
 - ibaotu.com
 - ibcet.org
 - ibdxiguaimg.com
@@ -3639,6 +3652,7 @@ domain_suffix_set:
 - ioppo.net
 - iot-tencent.com
 - iotronic.tech
+- ip.cn
 - ip138.com
 - ipanda.cn
 - ipanda.com
@@ -3672,6 +3686,8 @@ domain_suffix_set:
 - ishijue.com
 - ishumei.com
 - ishuqi.com
+- isigning.cn
+- isigning.com
 - ispqcloud.com
 - istoreos.com
 - istv.cn
@@ -4769,8 +4785,6 @@ domain_suffix_set:
 - modernjs.cn
 - modex.com.cn
 - moedu.com
-- moegirl.org
-- moegirl.org.cn
 - moer.cn
 - mofang.com
 - mofazhu.com
@@ -4900,6 +4914,7 @@ domain_suffix_set:
 - nalrer.cn
 - namiso.com
 - nanhaicorp.com
+- nanocorechip.com
 - nanyuenews.com
 - narwal.com
 - narwaltech.com
@@ -7258,6 +7273,7 @@ domain_suffix_set:
 - xuexi365.com.cn
 - xuexi365.net
 - xuexicha.com
+- xuexitong.com
 - xundupdf.com
 - xunfei.cn
 - xunfeixxj.com
@@ -7791,6 +7807,7 @@ domain_set:
 - account-cn.alibabacloud.com
 - api.alibabacloud.com
 - api.blipsandchitz.me
+- app.moegirl.org.cn
 - cn.alibabacloud.com
 - ctdsb.clouddiffuse.xyz
 - dypnsapi-dualstack.aliyuncs.com
@@ -7812,6 +7829,7 @@ domain_set:
 - ntp6.aliyun.com
 - ntp7.aliyun.com
 - status.alibabacloud.com
+- storage.moegirl.org.cn
 - time.izatcloud.net
 - time.xtracloud.net
 - upos-icdn-cqg101.solseed.cn
