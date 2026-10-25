@@ -37,18 +37,10 @@ domain_suffix_set:
 - xn--czrs0t4phtr3a.cn
 - xn--fiqs8sxootzz.cn
 - xn--ohq11k7pl25iyo8a.cn
-- beats1.cn
-- beats1.com.cn
-- beats2.com.cn
-- beats4.cn
-- beatsbydre.com
-- beatsbydre.com.cn
-- beatsep.cn
 - apple-icloud.cn
 - appleicloud.cn
 - icloud-apple.cn
 - icloud-content.com.cn
-- icloud.cn
 - icloud.com.cn
 - icloud.net.cn
 - icloudapple.cn
@@ -61,6 +53,13 @@ domain_suffix_set:
 - researchkit.com.cn
 - swiftui.cn
 - swiftui.com.cn
+- beats1.cn
+- beats1.com.cn
+- beats2.com.cn
+- beats4.cn
+- beatsbydre.com
+- beatsbydre.com.cn
+- beatsep.cn
 domain_set:
 - amp-api-edge.apps.apple.com
 - amp-api-search-edge.apps.apple.com
@@ -224,6 +223,13 @@ domain_set:
 - www.apple.com
 - www.apple.com.edgekey.net.globalredir.akadns.net
 - xp.apple.com
+- amp-api-edge.music.apple.com
+- amp-api.music.apple.com
+- js-cdn.music.apple.com
+- music.apple.com
+- musicstatus.music.apple.com
+- play.music.apple.com
+- speedysub.music.apple.com
 - certs-lb.apple.com.akadns.net
 - certs.apple.com
 - crl-lb.apple.com.akadns.net
@@ -289,10 +295,3 @@ domain_set:
 - cdn-cn2.apple-mapkit.com
 - cdn-cn3.apple-mapkit.com
 - cdn-cn4.apple-mapkit.com
-- amp-api-edge.music.apple.com
-- amp-api.music.apple.com
-- js-cdn.music.apple.com
-- music.apple.com
-- musicstatus.music.apple.com
-- play.music.apple.com
-- speedysub.music.apple.com

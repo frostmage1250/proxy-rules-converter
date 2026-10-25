@@ -25,7 +25,7 @@
 
 ## Apple merge
 
-- Bett Apple rules retained: 1792.
+- Bett Apple rules retained: 1791.
 - Eligible Sukka domains: 15; uncovered scopes added: 2.
 - Bett entry order, spelling, and duplicates are preserved.
 - Sukka APNs push suffix, generator marker, process rules, and IP rules are excluded.
