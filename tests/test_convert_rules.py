@@ -205,7 +205,7 @@ class ConverterTests(unittest.TestCase):
         )
         self.assertEqual(
             set(config["bett"]),
-            {"geosite_base", "anthropic", "ai_mrs", "apple"},
+            {"geosite_base", "anthropic", "ai_mrs"},
         )
 
 

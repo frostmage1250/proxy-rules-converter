@@ -1,7 +1,8 @@
 # Mihomo rule converter
 
 This repository publishes the customized rule providers consumed by Mihomo and Egern,
-including AI, Claude, Apple merge, porn, MCDN, and V2Fly geolocation-cn.
+including AI, Claude, porn, MCDN, and V2Fly geolocation-cn.
+Apple and Apple Podcasts follow Bett rule providers and publish Egern-native equivalents.
 
 ## Conversion policy
 
@@ -20,6 +21,16 @@ the generator adds `+.webpubsub.azure.com`,
 not already covered, then recompiles with Mihomo. The validated final MRS is
 also decoded to `dist/mihomo/ai.list` for Egern conversion. `reports/ai.json`
 records the source and generated file hashes.
+
+## Apple and Apple Podcasts
+
+Mihomo consumes Bett's `geo/geosite/apple.mrs` and
+`geo/geosite/apple-podcasts.mrs` through the current upstream script mirror.
+The Egern converter reads their pinned Bett text sources and publishes
+`dist/egern/apple.yaml` and `dist/egern/apple-podcasts.yaml`, preserving
+matching scope, order within each native field, and duplicate entries.
+The former Apple Services supplement and `apple-merged` artifacts are retired.
+The separate Egern-only iCloud Private Relay source remains in use.
 
 ## Claude
 
@@ -100,8 +111,6 @@ V2Fly export for identical order and count.
 dist/mihomo/
 ├─ ai.list
 ├─ ai.mrs
-├─ apple-merged.list
-├─ apple-merged.mrs
 ├─ claude.yaml
 ├─ geolocation-cn.list
 ├─ geolocation-cn.mrs

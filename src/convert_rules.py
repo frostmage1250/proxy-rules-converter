@@ -665,19 +665,6 @@ def build(
     mcdn_merged_rules = merge_mcdn_rules(mcdn_rules, mcdn_adguard_rules)
     outputs["dist/mihomo/mcdn-block.list"] = render_rules(mcdn_merged_rules, "mihomo")
 
-    apple_url = join_url(bett["geosite_base"], bett["apple"])
-    apple_text = download("bett/geosite/apple", apple_url)
-    apple_primary = parse_domain_text(apple_text, apple_url)
-    apple_config = config["apple_merge"]
-    sukka_url = apple_config["sukka_url"]
-    sukka_text = download("sukka/clash/apple-services", sukka_url)
-    apple_supplement = parse_sukka_apple_services(
-        sukka_text, sukka_url, apple_config["excluded_domains"]
-    )
-    apple_merged = merge_apple_rules(apple_primary, apple_supplement)
-    apple_added = apple_merged[len(apple_primary):]
-    outputs["dist/mihomo/apple-merged.list"] = render_rules(apple_merged, "mihomo")
-
     anthropic_url = join_url(bett["geosite_base"], bett["anthropic"])
     anthropic_text = download("bett/geosite/anthropic", anthropic_url)
     anthropic_rules = parse_domain_text(anthropic_text, anthropic_url)
@@ -691,7 +678,7 @@ def build(
     outputs["dist/mihomo/claude.yaml"] = render_classical_yaml(claude_rules)
 
     summary = {
-        "schema_version": 13,
+        "schema_version": 14,
         "conversion_policy": {
             "syntax_only": True,
             "source_order_preserved": True,
@@ -739,20 +726,6 @@ def build(
             "outputs": ["dist/mihomo/mcdn-block.mrs", "dist/egern/mcdn-block.yaml"],
             "behavior": "domain",
         },
-        "apple_merge": {
-            "bett_source": apple_url,
-            "sukka_source": sukka_url,
-            "bett_entries": len(apple_primary),
-            "sukka_eligible_entries": len(apple_supplement),
-            "supplemented_entries": len(apple_added),
-            "supplemented_rules": [rule.mihomo() for rule in apple_added],
-            "excluded_domains": apple_config["excluded_domains"],
-            "excluded_rule_types": ["PROCESS-NAME", "PROCESS-PATH", "IP-CIDR", "IP-CIDR6", "IP-ASN"],
-            "bett_order_and_duplicates_preserved": True,
-            "output_entries": len(apple_merged),
-            "outputs": ["dist/mihomo/apple-merged.mrs", "dist/egern/apple-merged.yaml"],
-            "behavior": "domain",
-        },
         "claude": {
             "bett_source": anthropic_url,
             "site_source": claude_site_url,
@@ -796,14 +769,6 @@ def build(
         f"- Shared suffix rules: {len(mcdn_merged_rules)}.",
         "- The user-excluded *pcdn*.biliapi.net wildcard is omitted.",
         "- mcdn屏蔽: Mihomo domain MRS and Egern native YAML share the merged suffixes.",
-        "",
-        "## Apple merge",
-        "",
-        f"- Bett Apple rules retained: {len(apple_primary)}.",
-        f"- Eligible Sukka domains: {len(apple_supplement)}; uncovered scopes added: {len(apple_added)}.",
-        "- Bett entry order, spelling, and duplicates are preserved.",
-        "- Sukka APNs push suffix, generator marker, process rules, and IP rules are excluded.",
-        "- Mihomo MRS and Egern native YAML share the apple-merged domain source.",
         "",
         "## Claude",
         "",

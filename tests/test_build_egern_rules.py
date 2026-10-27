@@ -56,19 +56,23 @@ class EgernRuleConverterTests(unittest.TestCase):
         with self.assertRaises(BuildError):
             merge_privaterelay_sources("+.mask.icloud.com\n", "", [])
 
-    def test_apple_merge_resolves_to_same_run_list(self):
-        result = resolve_provider_source(
-            {"url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/apple-merged.mrs"},
-            bett_commit="bett-commit", converter_commit="converter-commit",
-        )
-        self.assertEqual(result["repository"], "frostmage1250/proxy-rules-converter")
-        self.assertEqual(result["path"], "dist/mihomo/apple-merged.list")
-        source = "push-apple.com.akadns.net\n+.appstore.com\n+.organicfruitapps.com\n"
+    def test_bett_apple_and_podcasts_follow_the_current_mirror(self):
+        for host in ("cdn.jsdmirror.com", "new-mirror.example"):
+            for asset in ("apple", "apple-podcasts"):
+                result = resolve_provider_source(
+                    {"url": f"https://{host}/gh/appshubcc/bett-rules@meta/geo/geosite/{asset}.mrs"},
+                    bett_commit="bett-commit", converter_commit="converter-commit",
+                )
+                self.assertEqual(result["repository"], "appshubcc/bett-rules")
+                self.assertEqual(result["path"], f"geo/geosite/{asset}.list")
+                self.assertEqual(result["commit"], "bett-commit")
+        source = "+.applepodcasts.com\n+.podcasts.apple.com\namp-api.podcasts.apple.com\npodcasts.apple.com\n"
         native = merge_ordered_rules(parse_domain_list(source))
         self.assertEqual(native, {
-            "domain_set": ["push-apple.com.akadns.net"],
-            "domain_suffix_set": ["appstore.com", "organicfruitapps.com"],
+            "domain_suffix_set": ["applepodcasts.com", "podcasts.apple.com"],
+            "domain_set": ["amp-api.podcasts.apple.com", "podcasts.apple.com"],
         })
+        self.assertEqual(output_rule_count([native]), 4)
 
     def test_domain_source_keeps_type_transitions_and_duplicates(self):
         result = parse_domain_list(

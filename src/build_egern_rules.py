@@ -112,7 +112,6 @@ def resolve_provider_source(
         allowed = {
             "dist/mihomo/geolocation-cn.mrs": CONVERTER_GEOLOCATION_LIST_PATH,
             "dist/mihomo/ai.mrs": "dist/mihomo/ai.list",
-            "dist/mihomo/apple-merged.mrs": "dist/mihomo/apple-merged.list",
             "dist/mihomo/porn.mrs": "dist/mihomo/porn.list",
             "dist/mihomo/mcdn-block.mrs": "dist/mihomo/mcdn-block.list",
             CONVERTER_CLAUDE_RULE_PATH: CONVERTER_CLAUDE_RULE_PATH,
@@ -419,11 +418,6 @@ def main() -> int:
                 mcdn_native, allow_unicode=True, sort_keys=False, width=1000
             )
         }
-        apple_source = (ROOT / "dist/mihomo/apple-merged.list").read_text(encoding="utf-8")
-        generated["apple-merged.yaml"] = yaml.safe_dump(
-            merge_ordered_rules(parse_domain_list(apple_source)),
-            allow_unicode=True, sort_keys=False, width=1000,
-        )
         source_records: list[dict[str, Any]] = []
 
         geo_report_text = (ROOT / CONVERTER_GEOLOCATION_REPORT_PATH).read_text(encoding="utf-8")
@@ -456,11 +450,7 @@ def main() -> int:
                 entries != geo_expected_entries or source_sha256 != geo_expected_sha256
             ):
                 raise BuildError("geolocation-cn disagrees with the converter report")
-            filename = (
-                "apple-merged.yaml"
-                if name == "apple" and metadata.get("source_path") == "dist/mihomo/apple-merged.list"
-                else slug(name) + ".yaml"
-            )
+            filename = slug(name) + ".yaml"
             output = f"dist/egern/{filename}"
             native_rule = merge_ordered_rules(segments)
             if output_rule_count([native_rule]) != source_entries:
