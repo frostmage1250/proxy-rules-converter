@@ -179,6 +179,9 @@ domain_set:
 - alkalimakersuite-pa.clients6.google.com
 - antigravity-pa.googleapis.com
 - antigravity.googleapis.com
+- appsgenaiserver-pa.clients.google.com
+- appsgenaiserver-pa.clients6.google.com
+- appsgenaiserver-pa.googleapis.com
 - browser-intake-datadoghq.com
 - client-api.arkoselabs.com
 - cloudaicompanion.googleapis.com
