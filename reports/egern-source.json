@@ -56,7 +56,7 @@
     "expected_entries": 7836,
     "list_path": "dist/mihomo/geolocation-cn.list",
     "report_path": "reports/geolocation-cn.json",
-    "report_sha256": "ba86355b377f37d2ba6c880d6f5396417c68d6175ccb438744ef0b19603352ec"
+    "report_sha256": "745f9ff0513bcea68db13b79590a895401ed1c25a252681a957f7bf92592dc5e"
   },
   "mihomo_script": {
     "commit": "ed36af7ad14f834521981f0fe43dd4d5403e7b22",
