@@ -176,10 +176,12 @@ jobs:
           podcast_source = resolve_provider_source(podcasts, bett_commit="pinned", converter_commit="main")
           assert podcast_source["path"] == "geo/geosite/apple-podcasts.list"
           assert podcasts["url"] == apple["url"].rsplit("/", 1)[0] + "/apple-podcasts.mrs"
-          assert model["rules"].count("RULE-SET,apple_podcasts,Apple Podcasts") == 1
-          assert model["rules"].index("RULE-SET,apple_podcasts,Apple Podcasts") < model["rules"].index("RULE-SET,apple_cn,Direct")
-          assert model["dns"]["nameserver-policy"]["rule-set:apple_podcasts"] == model["dns"]["nameserver"]
-          group = next(item for item in model["groups"] if item["name"] == "Apple Podcasts")
+          podcast_rule = "RULE-SET,apple_podcasts,媒体"
+          assert model["rules"].count(podcast_rule) == 1, "Podcasts must use the media policy once"
+          assert model["rules"].index(podcast_rule) < model["rules"].index("RULE-SET,apple_cn,Direct"), "Podcasts must precede Apple CN"
+          assert "rule-set:apple_podcasts" not in model["dns"].get("nameserver-policy", {}), "Podcasts must follow shared DNS policies"
+          assert all(item["name"] != "Apple Podcasts" for item in model["groups"]), "Standalone Podcasts group was retired"
+          group = next(item for item in model["groups"] if item["name"] == "媒体")
           assert group["proxies"][0] == "Proxy"
           appletv = model["providers"]["appletv"]
           assert appletv["format"] == "mrs" and appletv["behavior"] == "domain"
