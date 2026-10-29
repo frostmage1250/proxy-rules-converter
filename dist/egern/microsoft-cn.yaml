@@ -36,13 +36,6 @@ domain_suffix_set:
 - dcg.microsoft.com
 - dl.delivery.mp.microsoft.com
 - download.windowsupdate.com
-- bing.com.cn
-- cn.bing.com
-- cn.bing.net
-- cn.mm.bing.net
-- ditu.live.com
-- r.bing.com
-- th.bing.com
 - microsoftreactor.cn
 - microsoftreactor.com.cn
 - reactorms.com.cn
@@ -138,6 +131,13 @@ domain_suffix_set:
 - azure-dns-8.cn
 - azure-dns-9.cn
 - azure-dns-10.cn
+- bing.com.cn
+- cn.bing.com
+- cn.bing.net
+- cn.mm.bing.net
+- ditu.live.com
+- r.bing.com
+- th.bing.com
 domain_set:
 - azuremigrate.download.prss.microsoft.com
 - azuremigratetest.download.prss.microsoft.com
@@ -187,5 +187,5 @@ domain_set:
 - vscode.download.prss.microsoft.com
 - vz.download.prss.microsoft.com
 - windbg.download.prss.microsoft.com
-- bj1.api.bing.com
 - download.visualstudio.microsoft.com
+- bj1.api.bing.com
