@@ -9,6 +9,8 @@ import ipaddress
 import json
 import re
 import sys
+import subprocess
+import tempfile
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -65,7 +67,7 @@ def resolve_provider_source(
     *,
     bett_commit: str,
     converter_commit: str,
-) -> dict[str, str]:
+) -> dict[str, Any]:
     provider_url = provider.get("url")
     if not isinstance(provider_url, str) or not provider_url:
         raise BuildError(f"Provider has no final URL: {provider}")
@@ -94,6 +96,12 @@ def resolve_provider_source(
         if not match:
             raise BuildError(f"Unsupported raw GitHub provider URL: {provider_url}")
         repository, ref, published_path = match.groups()
+    elif provider.get("format") == "mrs" and provider.get("behavior") in {"domain", "ipcidr"} and parsed.path.endswith(".mrs"):
+        # Fetch the final upstream MRS itself; bundle paths can describe other data.
+        return {
+            "provider_url": provider_url, "repository": None, "ref": None, "commit": None,
+            "path": parsed.path.lstrip("/"), "url": provider_url, "source_format": "mrs",
+        }
     else:
         raise BuildError(f"Unsupported provider URL host: {provider_url}")
 
@@ -149,6 +157,34 @@ def download_text(url: str) -> str:
             return response.read().decode("utf-8-sig")
     except urllib.error.URLError as exc:
         raise BuildError(f"Failed to download {url}: {exc}") from exc
+
+
+def download_mrs_source(url: str, behavior: str) -> tuple[str, dict[str, Any]]:
+    """Decode one captured upstream MRS with the official Mihomo converter."""
+    if behavior not in {"domain", "ipcidr"}:
+        raise BuildError(f"Unsupported MRS behavior: {behavior}")
+    request = urllib.request.Request(url, headers={"User-Agent": "egern-config-builder/1"})
+    with urllib.request.urlopen(request, timeout=60) as response:
+        binary = response.read()
+    if not binary:
+        raise BuildError(f"Empty upstream MRS: {url}")
+    with tempfile.TemporaryDirectory(prefix="egern-mrs-") as temporary:
+        source_path = Path(temporary) / "source.mrs"
+        text_path = Path(temporary) / "decoded.list"
+        source_path.write_bytes(binary)
+        result = subprocess.run(
+            ["mihomo", "convert-ruleset", behavior, "mrs", str(source_path), str(text_path)],
+            capture_output=True, text=True, check=False,
+        )
+        if result.returncode:
+            raise BuildError(f"MRS decoding failed for {url}: {result.stderr}")
+        source = text_path.read_text(encoding="utf-8-sig")
+    return source, {
+        "source_format": "mrs",
+        "source_mrs_sha256": hashlib.sha256(binary).hexdigest(),
+        "source_mrs_bytes": len(binary),
+        "conversion_tool": "mihomo convert-ruleset",
+    }
 
 
 def merge_privaterelay_sources(
@@ -342,9 +378,8 @@ def parse_classical_yaml_provider(text: str) -> tuple[list[dict[str, Any]], int]
 def referenced_providers(model: dict[str, Any]) -> list[str]:
     result: list[str] = []
     for rule in model["rules"]:
-        parts = rule.split(",")
-        if parts[0] == "RULE-SET" and len(parts) >= 3:
-            result.append(parts[1])
+        # Logical rules can reference providers at any nesting depth.
+        result.extend(re.findall(r"\bRULE-SET,([^,()]+)", rule))
     for key in model.get("dns", {}).get("nameserver-policy", {}):
         if isinstance(key, str) and key.startswith("rule-set:"):
             result.append(key.removeprefix("rule-set:"))
@@ -509,11 +544,14 @@ def main() -> int:
             source_info = resolve_provider_source(
                 provider, bett_commit=args.bett_commit, converter_commit="main"
             )
-            if source_info["repository"] == CONVERTER_REPO:
+            source_metadata: dict[str, Any] = {}
+            behavior = provider.get("behavior")
+            if source_info.get("source_format") == "mrs":
+                source, source_metadata = download_mrs_source(source_info["url"], behavior)
+            elif source_info["repository"] == CONVERTER_REPO:
                 source = (ROOT / source_info["path"]).read_text(encoding="utf-8")
             else:
                 source = download_text(source_info["url"])
-            behavior = provider.get("behavior")
             if behavior == "domain":
                 segments = parse_domain_list(source)
                 source_entries = source_rule_count(source)
@@ -537,6 +575,7 @@ def main() -> int:
                     "source_path": source_info["path"],
                     "source_url": source_info["url"],
                     "source_generated_in_same_run": source_info["repository"] == CONVERTER_REPO,
+                    **source_metadata,
                 },
             )
 

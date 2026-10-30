@@ -158,11 +158,19 @@ jobs:
           model = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
           provider = model["providers"]["mcdn屏蔽"]
           private_index = model["rules"].index("RULE-SET,private,Direct")
-          assert model["rules"][private_index:private_index + 3] == [
-              "RULE-SET,private,Direct",
+          private_ip_index = model["rules"].index("RULE-SET,private_ip,Direct,no-resolve")
+          assert private_index < private_ip_index
+          assert model["rules"][private_ip_index:private_ip_index + 2] == [
               "RULE-SET,private_ip,Direct,no-resolve",
               "RULE-SET,mcdn屏蔽,REJECT",
-          ], "Private/MCDN consumer priority changed"
+          ], "Private IP/MCDN consumer priority changed"
+          quic = model["quic_rules"]
+          assert model["options"]["屏蔽国外QUIC"] is True and len(quic) == 1
+          quic_index = model["rules"].index(quic[0])
+          assert model["rules"].index("RULE-SET,apple_cn,Direct") < quic_index
+          assert quic_index < model["rules"].index("RULE-SET,claude,Claude")
+          assert "(RULE-SET,cn_additional)" in quic[0]
+          assert "(RULE-SET,cn_ip,no-resolve)" in quic[0]
           assert model["rules"].count("RULE-SET,mcdn屏蔽,REJECT") == 1, "Duplicate MCDN consumer rule"
           assert provider["format"] == "mrs" and provider["behavior"] == "domain"
           assert provider["url"] == "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/mcdn-block.mrs"
@@ -178,7 +186,7 @@ jobs:
           assert podcasts["url"] == apple["url"].rsplit("/", 1)[0] + "/apple-podcasts.mrs"
           podcast_rule = "RULE-SET,apple_podcasts,媒体"
           assert model["rules"].count(podcast_rule) == 1, "Podcasts must use the media policy once"
-          assert model["rules"].index(podcast_rule) < model["rules"].index("RULE-SET,apple_cn,Direct"), "Podcasts must precede Apple CN"
+          assert model["rules"].index("RULE-SET,apple_cn,Direct") < quic_index < model["rules"].index(podcast_rule), "Preserve upstream prefix and QUIC precedence"
           assert "rule-set:apple_podcasts" not in model["dns"].get("nameserver-policy", {}), "Podcasts must follow shared DNS policies"
           assert all(item["name"] != "Apple Podcasts" for item in model["groups"]), "Standalone Podcasts group was retired"
           group = next(item for item in model["groups"] if item["name"] == "媒体")

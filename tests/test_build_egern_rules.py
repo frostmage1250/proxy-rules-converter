@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import sys
 import unittest
+from unittest.mock import patch
+from types import SimpleNamespace
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,9 +22,48 @@ from build_egern_rules import (  # noqa: E402
     resolve_provider_source,
     source_rule_count,
     slug,
+    referenced_providers,
+    download_mrs_source,
 )
 
 class EgernRuleConverterTests(unittest.TestCase):
+
+    def test_logical_rules_include_nested_cn_exception_providers(self):
+        model = {"rules": [
+            "RULE-SET,private,Direct",
+            "AND,((NETWORK,UDP),(DST-PORT,443),(NOT,((OR,((RULE-SET,cn_additional),(RULE-SET,cn_ip,no-resolve)))))),REJECT",
+            "RULE-SET,cn_ip,Direct", "MATCH,Final",
+        ], "dns": {"nameserver-policy": {"rule-set:cn": ["system"]}}}
+        self.assertEqual(referenced_providers(model), ["private", "cn_additional", "cn_ip", "cn"])
+
+    def test_external_quic_mrs_uses_final_source_and_records_captured_digest(self):
+        url = "https://static-file-global.353355.xyz/rules/cn-additional-list.mrs"
+        provider = {"url": url, "format": "mrs", "behavior": "domain",
+                    "path-in-bundle": "geo/geosite/cn.mrs"}
+        source = resolve_provider_source(provider, bett_commit="bett", converter_commit="converter")
+        self.assertEqual(source["url"], url)
+        self.assertEqual(source["source_format"], "mrs")
+        self.assertIsNone(source["repository"])
+        commands = []
+        def decode(command, **kwargs):
+            commands.append(command)
+            self.assertEqual(Path(command[-2]).read_bytes(), b"captured-mrs")
+            Path(command[-1]).write_text("exact.example\n+.suffix.example\n", encoding="utf-8")
+            return SimpleNamespace(returncode=0, stderr="")
+        with patch("build_egern_rules.urllib.request.urlopen") as download, \
+             patch("build_egern_rules.subprocess.run", side_effect=decode):
+            download.return_value.__enter__.return_value.read.return_value = b"captured-mrs"
+            text, metadata = download_mrs_source(url, "domain")
+            self.assertEqual(download.call_args.args[0].full_url, url)
+            self.assertEqual(download.call_count, 1)
+        self.assertEqual(commands[0][:4], ["mihomo", "convert-ruleset", "domain", "mrs"])
+        self.assertEqual(text, "exact.example\n+.suffix.example\n")
+        self.assertEqual(metadata["source_mrs_bytes"], len(b"captured-mrs"))
+        self.assertEqual(len(metadata["source_mrs_sha256"]), 64)
+        self.assertEqual(merge_ordered_rules(parse_domain_list(text)), {
+            "domain_set": ["exact.example"], "domain_suffix_set": ["suffix.example"],
+        })
+
     def test_privaterelay_merge_preserves_bett_and_exact_sukka_scopes(self):
         base = "+.mask-api.icloud.com\n+.mask-h2.icloud.com\n+.mask.icloud.com\n"
         source, report = merge_privaterelay_sources(
