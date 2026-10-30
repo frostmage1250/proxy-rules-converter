@@ -160,15 +160,29 @@ jobs:
           private_index = model["rules"].index("RULE-SET,private,Direct")
           private_ip_index = model["rules"].index("RULE-SET,private_ip,Direct,no-resolve")
           assert private_index < private_ip_index
-          assert model["rules"][private_ip_index:private_ip_index + 2] == [
-              "RULE-SET,private_ip,Direct,no-resolve",
-              "RULE-SET,mcdn屏蔽,REJECT",
-          ], "Private IP/MCDN consumer priority changed"
+          assert model["rules"][-4:] == [
+              "RULE-SET,geolocation-!cn,Proxy", "RULE-SET,cn_ip,Direct",
+              "RULE-SET,private_ip,Direct,no-resolve", "MATCH,Final",
+          ], "YAML fallback order changed"
           quic = model["quic_rules"]
           assert model["options"]["屏蔽国外QUIC"] is True and len(quic) == 1
           quic_index = model["rules"].index(quic[0])
           assert model["rules"].index("RULE-SET,apple_cn,Direct") < quic_index
-          assert quic_index < model["rules"].index("RULE-SET,claude,Claude")
+          assert model["rules"][quic_index + 1] == "RULE-SET,mcdn屏蔽,REJECT"
+          service_order = [
+              "RULE-SET,youtube,YouTube", "RULE-SET,twitch,媒体",
+              "RULE-SET,google,Google", "RULE-SET,claude,Claude",
+              "RULE-SET,ai,AI", "RULE-SET,github,GitHub",
+              "RULE-SET,microsoft,Proxy", "RULE-SET,appletv,媒体",
+              "RULE-SET,apple_podcasts,媒体", "RULE-SET,apple,Proxy",
+              "RULE-SET,telegram,Telegram", "RULE-SET,steam,Proxy",
+              "RULE-SET,tiktok,媒体", "RULE-SET,twitter,媒体",
+              "RULE-SET,meta,媒体", "RULE-SET,pikpak,PikPak",
+              "RULE-SET,ehentai,EHentai", "RULE-SET,porn,porn",
+          ]
+          positions = [model["rules"].index(raw) for raw in service_order]
+          assert positions == sorted(positions), "Pinned YAML business order changed"
+          assert quic_index < model["rules"].index("RULE-SET,mcdn屏蔽,REJECT") < positions[0]
           assert "(RULE-SET,cn_additional)" in quic[0]
           assert "(RULE-SET,cn_ip,no-resolve)" in quic[0]
           assert model["rules"].count("RULE-SET,mcdn屏蔽,REJECT") == 1, "Duplicate MCDN consumer rule"
