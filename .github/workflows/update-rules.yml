@@ -158,11 +158,11 @@ jobs:
           model = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
           provider = model["providers"]["mcdn屏蔽"]
           private_index = model["rules"].index("RULE-SET,private,Direct")
-          private_ip_index = model["rules"].index("RULE-SET,private_ip,Direct,no-resolve")
+          private_ip_index = model["rules"].index("RULE-SET,private_ip,Direct")
           assert private_index < private_ip_index
           assert model["rules"][-4:] == [
               "RULE-SET,geolocation-!cn,Proxy", "RULE-SET,cn_ip,Direct",
-              "RULE-SET,private_ip,Direct,no-resolve", "MATCH,Final",
+              "RULE-SET,private_ip,Direct", "MATCH,Final",
           ], "YAML fallback order changed"
           quic = model["quic_rules"]
           assert model["options"]["屏蔽国外QUIC"] is True and len(quic) == 1
