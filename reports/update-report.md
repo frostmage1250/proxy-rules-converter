@@ -6,9 +6,9 @@
 
 ## pron
 
-- Local rules: 2; category-porn domain rules: 6520.
+- Local rules: 2; category-porn domain rules: 6521.
 - Selected websites: 26; selected domain rules: 76.
-- Unselected domain rules excluded: 6444.
+- Unselected domain rules excluded: 6445.
 - Source scope: category-porn only; no external CDN additions; E-Hentai and ExHentai excluded.
 - Regex rules excluded: 140.
 - Identical duplicates removed: 2.
