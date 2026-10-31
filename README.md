@@ -135,6 +135,11 @@ the providers, checks determinism, and commits changed generated files.
 
 ## Egern-native rule sets
 
+The model extractor calls the pinned script's public main entry point with reserved
+placeholder nodes. It reads the returned providers, effective rules and groups,
+without depending on internal finalRuleProviders/buildRules globals. High-rate
+and home group definitions are exported when those groups are generated.
+
 The same workflow extracts the rule-provider model from the pinned Mihomo script,
 converts every referenced provider to one Egern-native YAML file, and publishes
 `dist/egern/<provider>.yaml`. It also converts the pinned
