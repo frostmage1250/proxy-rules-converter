@@ -10,8 +10,8 @@ on:
       - "src/**"
       - "tests/**"
   schedule:
-    # Every 6 hours, after Mihomo and before Egern (UTC).
-    - cron: "23 0,6,12,18 * * *"
+    # Every 2 hours, after Mihomo and before Egern (UTC).
+    - cron: "23 */2 * * *"
 
 permissions:
   contents: write
