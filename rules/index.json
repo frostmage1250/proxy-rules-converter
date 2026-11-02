@@ -1,5 +1,5 @@
 {
-  "mihomo_commit": "d48c90f942754765a58211f23113d79b63ba3c4f",
+  "mihomo_commit": "09369c0a7e6e662e328e9ef2bdab0c9b8085448b",
   "providers": {
     "private": {
       "file": "private.yaml",
@@ -67,29 +67,11 @@
       "behavior": "domain",
       "format": "mrs"
     },
-    "twitch": {
-      "file": "twitch.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/twitch.mrs",
-      "behavior": "domain",
-      "format": "mrs"
-    },
     "google": {
       "file": "google.yaml",
       "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/google.mrs",
       "behavior": "domain",
       "format": "mrs"
-    },
-    "google_ip": {
-      "file": "google-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/google.mrs",
-      "behavior": "ipcidr",
-      "format": "mrs"
-    },
-    "claude": {
-      "file": "claude.yaml",
-      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/claude.yaml",
-      "behavior": "classical",
-      "format": "yaml"
     },
     "ai": {
       "file": "ai.yaml",
@@ -109,34 +91,10 @@
       "behavior": "domain",
       "format": "mrs"
     },
-    "microsoft_ip": {
-      "file": "microsoft-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/microsoft.mrs",
-      "behavior": "ipcidr",
-      "format": "mrs"
-    },
-    "appletv": {
-      "file": "appletv.yaml",
-      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple-tvplus.mrs",
-      "behavior": "domain",
-      "format": "mrs"
-    },
-    "apple_podcasts": {
-      "file": "apple-podcasts.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/apple-podcasts.mrs",
-      "behavior": "domain",
-      "format": "mrs"
-    },
     "apple": {
       "file": "apple.yaml",
       "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/apple.mrs",
       "behavior": "domain",
-      "format": "mrs"
-    },
-    "apple_ip": {
-      "file": "apple-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/apple.mrs",
-      "behavior": "ipcidr",
       "format": "mrs"
     },
     "telegram": {
@@ -145,22 +103,10 @@
       "behavior": "domain",
       "format": "mrs"
     },
-    "telegram_ip": {
-      "file": "telegram-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/telegram.mrs",
-      "behavior": "ipcidr",
-      "format": "mrs"
-    },
     "steam": {
       "file": "steam.yaml",
       "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/steam.mrs",
       "behavior": "domain",
-      "format": "mrs"
-    },
-    "steam_ip": {
-      "file": "steam-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/steam.mrs",
-      "behavior": "ipcidr",
       "format": "mrs"
     },
     "tiktok": {
@@ -169,34 +115,16 @@
       "behavior": "domain",
       "format": "mrs"
     },
-    "tiktok_ip": {
-      "file": "tiktok-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/tiktok.mrs",
-      "behavior": "ipcidr",
-      "format": "mrs"
-    },
     "twitter": {
       "file": "twitter.yaml",
       "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/twitter.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
-    "twitter_ip": {
-      "file": "twitter-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/twitter.mrs",
-      "behavior": "ipcidr",
-      "format": "mrs"
-    },
     "meta": {
       "file": "meta.yaml",
       "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/meta.mrs",
       "behavior": "domain",
-      "format": "mrs"
-    },
-    "facebook_ip": {
-      "file": "facebook-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/facebook.mrs",
-      "behavior": "ipcidr",
       "format": "mrs"
     },
     "pikpak": {
@@ -211,9 +139,33 @@
       "behavior": "domain",
       "format": "mrs"
     },
+    "appletv": {
+      "file": "appletv.yaml",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple-tvplus.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
     "porn": {
       "file": "porn.yaml",
       "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/porn.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "claude": {
+      "file": "claude.yaml",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/claude.yaml",
+      "behavior": "classical",
+      "format": "yaml"
+    },
+    "twitch": {
+      "file": "twitch.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/twitch.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "apple_podcasts": {
+      "file": "apple-podcasts.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/apple-podcasts.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
@@ -221,6 +173,54 @@
       "file": "geolocation-non-cn.yaml",
       "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/geolocation-!cn.mrs",
       "behavior": "domain",
+      "format": "mrs"
+    },
+    "google_ip": {
+      "file": "google-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/google.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "microsoft_ip": {
+      "file": "microsoft-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/microsoft.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "apple_ip": {
+      "file": "apple-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/apple.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "telegram_ip": {
+      "file": "telegram-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/telegram.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "steam_ip": {
+      "file": "steam-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/steam.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "tiktok_ip": {
+      "file": "tiktok-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/tiktok.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "twitter_ip": {
+      "file": "twitter-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/twitter.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "facebook_ip": {
+      "file": "facebook-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/facebook.mrs",
+      "behavior": "ipcidr",
       "format": "mrs"
     },
     "private_ip": {
