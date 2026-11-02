@@ -467,6 +467,17 @@ def duplicate_counts(values: Iterable[str]) -> dict[str, int]:
     }
 
 
+def rule_covers_domain(rule: DomainRule, domain: str) -> bool:
+    canonical = normalize_domain(domain)
+    if domain != canonical:
+        raise ConversionError(f"Noncanonical lookup domain: {domain!r}")
+    if rule.kind == "exact":
+        return domain == rule.value
+    if rule.kind == "suffix":
+        return domain == rule.value or domain.endswith("." + rule.value)
+    return domain != rule.value and domain.endswith("." + rule.value)
+
+
 def fetch_text(url: str) -> str:
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     try:
