@@ -7,6 +7,7 @@ import json
 import re
 import subprocess
 import tempfile
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -162,8 +163,16 @@ class Sources:
     def read(self, url):
         if url not in self.downloads:
             request = urllib.request.Request(url, headers={"User-Agent": "egern-rules-builder/1"})
-            with urllib.request.urlopen(request, timeout=90) as response:
-                self.downloads[url] = response.read()
+            print(f"Downloading rule source: {url}", flush=True)
+            try:
+                with urllib.request.urlopen(request, timeout=90) as response:
+                    self.downloads[url] = response.read()
+            except urllib.error.HTTPError as exc:
+                detail = exc.read(512).decode("utf-8", errors="replace")
+                raise BuildError(
+                    f"Rule source download failed: {url}; HTTP {exc.code} "
+                    f"{exc.reason}; response: {detail!r}"
+                ) from exc
             if not self.downloads[url]:
                 raise BuildError(f"Empty rule source: {url}")
         return self.downloads[url]
