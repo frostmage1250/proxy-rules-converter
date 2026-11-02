@@ -10,7 +10,7 @@ on:
       - "config/**"
       - "requirements.txt"
   schedule:
-    - cron: "50 0,6,12,18 * * *"
+    - cron: "50 */2 * * *"
 
 permissions:
   contents: write
