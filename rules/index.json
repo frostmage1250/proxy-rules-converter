@@ -1,5 +1,5 @@
 {
-  "mihomo_commit": "09369c0a7e6e662e328e9ef2bdab0c9b8085448b",
+  "mihomo_commit": "1630e63e37e8e03a1f56f9680256515a100bdb1e",
   "providers": {
     "private": {
       "file": "private.yaml",
@@ -73,6 +73,12 @@
       "behavior": "domain",
       "format": "mrs"
     },
+    "claude": {
+      "file": "claude.yaml",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/claude.yaml",
+      "behavior": "classical",
+      "format": "yaml"
+    },
     "ai": {
       "file": "ai.yaml",
       "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/ai.mrs",
@@ -88,6 +94,18 @@
     "microsoft": {
       "file": "microsoft.yaml",
       "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/microsoft.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "appletv": {
+      "file": "appletv.yaml",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple-tvplus.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "apple_podcasts": {
+      "file": "apple-podcasts.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/apple-podcasts.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
@@ -139,33 +157,9 @@
       "behavior": "domain",
       "format": "mrs"
     },
-    "appletv": {
-      "file": "appletv.yaml",
-      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple-tvplus.mrs",
-      "behavior": "domain",
-      "format": "mrs"
-    },
     "porn": {
       "file": "porn.yaml",
       "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/porn.mrs",
-      "behavior": "domain",
-      "format": "mrs"
-    },
-    "claude": {
-      "file": "claude.yaml",
-      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/claude.yaml",
-      "behavior": "classical",
-      "format": "yaml"
-    },
-    "twitch": {
-      "file": "twitch.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/twitch.mrs",
-      "behavior": "domain",
-      "format": "mrs"
-    },
-    "apple_podcasts": {
-      "file": "apple-podcasts.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/apple-podcasts.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
