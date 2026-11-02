@@ -34,7 +34,7 @@
     "name": "mcdn屏蔽",
     "outputs": [
       "dist/mihomo/mcdn-block.mrs",
-      "dist/egern/mcdn-block.yaml"
+      "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/egern/rules/mcdn-block.yaml"
     ],
     "source_sha256": "cddecdbcac22e7b00667ca215bdb11f393557b7942245032e49993d967a7e830",
     "upstream_entries": 33,
@@ -52,7 +52,7 @@
     "output": "dist/mihomo/porn.list",
     "outputs": [
       "dist/mihomo/porn.mrs",
-      "dist/egern/porn.yaml"
+      "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/egern/rules/porn.yaml"
     ],
     "policy_group": "pron",
     "regex_entries_excluded": 140,
