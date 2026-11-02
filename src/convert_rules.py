@@ -35,7 +35,6 @@ EXTERNALLY_MANAGED_OUTPUTS = frozenset(
         "dist/mihomo/geolocation-cn.list",
         "reports/geolocation-cn.json",
         "reports/ai.json",
-        "reports/egern-source.json",
         "dist/mihomo/ai.list",
     }
 )
@@ -468,65 +467,6 @@ def duplicate_counts(values: Iterable[str]) -> dict[str, int]:
     }
 
 
-def rule_covers_domain(rule: DomainRule, domain: str) -> bool:
-    canonical = normalize_domain(domain)
-    if domain != canonical:
-        raise ConversionError(f"Noncanonical lookup domain: {domain!r}")
-    if rule.kind == "exact":
-        return domain == rule.value
-    if rule.kind == "suffix":
-        return domain == rule.value or domain.endswith("." + rule.value)
-    return domain != rule.value and domain.endswith("." + rule.value)
-
-
-def parse_sukka_apple_services(
-    text: str, source: str, excluded_domains: Sequence[str]
-) -> list[DomainRule]:
-    """Accept domain rules only; APNs, IPs, processes, and the marker stay separate."""
-    result: list[DomainRule] = []
-    excluded = set(excluded_domains)
-    ignored_types = {"PROCESS-NAME", "PROCESS-PATH", "IP-CIDR", "IP-CIDR6", "IP-ASN"}
-    for line in rule_lines(text, source):
-        fields = line.split(",")
-        rule_type = fields[0]
-        if rule_type in ignored_types:
-            continue
-        if rule_type not in {"DOMAIN", "DOMAIN-SUFFIX"} or len(fields) != 2:
-            raise ConversionError(f"Unsupported Apple Services rule in {source}: {line}")
-        domain = validate_canonical_domain(fields[1], source, line)
-        if any(domain == item or domain.endswith("." + item) for item in excluded):
-            continue
-        result.append(DomainRule("exact" if rule_type == "DOMAIN" else "suffix", domain))
-    if not result:
-        raise ConversionError(f"No eligible Apple Services domains in {source}")
-    return result
-
-
-def merge_apple_rules(
-    primary: Sequence[DomainRule], supplement: Sequence[DomainRule]
-) -> list[DomainRule]:
-    """Preserve every Bett entry, appending only uncovered Sukka domain scopes."""
-    merged = list(primary)
-    for candidate in supplement:
-        if candidate.kind == "exact":
-            covered = any(rule_covers_domain(rule, candidate.value) for rule in merged)
-        elif candidate.kind == "suffix":
-            covered = any(
-                (rule.kind == "suffix" and (
-                    candidate.value == rule.value
-                    or candidate.value.endswith("." + rule.value)
-                ))
-                or (rule.kind == "subdomain_suffix"
-                    and candidate.value.endswith("." + rule.value))
-                for rule in merged
-            )
-        else:
-            raise ConversionError(f"Unsupported Apple supplement kind: {candidate.kind}")
-        if not covered:
-            merged.append(candidate)
-    return merged
-
-
 def fetch_text(url: str) -> str:
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     try:
@@ -705,7 +645,7 @@ def build(
             "deduplication": "identical rules; first occurrence retained; local rules first",
             "entries": len(porn_rules),
             "output": "dist/mihomo/porn.list",
-            "outputs": ["dist/mihomo/porn.mrs", "dist/egern/porn.yaml"],
+            "outputs": ["dist/mihomo/porn.mrs", "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/egern/rules/porn.yaml"],
             "behavior": "domain",
         },
         "mcdn_block": {
@@ -723,7 +663,7 @@ def build(
             "duplicates_removed": len(mcdn_rules) + len(mcdn_adguard_rules) - len(mcdn_merged_rules),
             "deduplication": "identical rules; first occurrence retained",
             "entries": len(mcdn_merged_rules),
-            "outputs": ["dist/mihomo/mcdn-block.mrs", "dist/egern/mcdn-block.yaml"],
+            "outputs": ["dist/mihomo/mcdn-block.mrs", "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/egern/rules/mcdn-block.yaml"],
             "behavior": "domain",
         },
         "claude": {

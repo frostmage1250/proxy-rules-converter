@@ -1,0 +1,86 @@
+name: Publish Egern rules
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [egern]
+    paths:
+      - ".github/workflows/update-egern.yml"
+      - "src/**"
+      - "config/**"
+      - "requirements.txt"
+  schedule:
+    - cron: "50 0,6,12,18 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-egern-rules
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: egern
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+      - run: python -m pip install --requirement requirements.txt
+      - name: Install latest stable official Mihomo converter
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          release_json="$(gh api repos/MetaCubeX/mihomo/releases/latest)"
+          mihomo_version="$(jq --raw-output '.tag_name' <<< "${release_json}")"
+          asset="mihomo-linux-amd64-compatible-${mihomo_version}.gz"
+          asset_json="$(
+            jq --compact-output --arg name "${asset}" \
+              '.assets[] | select(.name == $name)' <<< "${release_json}"
+          )"
+          download_url="$(jq --raw-output '.browser_download_url' <<< "${asset_json}")"
+          digest="$(jq --raw-output '.digest' <<< "${asset_json}")"
+          if [[ -z "${asset_json}" || "${digest}" != sha256:* ]]; then
+            echo "Latest stable Mihomo release is missing ${asset} or its SHA-256 digest." >&2
+            exit 1
+          fi
+          archive="${RUNNER_TEMP}/${asset}"
+          curl --fail --location --silent --show-error \
+            "${download_url}" \
+            --output "${archive}"
+          echo "${digest#sha256:}  ${archive}" | sha256sum --check
+          gzip --decompress --stdout "${archive}" > "${RUNNER_TEMP}/mihomo"
+          chmod +x "${RUNNER_TEMP}/mihomo"
+          echo "${RUNNER_TEMP}" >> "${GITHUB_PATH}"
+          echo "Using latest stable Mihomo ${mihomo_version}."
+          "${RUNNER_TEMP}/mihomo" -v
+
+
+      - name: Read one script, convert native rules, and publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mihomo_commit="$(gh api repos/frostmage1250/mihomo-script/commits/main --jq .sha)"
+          curl --fail --location --silent --show-error \
+            "https://raw.githubusercontent.com/frostmage1250/mihomo-script/${mihomo_commit}/mihomoScript.js" \
+            --output "${RUNNER_TEMP}/mihomoScript.js"
+          node src/extract_mihomo_model.js "${RUNNER_TEMP}/mihomoScript.js" > "${RUNNER_TEMP}/mihomo.json"
+          python src/convert_egern.py --model "${RUNNER_TEMP}/mihomo.json" --mihomo-commit "${mihomo_commit}"
+          git add -- rules
+          git diff --cached --check
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit --quiet -m "chore: publish native Egern rules"
+            git push origin HEAD:refs/heads/egern
+          fi

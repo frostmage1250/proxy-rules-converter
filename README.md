@@ -1,159 +1,39 @@
-# Mihomo rule converter
+# Rule converter
 
-This repository publishes the customized rule providers consumed by Mihomo and Egern,
-including AI, Claude, porn, MCDN, and V2Fly geolocation-cn.
-Apple and Apple Podcasts follow Bett rule providers and publish Egern-native equivalents.
+The repository has two publishing branches:
 
-## Conversion policy
+- `main`: custom Mihomo providers under `dist/mihomo/`.
+- [`egern`](https://github.com/frostmage1250/proxy-rules-converter/tree/egern): independently reads the latest Mihomo script and publishes all referenced providers as native YAML under `rules/`, plus APNs and Private Relay.
 
-- Preserve every source rule, its order, and the total rule count.
-- Do not semantically minimize, deduplicate, sort, replace, or silently ignore rules.
-- Preserve upstream exact duplicates in their original positions.
-- Stop the build when an unsupported rule, required normalization, or source
-  disappearance is detected.
+The Egern profile generator independently reads the script again and references the Egern branch. No shared configuration model is transferred. Historical `main/dist/egern/*.yaml` remain frozen compatibility URLs for existing profiles.
 
-## AI
+## Custom Mihomo providers
 
-`dist/mihomo/ai.mrs` is built directly from Bett's
-`category-ai-!cn.mrs`. Mihomo decodes the upstream MRS to temporary text;
-the generator adds `+.webpubsub.azure.com`,
-`client-api.arkoselabs.com`, and `openai-api.arkoselabs.com` when they are
-not already covered, then recompiles with Mihomo. The validated final MRS is
-also decoded to `dist/mihomo/ai.list` for Egern conversion. `reports/ai.json`
-records the source and generated file hashes.
+- **AI**: official Mihomo decodes Bett `category-ai-!cn.mrs`; three reviewed Azure/Arkose supplement rules are added if uncovered, then the MRS is compiled.
+- **Claude**: Bett Anthropic rules first, supplemented by the reviewed site rules and datadog/sentry/sift keyword fallbacks. NTP remains excluded.
+- **MCDN**: the four local suffixes in `config/mcdn-block.list` merge with AdGuard-AntiPCDN. The explicitly excluded wildcard is skipped. Only identical duplicates are removed.
+- **porn**: `config/pron-sites.json` selects reviewed domain rules from Bett category-porn, excluding regex and E-Hentai/ExHentai. The two suffixes in `config/porn.list` remain first. Only identical duplicates are removed.
+- **geolocation-cn**: the reviewed V2Fly build and domain additions remain in `config/v2fly/`; the official converter compiles the domain MRS.
 
-## Apple and Apple Podcasts
+Ordinary Apple, Podcasts, Steam CN and other service providers belong to the Mihomo script's upstream definitions. Their Egern format conversion belongs exclusively to the Egern branch.
 
-Mihomo consumes Bett's `geo/geosite/apple.mrs` and
-`geo/geosite/apple-podcasts.mrs` through the current upstream script mirror.
-The Egern converter reads their pinned Bett text sources and publishes
-`dist/egern/apple.yaml` and `dist/egern/apple-podcasts.yaml`, preserving
-matching scope, order within each native field, and duplicate entries.
-The former Apple Services supplement and `apple-merged` artifacts are retired.
-The separate Egern-only iCloud Private Relay source remains in use.
+## Main branch workflow
 
-## Claude
+The main workflow fetches sources, generates each custom provider once, validates during generation and commits `dist/` and `reports/`. Unit tests run on source pushes. Egern conversion, repeated native-artifact validation, repeated downloads and post-push file comparisons have been removed from this workflow.
 
-\`dist/mihomo/claude.yaml\` is a Mihomo classical provider. Bett's
-\`anthropic.list\` is the primary source; the typed rules and keyword fallbacks
-published by \`https://ip.net.coffee/claude/site.html\` supply missing
-authentication, CDN, telemetry, risk-control, customer-support, IPv4, IPv6,
-and AS399358 coverage. Bett rules are emitted first, and site rules already
-covered by a Bett suffix are not duplicated.
+The small `update-egern.yml` workflow also exists on this default branch because GitHub schedules originate here. Its job checks out `egern` and runs that branch's converter; its implementation and rule outputs remain on `egern`.
 
-The extractor requires the reviewed complete site rule block and all three
-\`datadog\`, \`sentry\`, and \`sift\` keyword fallbacks. Any disappearance or
-unsupported syntax stops the build. NTP is explicitly excluded from the
-Claude provider.
-
-## MCDN block
-
-The four local suffixes in `config/mcdn-block.list` are merged with
-[xianhongtao/AdGuard-AntiPCDN-Rules](https://github.com/xianhongtao/AdGuard-AntiPCDN-Rules/blob/main/adguard.txt).
-The user-excluded `||*pcdn*.biliapi.net^$important` wildcard is skipped;
-all other supported AdGuard hostname blocks become suffix rules, including
-their apex and subdomains. Unsupported syntax fails the build.
-
-MCDN is an explicit exception to duplicate preservation: only identical rules
-are removed, keeping their first occurrence and local rules first. Covered
-narrower suffixes are retained; no semantic minimization is performed.
-
-The workflow publishes `dist/mihomo/mcdn-block.mrs` (domain behavior) and
-`dist/egern/mcdn-block.yaml` (native `domain_suffix_set`), plus the readable
-`dist/mihomo/mcdn-block.list`. All three share the same merged suffixes.
-The AdGuard source is fetched once per workflow run; generation and the final
-deterministic check use that snapshot. The report records its URL, hash,
-excluded rules, input counts, removed duplicates, and final rule count.
-Final validation decodes the MRS and compares it and Egern YAML against the
-merged source. Existing consumer URLs and REJECT routing remain unchanged.
-
-## pron
-
-The `pron` policy group uses `dist/mihomo/porn.mrs` and
-`dist/egern/porn.yaml`. Both are generated from a reviewed subset of
-Bett's [`category-porn` classical list](https://github.com/appshubcc/bett-rules/blob/meta/geo/geosite/classical/category-porn.list).
-
-`config/pron-sites.json` defines the selected 26 websites, their reviewed
-alternate domains, and independent image/video CDN domains already present in
-`category-porn`. Selection uses exact domain names and preserves each source
-rule's `DOMAIN` or `DOMAIN-SUFFIX` matching scope. It adds no external domains.
-E-Hentai and ExHentai are excluded, as are all `DOMAIN-REGEX` rules. Missing
-selected source domains fail the build rather than silently expanding or
-replacing the selection.
-
-The existing `javdb.com` and `hanime1.me` rules stay first; FC2's
-`video.fc2.com` and `adult.contents.fc2.com` are included. Only identical
-duplicates are removed. No suffix minimization or sorting is applied.
-
-The workflow uses one category-porn snapshot for generation and final
-deterministic validation. Reports record the source hash, selected websites,
-selected and excluded domain counts, excluded regex count, removed duplicates,
-and final rule count. Existing provider URLs and the `pron` group remain valid.
-
-## V2Fly geolocation-cn
-
-This is the approved exception to the Bett rule-data source. The workflow
-builds `geolocation-cn-clean` with V2Fly's official generator. The local
-`config/v2fly/geolocation-cn-clean` wrapper adds the `ugcimg.cn` suffix
-(including the apex and all subdomains) and the exact host
-`dypnsapi-dualstack.aliyuncs.com` and `upos-icdn-cqg101.solseed.cn`.
-Domain rule sets do not include ports; both additions match exact hosts.
-
-The current three regular-expression rules cannot be represented by domain
-MRS and are explicitly pinned in `config/v2fly/geolocation-cn-regex.txt`.
-Any change to that reviewed set stops the workflow. MetaCubeX is used only
-to compile the MRS format. The Mihomo text list is checked against the
-V2Fly export for identical order and count.
-
-## Published files
+## Published Mihomo files
 
 ```text
 dist/mihomo/
-├─ ai.list
-├─ ai.mrs
-├─ claude.yaml
-├─ geolocation-cn.list
-├─ geolocation-cn.mrs
-├─ mcdn-block.list
-├─ mcdn-block.mrs
-├─ porn.list
-└─ porn.mrs
+  ai.list
+  ai.mrs
+  claude.yaml
+  geolocation-cn.list
+  geolocation-cn.mrs
+  mcdn-block.list
+  mcdn-block.mrs
+  porn.list
+  porn.mrs
 ```
-
-`reports/geolocation-cn.json` records the V2Fly source, converter commit,
-entry counts, sentinels, and output hashes. `reports/summary.json` and
-`reports/update-report.md` describe the current customized provider sources.
-
-The unused 11-rule Steam download provider and its allowlist/reporting pipeline
-have been retired. Consumers continue using Bett `steam@cn` through `steam_cn`.
-
-## Automation
-
-`.github/workflows/update-rules.yml` runs every six hours and on relevant
-source changes. It fetches fresh upstream files, runs validation, regenerates
-the providers, checks determinism, and commits changed generated files.
-
-## Egern-native rule sets
-
-The model extractor calls the pinned script's public main entry point with reserved
-placeholder nodes. It reads the returned providers, effective rules and groups,
-without depending on internal finalRuleProviders/buildRules globals. High-rate
-and home group definitions are exported when those groups are generated.
-
-The same workflow extracts the rule-provider model from the pinned Mihomo script,
-converts every referenced provider to one Egern-native YAML file, and publishes
-`dist/egern/<provider>.yaml`. It also converts the pinned
-`ttyyss2233/Tool/shadowrocket/rules/apns.list` to `dist/egern/apns.yaml`.
-No source entry is removed or deduplicated. Egern native YAML stores each rule
-type in its own list, so rules of different types are grouped by field; within
-each field, original order and duplicates are preserved. A rule set matches
-when any entry matches.
-
-`reports/egern-source.json` records the Mihomo, Bett, and APNs commits,
-source URLs and hashes, source and output counts, a source-order digest,
-a native-field-order digest, and the output file hash for each provider.
-Generated geolocation-cn, AI, and Claude sources are read from this workflow's
-own Mihomo outputs after validation; Egern conversion uses text sources rather
-than decoding MRS binaries. The Egern profile repository consumes this report
-and only publishes its profile. Import the current Egern profile to pick up
-the one-file references.

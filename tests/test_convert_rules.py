@@ -18,8 +18,6 @@ from convert_rules import (  # noqa: E402
     extract_claude_site_rules,
     is_externally_managed_output,
     merge_claude_rules,
-    merge_apple_rules,
-    parse_sukka_apple_services,
     merge_mcdn_rules,
     parse_porn_source,
     merge_porn_rules,
@@ -30,51 +28,10 @@ from convert_rules import (  # noqa: E402
     parse_mixed_ipcidr_text,
     render_classical_yaml,
     render_rules,
-    rule_covers_domain,
 )
 
 
 class ConverterTests(unittest.TestCase):
-    def test_apple_supplement_excludes_push_marker_processes_and_ips(self) -> None:
-        rules = parse_sukka_apple_services(
-            "# generated\n"
-            "DOMAIN,7h15.ru1353t.1s.m4d3.by.5ukk4w.skk.moe\n"
-            "DOMAIN-SUFFIX,appstore.com\n"
-            "DOMAIN-SUFFIX,organicfruitapps.com\n"
-            "DOMAIN-SUFFIX,push-apple.com.akadns.net\n"
-            "PROCESS-NAME,apsd\n"
-            "IP-CIDR,17.0.0.0/8,no-resolve\n",
-            "Sukka",
-            ["7h15.ru1353t.1s.m4d3.by.5ukk4w.skk.moe", "push-apple.com.akadns.net"],
-        )
-        self.assertEqual(rules, [
-            DomainRule("suffix", "appstore.com"),
-            DomainRule("suffix", "organicfruitapps.com"),
-        ])
-        with self.assertRaises(ConversionError):
-            parse_sukka_apple_services("DOMAIN-KEYWORD,apple\n", "Sukka", [])
-        with self.assertRaises(ConversionError):
-            parse_sukka_apple_services("DOMAIN-SUFFIX,Apple.com\n", "Sukka", [])
-
-    def test_apple_merge_preserves_base_and_uses_semantic_coverage(self) -> None:
-        primary = parse_domain_text(
-            "exact.example\n+.apple.com\nexact.example\n.subdomain.example\n", "Bett"
-        )
-        supplement = parse_sukka_apple_services(
-            "DOMAIN,api.apple.com\n"
-            "DOMAIN-SUFFIX,maps.apple.com\n"
-            "DOMAIN-SUFFIX,exact.example\n"
-            "DOMAIN-SUFFIX,child.subdomain.example\n"
-            "DOMAIN-SUFFIX,appstore.com\n"
-            "DOMAIN-SUFFIX,appstore.com\n", "Sukka", []
-        )
-        merged = merge_apple_rules(primary, supplement)
-        self.assertEqual(merged[:len(primary)], primary)
-        self.assertEqual(merged[len(primary):], [
-            DomainRule("suffix", "exact.example"),
-            DomainRule("suffix", "appstore.com"),
-        ])
-
     def test_domain_conversion_preserves_order_and_count(self) -> None:
         rules = parse_domain_text(
             "z.example\n+.example.com\na.example\n+.example.com\n", "test"
@@ -255,23 +212,16 @@ class ConverterTests(unittest.TestCase):
                 is_externally_managed_output(ROOT / "dist" / "mihomo" / name)
             )
 
-    def test_egern_and_ai_outputs_are_externally_managed(self) -> None:
+    def test_legacy_egern_and_ai_outputs_are_externally_managed(self) -> None:
         for path in (
             ROOT / "dist" / "mihomo" / "ai.list",
             ROOT / "dist" / "egern" / "apns.yaml",
             ROOT / "dist" / "egern" / "geolocation-cn.yaml",
-            ROOT / "reports" / "egern-source.json",
         ):
             self.assertTrue(is_externally_managed_output(path))
         self.assertFalse(
             is_externally_managed_output(ROOT / "dist" / "mihomo" / "porn.list")
         )
-
-    def test_suffix_coverage(self) -> None:
-        rule = DomainRule("suffix", "example.com")
-        self.assertTrue(rule_covers_domain(rule, "example.com"))
-        self.assertTrue(rule_covers_domain(rule, "cdn.example.com"))
-        self.assertFalse(rule_covers_domain(rule, "notexample.com"))
 
     def test_duplicate_counts(self) -> None:
         self.assertEqual(
