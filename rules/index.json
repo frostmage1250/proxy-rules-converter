@@ -1,0 +1,249 @@
+{
+  "mihomo_commit": "d48c90f942754765a58211f23113d79b63ba3c4f",
+  "providers": {
+    "private": {
+      "file": "private.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/private.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "geolocation-cn": {
+      "file": "geolocation-cn.yaml",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/geolocation-cn.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "steam_cn": {
+      "file": "steam-cn.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/steam@cn.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "synology": {
+      "file": "synology.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/synology.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "nvidia_cn": {
+      "file": "nvidia-cn.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/nvidia@cn.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "apple_cn": {
+      "file": "apple-cn.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/apple@cn.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "microsoft_cn": {
+      "file": "microsoft-cn.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/microsoft@cn.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "cn_additional": {
+      "file": "cn-additional.yaml",
+      "url": "https://static-file-global.353355.xyz/rules/cn-additional-list.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "cn_ip": {
+      "file": "cn-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/cn.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "mcdn屏蔽": {
+      "file": "mcdn-block.yaml",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/mcdn-block.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "youtube": {
+      "file": "youtube.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/youtube.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "twitch": {
+      "file": "twitch.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/twitch.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "google": {
+      "file": "google.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/google.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "google_ip": {
+      "file": "google-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/google.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "claude": {
+      "file": "claude.yaml",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/claude.yaml",
+      "behavior": "classical",
+      "format": "yaml"
+    },
+    "ai": {
+      "file": "ai.yaml",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/ai.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "github": {
+      "file": "github.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/github.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "microsoft": {
+      "file": "microsoft.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/microsoft.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "microsoft_ip": {
+      "file": "microsoft-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/microsoft.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "appletv": {
+      "file": "appletv.yaml",
+      "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/apple-tvplus.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "apple_podcasts": {
+      "file": "apple-podcasts.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/apple-podcasts.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "apple": {
+      "file": "apple.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/apple.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "apple_ip": {
+      "file": "apple-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/apple.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "telegram": {
+      "file": "telegram.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/telegram.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "telegram_ip": {
+      "file": "telegram-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/telegram.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "steam": {
+      "file": "steam.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/steam.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "steam_ip": {
+      "file": "steam-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/steam.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "tiktok": {
+      "file": "tiktok.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/tiktok.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "tiktok_ip": {
+      "file": "tiktok-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/tiktok.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "twitter": {
+      "file": "twitter.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/twitter.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "twitter_ip": {
+      "file": "twitter-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/twitter.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "meta": {
+      "file": "meta.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/meta.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "facebook_ip": {
+      "file": "facebook-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/facebook.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "pikpak": {
+      "file": "pikpak.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/pikpak.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "ehentai": {
+      "file": "ehentai.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/ehentai.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "porn": {
+      "file": "porn.yaml",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/porn.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "geolocation-!cn": {
+      "file": "geolocation-non-cn.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/geolocation-!cn.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "private_ip": {
+      "file": "private-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/private.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "douyin": {
+      "file": "douyin.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/douyin.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
+    "cn": {
+      "file": "cn.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/cn.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    }
+  },
+  "extra_files": [
+    "apns.yaml",
+    "privaterelay.yaml"
+  ]
+}

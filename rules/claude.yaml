@@ -34,8 +34,8 @@ domain_keyword_set:
 - sentry
 ip_cidr_set:
 - 160.79.104.0/21
+no_resolve: true
 ip_cidr6_set:
 - 2607:6bc0::/32
 asn_set:
 - '399358'
-no_resolve: true

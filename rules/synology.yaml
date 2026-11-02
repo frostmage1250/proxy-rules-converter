@@ -1,9 +1,4 @@
 domain_suffix_set:
-- gofile.me
-- quickconnect.to
-- synology.com
-- synologydownload.com
-- synologyupdate.com
 - diskstation.me
 - dscloud.biz
 - dscloud.me
@@ -14,8 +9,13 @@ domain_suffix_set:
 - familyds.com
 - familyds.net
 - familyds.org
+- gofile.me
 - i234.me
 - myds.me
-- synology.me
 - quickconnect.cn
+- quickconnect.to
 - synology.cn
+- synology.com
+- synology.me
+- synologydownload.com
+- synologyupdate.com

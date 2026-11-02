@@ -1,3 +1,12 @@
+domain_suffix_set:
+- ext-twitch.tv
+- jtvnw.net
+- live-video.net
+- ttvnw.net
+- twitch.tv
+- twitchcdn.net
+- twitchcon.com
+- twitchsvc.net
 domain_set:
 - d1g1f25tn8m2e6.cloudfront.net
 - d1m7jfoe9zdc1j.cloudfront.net
@@ -26,12 +35,3 @@ domain_set:
 - dqrpb9wgowsf5.cloudfront.net
 - ds0h3roq6wcgc.cloudfront.net
 - dykkng5hnh52u.cloudfront.net
-domain_suffix_set:
-- ext-twitch.tv
-- jtvnw.net
-- live-video.net
-- ttvnw.net
-- twitch.tv
-- twitchcdn.net
-- twitchcon.com
-- twitchsvc.net

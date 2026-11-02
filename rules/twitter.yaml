@@ -1,17 +1,18 @@
 domain_suffix_set:
-- twitter.jp
-- twitter.biz
+- ads-twitter.com
+- cms-twdigitalassets.com
+- periscope.tv
 - pscp.tv
 - t.co
 - tellapart.com
 - tweetdeck.com
 - twimg.com
-- twittercommunity.com
-- x.com
-- twitter.com
-- periscope.tv
-- cms-twdigitalassets.com
 - twitpic.com
+- twitter.biz
+- twitter.com
+- twitter.jp
+- twitter.map.fastly.net
+- twittercommunity.com
 - twitterflightschool.com
 - twitterinc.com
 - twitteroauth.com
@@ -21,5 +22,4 @@ domain_suffix_set:
 - twttr.net
 - twvid.com
 - vine.co
-- twitter.map.fastly.net
-- ads-twitter.com
+- x.com

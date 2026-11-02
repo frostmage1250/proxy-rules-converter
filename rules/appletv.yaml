@@ -1,3 +1,5 @@
+domain_suffix_set:
+- tv.apple.com
 domain_set:
 - apple-tv-plus-press.apple.com
 - hls-amt.itunes.apple.com
@@ -6,5 +8,3 @@ domain_set:
 - play-edge.itunes.apple.com
 - tv.applemusic.com
 - uts-api.itunes.apple.com
-domain_suffix_set:
-- tv.apple.com
