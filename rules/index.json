@@ -1,5 +1,5 @@
 {
-  "mihomo_commit": "1630e63e37e8e03a1f56f9680256515a100bdb1e",
+  "mihomo_commit": "b113d0858f1ea821e4e1510508ca0c90e6e4719b",
   "providers": {
     "private": {
       "file": "private.yaml",
@@ -41,18 +41,6 @@
       "file": "microsoft-cn.yaml",
       "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/microsoft@cn.mrs",
       "behavior": "domain",
-      "format": "mrs"
-    },
-    "cn_additional": {
-      "file": "cn-additional.yaml",
-      "url": "https://static-file-global.353355.xyz/rules/cn-additional-list.mrs",
-      "behavior": "domain",
-      "format": "mrs"
-    },
-    "cn_ip": {
-      "file": "cn-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/cn.mrs",
-      "behavior": "ipcidr",
       "format": "mrs"
     },
     "mcdn屏蔽": {
@@ -214,6 +202,12 @@
     "facebook_ip": {
       "file": "facebook-ip.yaml",
       "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/facebook.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "cn_ip": {
+      "file": "cn-ip.yaml",
+      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/cn.mrs",
       "behavior": "ipcidr",
       "format": "mrs"
     },
