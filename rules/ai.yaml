@@ -172,7 +172,6 @@ domain_suffix_set:
 - tripo3d.ai
 - turn.livekit.cloud
 - typesafe.ai
-- webpubsub.azure.com
 - windsurf.build
 - windsurf.com
 - x.ai
@@ -189,7 +188,6 @@ domain_set:
 - appsgenaiserver-pa.clients6.google.com
 - appsgenaiserver-pa.googleapis.com
 - browser-intake-datadoghq.com
-- client-api.arkoselabs.com
 - cloudaicompanion.googleapis.com
 - cloudcode-pa.googleapis.com
 - copilot-proxy.githubusercontent.com
@@ -204,7 +202,6 @@ domain_set:
 - notebooklm.googleapis.com
 - o33249.ingest.sentry.io
 - o33249.ingest.us.sentry.io
-- openai-api.arkoselabs.com
 - openai.qualtrics.com
 - openaiapi-site.azureedge.net
 - openaiassets.blob.core.windows.net
