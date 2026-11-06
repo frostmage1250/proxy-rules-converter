@@ -162,15 +162,22 @@ class Sources:
 
     def read(self, url):
         if url not in self.downloads:
-            request = urllib.request.Request(url, headers={"User-Agent": "egern-rules-builder/1"})
-            print(f"Downloading rule source: {url}", flush=True)
+            # Fetch the same Bett repository/ref directly: CDN package limits can
+            # reject individual files. Keep the script URL in the source index.
+            download_url = re.sub(
+                r"^https://(?:fastly\.jsdelivr\.net|cdn\.jsdelivr\.net|cdn\.jsdmirror\.com)/gh/appshubcc/bett-rules@([^/]+)/",
+                r"https://raw.githubusercontent.com/appshubcc/bett-rules/\1/",
+                url,
+            )
+            request = urllib.request.Request(download_url, headers={"User-Agent": "egern-rules-builder/1"})
+            print(f"Downloading rule source: {url} via {download_url}", flush=True)
             try:
                 with urllib.request.urlopen(request, timeout=90) as response:
                     self.downloads[url] = response.read()
             except urllib.error.HTTPError as exc:
                 detail = exc.read(512).decode("utf-8", errors="replace")
                 raise BuildError(
-                    f"Rule source download failed: {url}; HTTP {exc.code} "
+                    f"Rule source download failed: {url} via {download_url}; HTTP {exc.code} "
                     f"{exc.reason}; response: {detail!r}"
                 ) from exc
             if not self.downloads[url]:
