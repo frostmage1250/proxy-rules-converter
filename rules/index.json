@@ -1,33 +1,33 @@
 {
-  "mihomo_commit": "24ac15aeb2f9c2739d60e5f92b48f3ecf9f47859",
+  "mihomo_commit": "201600d1ae5713227761503c9a64bc1343b9da1c",
   "providers": {
     "private": {
       "file": "private.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/private.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/private.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "geolocation-cn": {
       "file": "geolocation-cn.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/geolocation-cn.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/geolocation-cn.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "games_cn": {
       "file": "games-cn.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/category-games@cn.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/category-games@cn.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "synology": {
       "file": "synology.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/synology.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/synology.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "nvidia_cn": {
       "file": "nvidia-cn.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/nvidia@cn.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/nvidia@cn.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
@@ -39,19 +39,19 @@
     },
     "apple_podcasts": {
       "file": "apple-podcasts.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/apple-podcasts.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/apple-podcasts.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "apple_cn": {
       "file": "apple-cn.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/apple@cn.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/apple@cn.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "microsoft_cn": {
       "file": "microsoft-cn.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/microsoft@cn.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/microsoft@cn.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
@@ -63,25 +63,25 @@
     },
     "category-ads": {
       "file": "category-ads.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/category-ads.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/category-ads.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "googlefcm": {
       "file": "googlefcm.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/googlefcm.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/googlefcm.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "youtube": {
       "file": "youtube.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/youtube.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/youtube.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "google": {
       "file": "google.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/google.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/google.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
@@ -93,115 +93,109 @@
     },
     "ai": {
       "file": "ai.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/category-ai-!cn.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/category-ai-!cn.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "github": {
       "file": "github.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/github.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/github.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "microsoft": {
       "file": "microsoft.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/microsoft.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/microsoft.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "apple": {
       "file": "apple.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/apple.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/apple.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "telegram": {
       "file": "telegram.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/telegram.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/telegram.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "steam": {
       "file": "steam.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/steam.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/steam.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "tiktok": {
       "file": "tiktok.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/tiktok.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/tiktok.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "twitter": {
       "file": "twitter.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/twitter.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/twitter.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "meta": {
       "file": "meta.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/meta.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/meta.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "line": {
       "file": "line.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/line.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/line.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "netflix": {
       "file": "netflix.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/netflix.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/netflix.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "emby": {
       "file": "emby.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/666OS/rules@release/mihomo/domain/Emby.mrs",
-      "behavior": "domain",
-      "format": "mrs"
-    },
-    "emos": {
-      "file": "emos.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/binaryu/emos-proxy-rule@main/rules/emos-mihomo.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/category-emby.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "pikpak": {
       "file": "pikpak.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/pikpak.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/pikpak.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "spotify": {
       "file": "spotify.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/spotify.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/spotify.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "cryptocurrency": {
       "file": "cryptocurrency.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/category-cryptocurrency.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/category-cryptocurrency.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "paypal": {
       "file": "paypal.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/paypal.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/paypal.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "patreon": {
       "file": "patreon.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/patreon.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/patreon.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "ehentai": {
       "file": "ehentai.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/ehentai.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/ehentai.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
@@ -213,91 +207,91 @@
     },
     "geolocation-!cn": {
       "file": "geolocation-non-cn.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/geolocation-!cn.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/geolocation-!cn.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "google_ip": {
       "file": "google-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/google.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/google.mrs",
       "behavior": "ipcidr",
       "format": "mrs"
     },
     "microsoft_ip": {
       "file": "microsoft-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/microsoft.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/microsoft.mrs",
       "behavior": "ipcidr",
       "format": "mrs"
     },
     "apple_ip": {
       "file": "apple-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/apple.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/apple.mrs",
       "behavior": "ipcidr",
       "format": "mrs"
     },
     "telegram_ip": {
       "file": "telegram-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/telegram.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/telegram.mrs",
       "behavior": "ipcidr",
       "format": "mrs"
     },
     "steam_ip": {
       "file": "steam-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/steam.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/steam.mrs",
       "behavior": "ipcidr",
       "format": "mrs"
     },
     "tiktok_ip": {
       "file": "tiktok-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/tiktok.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/tiktok.mrs",
       "behavior": "ipcidr",
       "format": "mrs"
     },
     "twitter_ip": {
       "file": "twitter-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/twitter.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/twitter.mrs",
       "behavior": "ipcidr",
       "format": "mrs"
     },
     "facebook_ip": {
       "file": "facebook-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/facebook.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/facebook.mrs",
       "behavior": "ipcidr",
       "format": "mrs"
     },
     "netflix_ip": {
       "file": "netflix-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/netflix.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/netflix.mrs",
       "behavior": "ipcidr",
       "format": "mrs"
     },
     "spotify_ip": {
       "file": "spotify-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/spotify.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/spotify.mrs",
       "behavior": "ipcidr",
       "format": "mrs"
     },
     "cn_ip": {
       "file": "cn-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/cn.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/cn.mrs",
       "behavior": "ipcidr",
       "format": "mrs"
     },
     "private_ip": {
       "file": "private-ip.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geoip/private.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/private.mrs",
       "behavior": "ipcidr",
       "format": "mrs"
     },
     "douyin": {
       "file": "douyin.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/douyin.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/douyin.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
     "cn": {
       "file": "cn.yaml",
-      "url": "https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/cn.mrs",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/cn.mrs",
       "behavior": "domain",
       "format": "mrs"
     }
