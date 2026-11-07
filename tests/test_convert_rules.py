@@ -207,7 +207,7 @@ class ConverterTests(unittest.TestCase):
         )
 
     def test_geolocation_outputs_are_externally_managed(self) -> None:
-        for name in ("geolocation-cn.list", "geolocation-cn.mrs"):
+        for name in ("geolocation-cn.mrs",):
             self.assertTrue(
                 is_externally_managed_output(ROOT / "dist" / "mihomo" / name)
             )

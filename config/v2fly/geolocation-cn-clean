@@ -1,8 +1,2 @@
-# Resolve the official V2Fly category with the official parser, while dropping
-# entries explicitly tagged as advertisements.
+# Expand the official V2Fly category and exclude only entries tagged @ads.
 include:geolocation-cn @-ads
-
-# User-maintained domain rules; ports are not part of domain rules.
-domain:ugcimg.cn
-full:dypnsapi-dualstack.aliyuncs.com
-full:upos-icdn-cqg101.solseed.cn

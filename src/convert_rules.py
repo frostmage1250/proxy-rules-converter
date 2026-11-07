@@ -32,8 +32,6 @@ USER_AGENT = (
 DOMAIN_LABEL_RE = re.compile(r"^[a-z0-9_](?:[a-z0-9_-]{0,61}[a-z0-9_])?$", re.I)
 EXTERNALLY_MANAGED_OUTPUTS = frozenset(
     {
-        "dist/mihomo/geolocation-cn.list",
-        "reports/geolocation-cn.json",
         "reports/ai.json",
         "dist/mihomo/ai.list",
     }

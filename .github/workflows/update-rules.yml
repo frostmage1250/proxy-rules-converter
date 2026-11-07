@@ -108,8 +108,7 @@ jobs:
             cd "${v2fly_root}"
             go run . \
               --datprofile="${GITHUB_WORKSPACE}/config/v2fly/dat-profile.json" \
-              --outputdir="${v2fly_output}" \
-              --exportlists=geolocation-cn-clean
+              --outputdir="${v2fly_output}"
           )
 
           git clone --depth 1 \
@@ -123,18 +122,8 @@ jobs:
             -f "${v2fly_output}/geolocation-cn.dat" \
             -o "${meta_output}"
 
-          python src/convert_v2fly_geolocation_cn.py \
-            --v2fly-export "${v2fly_output}/geolocation-cn-clean.txt" \
-            --output dist/mihomo/geolocation-cn.list
           install -m 0644 "${meta_output}/geolocation-cn-clean.mrs" \
             dist/mihomo/geolocation-cn.mrs
-          python src/validate_geolocation_cn.py \
-            --v2fly-export "${v2fly_output}/geolocation-cn-clean.txt" \
-            --domain-list dist/mihomo/geolocation-cn.list \
-            --domain-mrs dist/mihomo/geolocation-cn.mrs \
-            --v2fly-commit "$(git -C "${v2fly_root}" rev-parse HEAD)" \
-            --mrs-converter-commit "$(git -C "${converter_root}" rev-parse HEAD)" \
-            --report reports/geolocation-cn.json
 
       - name: Commit changed generated files
         shell: bash

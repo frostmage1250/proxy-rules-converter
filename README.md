@@ -13,7 +13,7 @@ The Egern profile generator independently reads the script again and references 
 - **Claude**: Bett Anthropic rules first, supplemented by the reviewed site rules and datadog/sentry/sift keyword fallbacks. NTP remains excluded.
 - **MCDN**: the four local suffixes in `config/mcdn-block.list` merge with AdGuard-AntiPCDN. The explicitly excluded wildcard is skipped. Only identical duplicates are removed.
 - **porn**: `config/pron-sites.json` selects reviewed domain rules from Bett category-porn, excluding regex and E-Hentai/ExHentai. The two suffixes in `config/porn.list` remain first. Only identical duplicates are removed.
-- **geolocation-cn**: the reviewed V2Fly build and domain additions remain in `config/v2fly/`; the official converter compiles the domain MRS.
+- **geolocation-cn**: each build fetches the latest V2Fly source, expands `geolocation-cn` with the official V2Fly generator and excludes entries tagged `@ads`, then MetaCubeX/meta-rules-converter compiles the resulting DAT to domain MRS. No supplemental domains or custom text-list conversion are used.
 
 Ordinary Apple, Podcasts, Steam CN and other service providers belong to the Mihomo script's upstream definitions. Their Egern format conversion belongs exclusively to the Egern branch.
 
@@ -30,7 +30,6 @@ dist/mihomo/
   ai.list
   ai.mrs
   claude.yaml
-  geolocation-cn.list
   geolocation-cn.mrs
   mcdn-block.list
   mcdn-block.mrs
