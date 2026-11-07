@@ -1,5 +1,5 @@
 {
-  "mihomo_commit": "e832cfcbd032144ea04fc169666cd5da8729c4ff",
+  "mihomo_commit": "9e364becf7f804184e84ea926f7ffa157f149755",
   "providers": {
     "private": {
       "file": "private.yaml",
@@ -9,7 +9,7 @@
     },
     "geolocation-cn": {
       "file": "geolocation-cn.yaml",
-      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/geolocation-cn.mrs",
+      "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/geolocation-cn.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
