@@ -1,6 +1,12 @@
 {
-  "mihomo_commit": "3ddb2eb4765b2afe5fa4822e260ab03811a19b6f",
+  "mihomo_commit": "bb7e002892bba71bd0cc732e9c74f3dee00fbb41",
   "providers": {
+    "category-ads": {
+      "file": "category-ads.yaml",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/category-ads.mrs",
+      "behavior": "domain",
+      "format": "mrs"
+    },
     "private": {
       "file": "private.yaml",
       "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/private.mrs",
@@ -58,12 +64,6 @@
     "mcdn屏蔽": {
       "file": "mcdn-block.yaml",
       "url": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/mihomo/mcdn-block.mrs",
-      "behavior": "domain",
-      "format": "mrs"
-    },
-    "category-ads": {
-      "file": "category-ads.yaml",
-      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/category-ads.mrs",
       "behavior": "domain",
       "format": "mrs"
     },
@@ -211,6 +211,18 @@
       "behavior": "domain",
       "format": "mrs"
     },
+    "cn_ip": {
+      "file": "cn-ip.yaml",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/cn.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
+    "private_ip": {
+      "file": "private-ip.yaml",
+      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/private.mrs",
+      "behavior": "ipcidr",
+      "format": "mrs"
+    },
     "google_ip": {
       "file": "google-ip.yaml",
       "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/google.mrs",
@@ -268,18 +280,6 @@
     "spotify_ip": {
       "file": "spotify-ip.yaml",
       "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/spotify.mrs",
-      "behavior": "ipcidr",
-      "format": "mrs"
-    },
-    "cn_ip": {
-      "file": "cn-ip.yaml",
-      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/cn.mrs",
-      "behavior": "ipcidr",
-      "format": "mrs"
-    },
-    "private_ip": {
-      "file": "private-ip.yaml",
-      "url": "https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/private.mrs",
       "behavior": "ipcidr",
       "format": "mrs"
     },
