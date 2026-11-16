@@ -34,6 +34,7 @@ domain_suffix_set:
 - beatsbydre.com
 - beatsbydre.com.cn
 - beatsep.cn
+- captive.apple.com
 - ecgapp.com.cn
 - faceshift.cn
 - homepod.cn
@@ -127,6 +128,7 @@ domain_set:
 - communities.apple.com
 - configuration.apple.com
 - configuration.apple.com.akadns.net
+- configuration.ls.apple.com
 - crl-lb.apple.com.akadns.net
 - crl.apple.com
 - cstat.apple.com
@@ -210,9 +212,11 @@ domain_set:
 - misc-assets.itunes.apple.com
 - ml.cdn-apple.com
 - music.apple.com
+- musicstatus.itunes.apple.com
 - musicstatus.music.apple.com
 - mvod.itunes.apple.com
 - myapp.itunes.apple.com
+- mzstorekit.itunes.apple.com
 - np-edge.itunes.apple.com
 - ocsp.apple.com
 - ocsp2.apple.com
