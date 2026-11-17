@@ -88,7 +88,7 @@
     "selection_source": "config/pron-sites.json",
     "source_scope": "category-porn only; no external domains",
     "upstream_domain_entries": 6521,
-    "upstream_sha256": "6a27bbb204eacd9ad65b936165ccd133a6eb660b74e4defac328e4f196f70b80",
+    "upstream_sha256": "cbb5aa8bb1439a6229045ec19ae7efeadf0b1080d5ea2c8dd4f04f36c6635296",
     "upstream_source": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/classical/category-porn.list"
   },
   "schema_version": 14,
@@ -100,7 +100,7 @@
     },
     "bett/geosite/category-porn": {
       "bytes": 191218,
-      "sha256": "6a27bbb204eacd9ad65b936165ccd133a6eb660b74e4defac328e4f196f70b80",
+      "sha256": "cbb5aa8bb1439a6229045ec19ae7efeadf0b1080d5ea2c8dd4f04f36c6635296",
       "url": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/geosite/classical/category-porn.list"
     },
     "ip.net.coffee/claude/site": {
