@@ -25,9 +25,9 @@ from convert_rules import (
 def domain_text_to_classical(text: str, source: str) -> list[str]:
     """Return one classical rule per domain line, preserving order.
 
-    Mihomo stores ``+.x`` as both ``x`` and ``+.x``, so a decoded .mrs lists
-    both. ``DOMAIN,x`` is dropped when ``DOMAIN-SUFFIX,x`` exists because the
-    suffix rule already matches ``x``; nothing else is removed.
+    ``DOMAIN,x`` is dropped when ``DOMAIN-SUFFIX,x`` exists because the suffix
+    rule already matches ``x`` (a safeguard; current Mihomo dumps already merge
+    them); nothing else is removed.
     """
 
     parsed: list[tuple[str, str]] = []
