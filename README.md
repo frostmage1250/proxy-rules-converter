@@ -5,7 +5,7 @@
 设备端引用地址：
 
 ```
-https://cdn.jsdelivr.net/gh/frostmage1250/proxy-rules-converter@egern/rules/<文件名>.yaml
+https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/egern/rules/<文件名>.yaml
 ```
 
 ## 清单 `config/rules.json`
