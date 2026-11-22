@@ -22,7 +22,7 @@ dist/classical/     # 给 egern 分支使用（DOMAIN-SUFFIX,x / DOMAIN,x）
 reports/            # summary.json、update-report.md
 ```
 
-`.mrs` 由官方 Mihomo `convert-ruleset` 从 `build/`（已 gitignore）里的中间文本编译，不再发布 `+.` 格式的 `.list`。`dist/egern/*.yaml` 是旧版兼容地址，保持冻结。
+`.mrs` 由官方 Mihomo `convert-ruleset` 从 `build/`（已 gitignore）里的中间文本编译，不再发布 `+.` 格式的 `.list`。
 
 ## 自定义规则来源
 

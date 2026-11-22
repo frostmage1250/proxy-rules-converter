@@ -278,8 +278,6 @@ class ConverterTests(unittest.TestCase):
             ROOT / "dist" / "mihomo" / "geolocation-cn.mrs",
             ROOT / "dist" / "mihomo" / "porn.mrs",
             ROOT / "dist" / "classical" / "geolocation-cn.list",
-            ROOT / "dist" / "egern" / "apns.yaml",
-            ROOT / "dist" / "egern" / "geolocation-cn.yaml",
         ):
             with self.subTest(path=path):
                 self.assertTrue(is_externally_managed_output(path))

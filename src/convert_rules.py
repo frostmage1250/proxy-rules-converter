@@ -376,7 +376,7 @@ def is_externally_managed_output(path: Path) -> bool:
     relative = path.relative_to(ROOT).as_posix()
     return (
         path.parent == ROOT / "dist" / "mihomo" and path.suffix == ".mrs"
-    ) or path.parent == ROOT / "dist" / "egern" or relative in EXTERNALLY_MANAGED_OUTPUTS
+    ) or relative in EXTERNALLY_MANAGED_OUTPUTS
 
 
 def managed_files() -> set[str]:
