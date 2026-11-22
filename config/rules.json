@@ -1,0 +1,51 @@
+{
+  "sources": {
+    "bett": {
+      "base": "https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/",
+      "skip_types": ["DOMAIN-REGEX", "DOMAIN-KEYWORD"]
+    },
+    "custom": {
+      "base": "https://raw.githubusercontent.com/frostmage1250/proxy-rules-converter/main/dist/"
+    }
+  },
+  "rules": {
+    "private.yaml": "bett:geosite/classical/private.list",
+    "category-ai-cn.yaml": "bett:geosite/classical/category-ai-cn.list",
+    "appletv.yaml": "bett:geosite/classical/apple-tvplus.list",
+    "apple-podcasts.yaml": "bett:geosite/classical/apple-podcasts.list",
+    "apple-cn.yaml": "bett:geosite/classical/apple@cn.list",
+    "microsoft-cn.yaml": "bett:geosite/classical/microsoft@cn.list",
+    "ai.yaml": "bett:geosite/classical/category-ai-!cn.list",
+    "youtube.yaml": "bett:geosite/classical/youtube.list",
+    "google.yaml": "bett:geosite/classical/google.list",
+    "telegram.yaml": "bett:geosite/classical/telegram.list",
+    "github.yaml": "bett:geosite/classical/github.list",
+    "microsoft.yaml": "bett:geosite/classical/microsoft.list",
+    "apple.yaml": "bett:geosite/classical/apple.list",
+    "steam.yaml": "bett:geosite/classical/steam.list",
+    "tiktok.yaml": "bett:geosite/classical/tiktok.list",
+    "twitter.yaml": "bett:geosite/classical/twitter.list",
+    "meta.yaml": "bett:geosite/classical/meta.list",
+    "pikpak.yaml": "bett:geosite/classical/pikpak.list",
+    "ehentai.yaml": "bett:geosite/classical/ehentai.list",
+    "geolocation-non-cn.yaml": "bett:geosite/classical/geolocation-!cn.list",
+    "douyin.yaml": "bett:geosite/classical/douyin.list",
+    "cn.yaml": "bett:geosite/classical/cn.list",
+    "cn-ip.yaml": "bett:geoip/classical/cn.list",
+    "private-ip.yaml": "bett:geoip/classical/private.list",
+    "openai-ip.yaml": "bett:geoip/classical/openai.list",
+    "google-ip.yaml": "bett:geoip/classical/google.list",
+    "telegram-ip.yaml": "bett:geoip/classical/telegram.list",
+    "microsoft-ip.yaml": "bett:geoip/classical/microsoft.list",
+    "apple-ip.yaml": "bett:geoip/classical/apple.list",
+    "steam-ip.yaml": "bett:geoip/classical/steam.list",
+    "tiktok-ip.yaml": "bett:geoip/classical/tiktok.list",
+    "twitter-ip.yaml": "bett:geoip/classical/twitter.list",
+    "facebook-ip.yaml": "bett:geoip/classical/facebook.list",
+    "claude.yaml": "custom:mihomo/claude.list",
+    "mcdn-block.yaml": "custom:classical/mcdn-block.list",
+    "porn.yaml": "custom:classical/porn.list",
+    "geolocation-cn.yaml": "custom:classical/geolocation-cn.list",
+    "apns.yaml": "https://raw.githubusercontent.com/ttyyss2233/Tool/main/shadowrocket/rules/apns.list"
+  }
+}
