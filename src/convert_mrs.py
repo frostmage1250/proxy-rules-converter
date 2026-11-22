@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Compile generated Mihomo text providers to deterministic MRS files.
+"""Compile intermediate Mihomo domain text to deterministic MRS files.
 
 This wrapper deliberately delegates the binary format to Mihomo's official
-``convert-ruleset`` command. The readable ``.list`` files remain the source of truth.
+``convert-ruleset`` command. ``convert_rules.py`` writes the ``+.`` domain text
+to the gitignored ``build/mihomo/`` directory; only the ``.mrs`` files are
+published to ``dist/mihomo/``.
 """
 
 from __future__ import annotations
@@ -18,9 +20,9 @@ from pathlib import Path
 from typing import Sequence
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_RULE_DIR = ROOT / "dist" / "mihomo"
-EXTERNALLY_COMPILED_DOMAIN_LISTS = frozenset({"ai.list"})
-EXTERNALLY_COMPILED_MRS = frozenset({"geolocation-cn.mrs", "ai.mrs"})
+DEFAULT_SOURCE_DIR = ROOT / "build" / "mihomo"
+DEFAULT_OUTPUT_DIR = ROOT / "dist" / "mihomo"
+EXTERNALLY_COMPILED_MRS = frozenset({"geolocation-cn.mrs"})
 
 
 class MrsConversionError(RuntimeError):
@@ -34,17 +36,16 @@ class RuleSet:
     behavior: str
 
 
-def discover_rule_sets(rule_dir: Path) -> list[RuleSet]:
-    """Map locally compiled Mihomo text providers to same-named MRS outputs."""
+def discover_rule_sets(source_dir: Path, output_dir: Path) -> list[RuleSet]:
+    """Map intermediate domain text files to same-named MRS outputs."""
 
     return [
         RuleSet(
             source=source,
-            destination=source.with_suffix(".mrs"),
+            destination=output_dir / (source.stem + ".mrs"),
             behavior="domain",
         )
-        for source in sorted(rule_dir.glob("*.list"))
-        if source.name not in EXTERNALLY_COMPILED_DOMAIN_LISTS
+        for source in sorted(source_dir.glob("*.list"))
     ]
 
 
@@ -88,20 +89,21 @@ def compile_rule_set(mihomo: Path, rule_set: RuleSet, destination: Path) -> None
 
 
 def convert_all(
-    mihomo: Path, rule_dir: Path, check: bool
+    mihomo: Path, source_dir: Path, output_dir: Path, check: bool
 ) -> tuple[list[str], list[str]]:
-    domain_rule_sets = discover_rule_sets(rule_dir)
+    domain_rule_sets = discover_rule_sets(source_dir, output_dir)
     if not domain_rule_sets:
-        raise MrsConversionError(f"No .list rule providers found in {rule_dir}")
+        raise MrsConversionError(f"No .list rule providers found in {source_dir}")
     changed: list[str] = []
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-    with tempfile.TemporaryDirectory(prefix="mrs-", dir=rule_dir) as temp_name:
+    with tempfile.TemporaryDirectory(prefix="mrs-", dir=output_dir) as temp_name:
         temp_dir = Path(temp_name)
         rule_sets = domain_rule_sets
         expected = {rule_set.destination for rule_set in rule_sets}
         stale = sorted(
             path.name
-            for path in rule_dir.glob("*.mrs")
+            for path in output_dir.glob("*.mrs")
             if path not in expected and path.name not in EXTERNALLY_COMPILED_MRS
         )
         for rule_set in rule_sets:
@@ -119,14 +121,15 @@ def convert_all(
 
     if not check:
         for name in stale:
-            (rule_dir / name).unlink()
+            (output_dir / name).unlink()
     return changed, stale
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--mihomo", type=Path, help="Path to the official Mihomo executable")
-    parser.add_argument("--rule-dir", type=Path, default=DEFAULT_RULE_DIR)
+    parser.add_argument("--source-dir", type=Path, default=DEFAULT_SOURCE_DIR)
+    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument(
         "--check",
         action="store_true",
@@ -136,7 +139,9 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     try:
         mihomo = resolve_mihomo(args.mihomo)
-        changed, stale = convert_all(mihomo, args.rule_dir.resolve(), args.check)
+        source_dir = args.source_dir.resolve()
+        output_dir = args.output_dir.resolve()
+        changed, stale = convert_all(mihomo, source_dir, output_dir, args.check)
         if args.check and (changed or stale):
             print("Generated MRS files are out of date:", file=sys.stderr)
             for name in changed:
@@ -147,7 +152,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         verb = "checked" if args.check else "generated"
         print(
             f"MRS files {verb}: "
-            f"{len(discover_rule_sets(args.rule_dir))}; "
+            f"{len(discover_rule_sets(source_dir, output_dir))}; "
             f"changed {len(changed)}, removed {len(stale)} stale files."
         )
         return 0

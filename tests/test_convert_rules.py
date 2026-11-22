@@ -2,32 +2,36 @@ from __future__ import annotations
 
 import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+import convert_rules  # noqa: E402
 from convert_rules import (  # noqa: E402
-    CLAUDE_SITE_REQUIRED_TYPED_RULES,
-    PORN_LIST,
+    CLAUDE_PROCESS_RULE,
+    CLAUDE_SUPPLEMENT,
+    PRON_SITES,
     ConversionError,
     DomainRule,
+    build,
+    build_claude_rules,
     duplicate_counts,
-    extract_claude_site_rules,
     is_externally_managed_output,
-    merge_claude_rules,
     merge_mcdn_rules,
-    parse_porn_source,
-    merge_porn_rules,
-    select_pron_rules,
-    parse_mcdn_adguard,
+    parse_claude_supplement,
     parse_domain_text,
     parse_ipcidr_text,
-    parse_mixed_ipcidr_text,
-    render_classical_yaml,
+    parse_mcdn_adguard,
+    parse_porn_source,
+    render_classical_rules,
+    render_classical_text,
     render_rules,
+    select_pron_rules,
 )
 
 
@@ -40,15 +44,6 @@ class ConverterTests(unittest.TestCase):
             render_rules(rules, "mihomo"),
             "z.example\n+.example.com\na.example\n+.example.com\n",
         )
-
-    def test_porn_source_has_exact_suffixes_in_order(self) -> None:
-        source = PORN_LIST.read_text(encoding="utf-8")
-        rules = parse_domain_text(source, str(PORN_LIST))
-        self.assertEqual(rules, [
-            DomainRule("suffix", "javdb.com"),
-            DomainRule("suffix", "hanime1.me"),
-        ])
-        self.assertEqual(render_rules(rules, "mihomo"), source)
 
     def test_pron_excludes_regex_and_preserves_domain_scope(self) -> None:
         rules, excluded = parse_porn_source(
@@ -83,16 +78,15 @@ class ConverterTests(unittest.TestCase):
             with self.subTest(domain=domain), self.assertRaises(ConversionError):
                 select_pron_rules([DomainRule("suffix", "javdb.com")], selection)
 
-    def test_pron_merge_keeps_local_order_and_distinct_scopes(self) -> None:
-        local = [DomainRule("suffix", "javdb.com"), DomainRule("suffix", "hanime1.me")]
-        upstream = [
-            DomainRule("suffix", "hanime1.me"), DomainRule("suffix", "javdb.com"),
-            DomainRule("exact", "video.fc2.com"), DomainRule("suffix", "video.fc2.com"),
-            DomainRule("suffix", "video.fc2.com"),
-        ]
-        self.assertEqual(merge_porn_rules(local, upstream), [
-            *local, DomainRule("exact", "video.fc2.com"), DomainRule("suffix", "video.fc2.com"),
-        ])
+    def test_pron_selection_config_has_former_local_sites(self) -> None:
+        selection = json.loads(PRON_SITES.read_text(encoding="utf-8"))
+        domains = {
+            domain
+            for site in selection["sites"]
+            for domain in site["domains"] + site["cdn_domains"]
+        }
+        self.assertTrue({"javdb.com", "hanime1.me"}.issubset(domains))
+        self.assertFalse((ROOT / "config" / "porn.list").exists())
 
     def test_pron_rejects_unsupported_or_empty_domain_source(self) -> None:
         for source in ["DOMAIN-KEYWORD,example\n", "DOMAIN-REGEX,example.*\n", "DOMAIN-SUFFIX,Example.COM\n"]:
@@ -156,72 +150,147 @@ class ConverterTests(unittest.TestCase):
         with self.assertRaises(ConversionError):
             parse_ipcidr_text("2001:db8::/32\n", "test", 4)
 
-    def test_bett_sources_include_ai_mrs(self) -> None:
+    def test_bett_sources_have_no_ai_or_site_scraping(self) -> None:
         config = json.loads(
             (ROOT / "config" / "sources.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(
-            set(config["bett"]),
-            {"geosite_base", "anthropic", "ai_mrs"},
+        self.assertEqual(set(config["bett"]), {"geosite_base", "anthropic"})
+        self.assertNotIn("claude_site", config)
+
+    def test_claude_supplement_file_is_valid(self) -> None:
+        rules = parse_claude_supplement(
+            CLAUDE_SUPPLEMENT.read_text(encoding="utf-8"), str(CLAUDE_SUPPLEMENT)
         )
+        self.assertTrue(rules)
+        self.assertNotIn(CLAUDE_PROCESS_RULE, rules)
 
-
-    def test_claude_site_extraction_keeps_keywords_and_excludes_ntp(self) -> None:
-        typed = "\n".join(sorted(CLAUDE_SITE_REQUIRED_TYPED_RULES))
-        html = (
-            "<html><pre><code>"
-            + typed
-            + "</code></pre><pre><code>"
-            + "geosite:anthropic\nkeyword:datadog\nkeyword:sentry\n"
-            + "keyword:sift\ngeosite:category-ntp"
-            + "</code></pre></html>"
+    def test_claude_supplement_accepts_allowed_types_and_comments(self) -> None:
+        text = (
+            "# comment\n\n"
+            "DOMAIN,a.example\nDOMAIN-SUFFIX,b.example\nDOMAIN-KEYWORD,telemetry\n"
+            "IP-CIDR,192.0.2.0/24,no-resolve\nIP-CIDR6,2001:db8::/32\n"
+            "IP-ASN,64496,no-resolve\n"
         )
-        rules = extract_claude_site_rules(html, "test")
-        for keyword in ("datadog", "sentry", "sift"):
-            self.assertIn(f"DOMAIN-KEYWORD,{keyword}", rules)
-        self.assertFalse(any("ntp" in rule.lower() for rule in rules))
+        self.assertEqual(len(parse_claude_supplement(text, "test")), 6)
 
-    def test_claude_merge_keeps_bett_first_and_site_supplements(self) -> None:
+    def test_claude_supplement_rejects_other_rules(self) -> None:
+        for line in (
+            "PROCESS-NAME,claude.exe",
+            "DOMAIN-REGEX,^claude",
+            "DOMAIN-WILDCARD,*.claude.ai",
+            "DOMAIN,Claude.ai",
+            "DOMAIN-SUFFIX,claude.ai,no-resolve",
+            "IP-CIDR,192.0.2.1/24,no-resolve",
+            "IP-CIDR,2001:db8::/32",
+            "IP-CIDR6,192.0.2.0/24",
+            "IP-ASN,AS64496",
+            "IP-CIDR,192.0.2.0/24,no-resolve,extra",
+            "+.claude.ai",
+        ):
+            with self.subTest(line=line), self.assertRaises(ConversionError):
+                parse_claude_supplement(line + "\n", "test")
+
+    def test_claude_rules_bett_first_dedup_and_process_last(self) -> None:
         bett = parse_domain_text(
-            "+.anthropic.com\nservd-anthropic-website.b-cdn.net\n", "bett"
+            "servd-anthropic-website.b-cdn.net\n+.anthropic.com\n+.claude.ai\n", "bett"
         )
-        site = [
+        supplement = [
             "DOMAIN-SUFFIX,anthropic.com",
             "DOMAIN,api.anthropic.com",
-            "DOMAIN-SUFFIX,sentry.io",
+            "DOMAIN-KEYWORD,datadog",
+            "DOMAIN-KEYWORD,datadog",
             "IP-ASN,399358,no-resolve",
         ]
-        merged = merge_claude_rules(bett, site)
         self.assertEqual(
-            merged[:2],
+            build_claude_rules(bett, supplement),
             [
-                "DOMAIN-SUFFIX,anthropic.com",
                 "DOMAIN,servd-anthropic-website.b-cdn.net",
+                "DOMAIN-SUFFIX,anthropic.com",
+                "DOMAIN-SUFFIX,claude.ai",
+                "DOMAIN,api.anthropic.com",
+                "DOMAIN-KEYWORD,datadog",
+                "IP-ASN,399358,no-resolve",
+                CLAUDE_PROCESS_RULE,
             ],
         )
-        self.assertNotIn("DOMAIN,api.anthropic.com", merged)
-        self.assertIn("DOMAIN-SUFFIX,sentry.io", merged)
-        self.assertIn("IP-ASN,399358,no-resolve", merged)
+
+    def test_claude_bett_subdomain_only_rule_fails(self) -> None:
+        with self.assertRaises(ConversionError):
+            build_claude_rules(parse_domain_text(".anthropic.com\n", "bett"), [])
+
+    def test_classical_rendering_has_no_payload(self) -> None:
+        text = render_classical_rules(
+            [DomainRule("suffix", "a.example"), DomainRule("exact", "b.example")]
+        )
+        self.assertEqual(text, "DOMAIN-SUFFIX,a.example\nDOMAIN,b.example\n")
+        with self.assertRaises(ConversionError):
+            render_classical_text([])
+
+    def test_build_produces_exact_output_set(self) -> None:
+        selection = json.loads(PRON_SITES.read_text(encoding="utf-8"))
+        porn_lines = ["DOMAIN-REGEX,^ignored$", "DOMAIN-SUFFIX,not-selected.example"]
+        for site in selection["sites"]:
+            for domain in site["domains"] + site["cdn_domains"]:
+                porn_lines.append(f"DOMAIN-SUFFIX,{domain}")
+        anthropic = "+.anthropic.com\nservd-anthropic-website.b-cdn.net\n"
+        adguard = "! test\n||mcdn.bilivideo.com^$important\n||pcdn.example.com^\n"
+        with tempfile.TemporaryDirectory() as temp_name:
+            porn_path = Path(temp_name) / "category-porn.list"
+            mcdn_path = Path(temp_name) / "adguard.txt"
+            porn_path.write_text("\n".join(porn_lines) + "\n", encoding="utf-8")
+            mcdn_path.write_text(adguard, encoding="utf-8")
+            with mock.patch.object(convert_rules, "fetch_text", return_value=anthropic):
+                outputs, intermediates = build(
+                    ROOT / "config" / "sources.json", mcdn_path, porn_path
+                )
         self.assertEqual(
-            render_classical_yaml(merged).splitlines()[0], "payload:"
+            set(outputs),
+            {
+                "dist/mihomo/claude.list",
+                "dist/classical/mcdn-block.list",
+                "dist/classical/porn.list",
+                "reports/summary.json",
+                "reports/update-report.md",
+            },
+        )
+        self.assertEqual(set(intermediates), {"mcdn-block.list", "porn.list"})
+
+        claude = outputs["dist/mihomo/claude.list"].splitlines()
+        self.assertEqual(claude[0], "DOMAIN-SUFFIX,anthropic.com")
+        self.assertEqual(claude[-1], CLAUDE_PROCESS_RULE)
+        self.assertEqual(len(claude), len(set(claude)))
+        self.assertNotIn("payload:", outputs["dist/mihomo/claude.list"])
+
+        porn = outputs["dist/classical/porn.list"].splitlines()
+        self.assertNotIn("DOMAIN-SUFFIX,not-selected.example", porn)
+        self.assertEqual(
+            [line.replace("DOMAIN-SUFFIX,", "+.", 1) for line in porn],
+            intermediates["porn.list"].splitlines(),
         )
 
-    def test_geolocation_outputs_are_externally_managed(self) -> None:
-        for name in ("geolocation-cn.mrs",):
-            self.assertTrue(
-                is_externally_managed_output(ROOT / "dist" / "mihomo" / name)
-            )
+        mcdn = outputs["dist/classical/mcdn-block.list"].splitlines()
+        self.assertEqual(mcdn[0], "DOMAIN-SUFFIX,mcdn.bilivideo.com")
+        self.assertEqual(mcdn[-1], "DOMAIN-SUFFIX,pcdn.example.com")
+        self.assertEqual(len(mcdn), 5)
 
-    def test_legacy_egern_and_ai_outputs_are_externally_managed(self) -> None:
+    def test_workflow_built_outputs_are_externally_managed(self) -> None:
         for path in (
-            ROOT / "dist" / "mihomo" / "ai.list",
+            ROOT / "dist" / "mihomo" / "geolocation-cn.mrs",
+            ROOT / "dist" / "mihomo" / "porn.mrs",
+            ROOT / "dist" / "classical" / "geolocation-cn.list",
             ROOT / "dist" / "egern" / "apns.yaml",
             ROOT / "dist" / "egern" / "geolocation-cn.yaml",
         ):
-            self.assertTrue(is_externally_managed_output(path))
-        self.assertFalse(
-            is_externally_managed_output(ROOT / "dist" / "mihomo" / "porn.list")
-        )
+            with self.subTest(path=path):
+                self.assertTrue(is_externally_managed_output(path))
+        for path in (
+            ROOT / "dist" / "mihomo" / "claude.list",
+            ROOT / "dist" / "mihomo" / "porn.list",
+            ROOT / "dist" / "classical" / "porn.list",
+            ROOT / "dist" / "classical" / "mcdn-block.list",
+        ):
+            with self.subTest(path=path):
+                self.assertFalse(is_externally_managed_output(path))
 
     def test_duplicate_counts(self) -> None:
         self.assertEqual(

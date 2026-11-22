@@ -1,38 +1,46 @@
 # Rule converter
 
-The repository has two publishing branches:
+自定义代理规则生成仓库，由 GitHub Actions 每天自动更新。
 
-- `main`: custom Mihomo providers under `dist/mihomo/`.
-- [`egern`](https://github.com/frostmage1250/proxy-rules-converter/tree/egern): independently reads the latest Mihomo script and publishes all referenced providers as native YAML under `rules/`, plus APNs and Private Relay.
+## 分支
 
-The Egern profile generator independently reads the script again and references the Egern branch. No shared configuration model is transferred. Historical `main/dist/egern/*.yaml` remain frozen compatibility URLs for existing profiles.
+- `main`：生成自定义规则，发布到 `dist/`。
+- [`egern`](https://github.com/frostmage1250/proxy-rules-converter/tree/egern)：把 Bett（appshubcc/bett-rules）的 classical 规则和本分支 `dist/classical/`、`dist/mihomo/claude.list` 中的自定义规则转换为 Egern 原生 YAML，发布在 `rules/`。
 
-## Custom Mihomo providers
-
-- **AI**: official Mihomo decodes Bett `category-ai-!cn.mrs`; three reviewed Azure/Arkose supplement rules are added if uncovered, then the MRS is compiled.
-- **Claude**: Bett Anthropic rules first, supplemented by the reviewed site rules and datadog/sentry/sift keyword fallbacks. NTP remains excluded.
-- **MCDN**: the four local suffixes in `config/mcdn-block.list` merge with AdGuard-AntiPCDN. The explicitly excluded wildcard is skipped. Only identical duplicates are removed.
-- **porn**: `config/pron-sites.json` selects reviewed domain rules from Bett category-porn, excluding regex and E-Hentai/ExHentai. The two suffixes in `config/porn.list` remain first. Only identical duplicates are removed.
-- **geolocation-cn**: each build fetches the latest V2Fly source, expands `geolocation-cn` with the official V2Fly generator and excludes entries tagged `@ads`, then MetaCubeX/meta-rules-converter compiles the resulting DAT to domain MRS. No supplemental domains or custom text-list conversion are used.
-
-Ordinary Apple, Podcasts, Steam CN and other service providers belong to the Mihomo script's upstream definitions. Their Egern format conversion belongs exclusively to the Egern branch.
-
-## Main branch workflow
-
-The main workflow fetches sources, generates each custom provider once, validates during generation and commits `dist/` and `reports/`. Unit tests run on source pushes. Egern conversion, repeated native-artifact validation, repeated downloads and post-push file comparisons have been removed from this workflow.
-
-The small `update-egern.yml` workflow also exists on this default branch because GitHub schedules originate here. Its job checks out `egern` and runs that branch's converter; its implementation and rule outputs remain on `egern`.
-
-## Published Mihomo files
+## 产物
 
 ```text
-dist/mihomo/
-  ai.list
-  ai.mrs
-  claude.yaml
+dist/mihomo/        # 给 Mihomo 使用
+  claude.list       # classical 文本（含 DOMAIN-KEYWORD / IP-ASN / PROCESS-NAME，无法编码为 .mrs）
   geolocation-cn.mrs
-  mcdn-block.list
   mcdn-block.mrs
-  porn.list
   porn.mrs
+dist/classical/     # 给 egern 分支使用（DOMAIN-SUFFIX,x / DOMAIN,x）
+  geolocation-cn.list
+  mcdn-block.list
+  porn.list
+reports/            # summary.json、update-report.md
+```
+
+`.mrs` 由官方 Mihomo `convert-ruleset` 从 `build/`（已 gitignore）里的中间文本编译，不再发布 `+.` 格式的 `.list`。`dist/egern/*.yaml` 是旧版兼容地址，保持冻结。
+
+## 自定义规则来源
+
+- **claude**：Bett `geosite/anthropic` 在前，追加 `config/claude-supplement.list`（可直接编辑，只允许 DOMAIN / DOMAIN-SUFFIX / DOMAIN-KEYWORD / IP-CIDR / IP-CIDR6 / IP-ASN），完全相同的行只保留第一次出现，最后固定追加 `PROCESS-NAME,claude.exe`。
+- **mcdn-block**：`config/mcdn-block.list` 的四个后缀在前，合并 AdGuard-AntiPCDN-Rules（跳过 `sources.json` 中排除的通配规则），只去除完全相同的规则。
+- **porn**：按 `config/pron-sites.json` 从 Bett `category-porn` 中筛选站点域名；排除所有正则规则和 E-Hentai / ExHentai。
+- **geolocation-cn**：每次拉取最新 V2Fly domain-list-community，用官方生成器展开 `geolocation-cn` 并排除 `@ads`，再由 MetaCubeX/meta-rules-converter 编译为 `.mrs`；随后用 Mihomo 解码并转换为 `dist/classical/geolocation-cn.list`。
+
+## 工作流
+
+- `update-rules.yml`：每天 UTC 02:23（另可手动运行，或推送 `config/`、`src/`、`tests/` 等时触发）。推送触发时先跑单元测试，然后生成全部产物，有变化才提交 `dist/` 和 `reports/`。
+- `update-egern.yml`：每天 UTC 02:50。GitHub 定时任务只从默认分支触发，所以入口放在 `main`；它检出 `egern` 分支，运行该分支的 `src/build_rules.py`，有变化才提交并推送 `rules/`。
+
+## 本地运行
+
+```sh
+python -m pip install --requirement requirements.txt
+python -m unittest discover -s tests -v
+python src/convert_rules.py      # 生成 claude.list、dist/classical/*、reports/ 和 build/ 中间文本
+python src/convert_mrs.py        # 需要 Mihomo（--mihomo、MIHOMO_BIN 或 PATH）
 ```

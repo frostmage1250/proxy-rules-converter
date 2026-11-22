@@ -9,9 +9,9 @@ on:
       - "config/**"
       - "src/**"
       - "tests/**"
+      - "requirements.txt"
   schedule:
-    # Every 2 hours, after Mihomo and before Egern (UTC).
-    - cron: "23 */2 * * *"
+    - cron: "23 2 * * *"
 
 permissions:
   contents: write
@@ -86,9 +86,6 @@ jobs:
           python src/convert_rules.py --mcdn-source "${RUNNER_TEMP}/mcdn-adguard.txt" --porn-source "${RUNNER_TEMP}/category-porn.list"
           python src/convert_mrs.py
 
-      - name: Extend Bett AI MRS
-        run: python src/build_ai_mrs.py
-
       - name: Build V2Fly geolocation-cn and compile MRS
         shell: bash
         run: |
@@ -124,6 +121,17 @@ jobs:
 
           install -m 0644 "${meta_output}/geolocation-cn-clean.mrs" \
             dist/mihomo/geolocation-cn.mrs
+
+      - name: Decode geolocation-cn MRS to classical text
+        shell: bash
+        run: |
+          set -euo pipefail
+          mihomo convert-ruleset domain mrs \
+            dist/mihomo/geolocation-cn.mrs \
+            "${RUNNER_TEMP}/geolocation-cn.txt"
+          python src/domain_to_classical.py \
+            "${RUNNER_TEMP}/geolocation-cn.txt" \
+            dist/classical/geolocation-cn.list
 
       - name: Commit changed generated files
         shell: bash

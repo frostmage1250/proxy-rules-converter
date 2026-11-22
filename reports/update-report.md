@@ -1,32 +1,24 @@
 # Generated rule report
 
-- Conversion policy: syntax only; no semantic minimization or sorting.
-- Providers preserve source rule order and count, except explicitly merged providers.
-- Upstream exact duplicates are preserved; unsupported syntax and required normalization fail the build.
+- Conversion policy: syntax only; source order kept; only identical rules are deduplicated.
+- Unsupported syntax and required normalization fail the build.
 
 ## pron
 
-- Local rules: 2; category-porn domain rules: 6521.
+- category-porn domain rules: 6521; regex rules excluded: 140.
 - Selected websites: 26; selected domain rules: 76.
-- Unselected domain rules excluded: 6445.
-- Source scope: category-porn only; no external CDN additions; E-Hentai and ExHentai excluded.
-- Regex rules excluded: 140.
-- Identical duplicates removed: 2.
-- Shared domain rules: 76.
-- Mihomo list and MRS, plus Egern native YAML, use the same merged non-regex rules.
+- Source scope: category-porn only; E-Hentai and ExHentai excluded.
+- Output rules: 76 (dist/mihomo/porn.mrs, dist/classical/porn.list).
 
 ## MCDN block
 
 - Local rules: 4; accepted AdGuard rules: 33.
 - Identical duplicates removed: 2.
-- Shared suffix rules: 35.
 - The user-excluded *pcdn*.biliapi.net wildcard is omitted.
-- mcdn屏蔽: Mihomo domain MRS and Egern native YAML share the merged suffixes.
+- Output rules: 35 (dist/mihomo/mcdn-block.mrs, dist/classical/mcdn-block.list).
 
 ## Claude
 
-- Bett Anthropic rules: 21 (primary source).
-- Claude site rules: 23.
-- Merged classical rules: 36.
-- Authentication, telemetry, risk-control keywords, IPv4, IPv6, and AS399358 are retained.
-- NTP rules are explicitly excluded.
+- Bett Anthropic rules: 21; supplement rules (config/claude-supplement.list): 22.
+- Identical duplicates removed: 8.
+- Output rules: 36, ending with PROCESS-NAME,claude.exe (dist/mihomo/claude.list).
