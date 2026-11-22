@@ -67,6 +67,8 @@ def convert(text, name, skip_types=()):
             field = "ip_cidr6_set" if version == 6 else "ip_cidr_set"  # Bett writes IPv6 as IP-CIDR.
         elif kind == "IP-ASN" and not re.fullmatch(r"(?:AS)?\d+", value, re.IGNORECASE):
             raise BuildError(f"{where}: invalid ASN")
+        if kind == "IP-ASN":
+            value = re.sub(r"^AS", "", value, flags=re.IGNORECASE)  # Egern expects bare digits.
         if kind in IP_TYPES:
             no_resolve.add("no-resolve" in options)
         fields.setdefault(field, {})[value] = None  # dict keeps first-occurrence order, drops duplicates
