@@ -6,6 +6,7 @@ domain_set:
 - bybit.ada.support
 - cdn-spotify-experiments.conductrics.com
 - cdn.js7k.com
+- courses.myecnu.org
 - crl.versign.net
 - databank.worldbank.org
 - deutschewelle.h-cdn.com
@@ -10398,6 +10399,7 @@ domain_suffix_set:
 - cachefly.com
 - cachefly.net
 - cachinese.com
+- cachix.org
 - cacnw.com
 - cactusvpn.com
 - cad-mep.com
@@ -14417,9 +14419,11 @@ domain_suffix_set:
 - fastlane.tools
 - fastly-analytics.com
 - fastly-edge.com
+- fastly-insights.com
 - fastly-terrarium.com
 - fastly.com
 - fastly.net
+- fastlydns.net
 - fastlylabs.com
 - fastlylb.net
 - fastssh.com
@@ -30575,6 +30579,7 @@ domain_suffix_set:
 - vivatube.com
 - vivaxnxx.com
 - vivoglobal.com
+- vivox.com
 - vivthomas.com
 - vixen.com
 - vixengroup.com
